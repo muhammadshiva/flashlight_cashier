@@ -12,6 +12,7 @@ import 'features/customer/domain/repositories/customer_repository.dart';
 import 'features/customer/domain/usecases/create_customer.dart';
 import 'features/customer/domain/usecases/delete_customer.dart';
 import 'features/customer/domain/usecases/get_customers.dart';
+import 'features/customer/domain/usecases/update_customer.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
 import 'features/membership/data/datasources/membership_remote_data_source.dart';
 import 'features/membership/data/repositories/membership_repository_impl.dart';
@@ -31,6 +32,7 @@ import 'features/product/data/datasources/product_remote_data_source.dart';
 import 'features/product/data/repositories/product_repository_impl.dart';
 import 'features/product/domain/repositories/product_repository.dart';
 import 'features/product/domain/usecases/product_usecases.dart';
+import 'features/product/domain/usecases/update_product.dart';
 import 'features/product/presentation/bloc/product_bloc.dart';
 
 import 'features/vehicle/presentation/bloc/vehicle_bloc.dart';
@@ -42,6 +44,14 @@ import 'features/work_order/domain/usecases/work_order_usecases.dart';
 import 'features/work_order/domain/usecases/update_work_order_status.dart';
 import 'features/work_order/presentation/bloc/pos_bloc.dart';
 import 'features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'features/work_order/domain/usecases/get_work_order.dart';
+import 'features/work_order/presentation/bloc/detail/work_order_detail_bloc.dart';
+import 'features/user/data/datasources/user_remote_data_source.dart';
+import 'features/user/data/repositories/user_repository_impl.dart';
+import 'features/user/domain/repositories/user_repository.dart';
+import 'features/user/domain/usecases/user_usecases.dart';
+import 'features/user/presentation/bloc/user_bloc.dart';
+import 'features/report/presentation/bloc/reports_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -77,6 +87,7 @@ Future<void> init() async {
     () => CustomerBloc(
       getCustomers: sl(),
       createCustomer: sl(),
+      updateCustomer: sl(),
       deleteCustomer: sl(),
     ),
   );
@@ -84,6 +95,7 @@ Future<void> init() async {
   // Use cases
   sl.registerLazySingleton(() => GetCustomers(sl()));
   sl.registerLazySingleton(() => CreateCustomer(sl()));
+  sl.registerLazySingleton(() => UpdateCustomer(sl()));
   sl.registerLazySingleton(() => DeleteCustomer(sl()));
 
   // Repository
@@ -177,6 +189,7 @@ Future<void> init() async {
     () => ProductBloc(
       getProducts: sl(),
       createProduct: sl(),
+      updateProduct: sl(),
       deleteProduct: sl(),
     ),
   );
@@ -184,6 +197,7 @@ Future<void> init() async {
   // Use cases
   sl.registerLazySingleton(() => GetProducts(sl()));
   sl.registerLazySingleton(() => CreateProduct(sl()));
+  sl.registerLazySingleton(() => UpdateProduct(sl()));
   sl.registerLazySingleton(() => DeleteProduct(sl()));
 
   // Repository
@@ -227,5 +241,42 @@ Future<void> init() async {
         getWorkOrders: sl(),
         getCustomers: sl(),
         getVehicles: sl(),
+      ));
+
+  sl.registerFactory(() => WorkOrderDetailBloc(
+        getWorkOrder: sl(),
+        updateWorkOrderStatus: sl(),
+      ));
+  sl.registerLazySingleton(() => GetWorkOrder(sl()));
+
+  //! Features - User
+  // Bloc
+  sl.registerFactory(() => UserBloc(
+        getUsers: sl(),
+        createUser: sl(),
+        updateUser: sl(),
+        deleteUser: sl(),
+      ));
+
+  // Use cases
+  sl.registerLazySingleton(() => GetUsers(sl()));
+  sl.registerLazySingleton(() => CreateUser(sl()));
+  sl.registerLazySingleton(() => UpdateUser(sl()));
+  sl.registerLazySingleton(() => DeleteUser(sl()));
+
+  // Repository
+  sl.registerLazySingleton<UserRepository>(
+    () => UserRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<UserRemoteDataSource>(
+    () => UserRemoteDataSourceImpl(dio: sl<DioClient>().dio),
+  );
+
+  //! Features - Reports
+  sl.registerFactory(() => ReportsBloc(
+        getWorkOrders: sl(),
+        getServices: sl(),
       ));
 }

@@ -61,8 +61,8 @@ class CustomerListView extends StatelessWidget {
                     },
                   ),
                   onTap: () {
-                    // Navigate to edit or details
-                    // context.push('/customers/${customer.id}');
+                    context.push('/customers/${customer.id}/edit',
+                        extra: customer);
                   },
                 );
               },

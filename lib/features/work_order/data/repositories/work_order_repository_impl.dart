@@ -122,4 +122,14 @@ class WorkOrderRepositoryImpl implements WorkOrderRepository {
       return Left(e);
     }
   }
+
+  @override
+  Future<Either<Failure, WorkOrder>> getWorkOrderById(String id) async {
+    try {
+      final result = await remoteDataSource.getWorkOrderById(id);
+      return Right(result.toEntity());
+    } on Failure catch (e) {
+      return Left(e);
+    }
+  }
 }

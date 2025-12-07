@@ -17,9 +17,9 @@ class DashboardHeader extends StatelessWidget {
       child: Row(
         children: [
           const Text(
-            'MotoWash POS',
+            'Hello',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E293B),
             ),

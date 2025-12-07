@@ -20,5 +20,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (auth) => emit(AuthSuccess(auth: auth)),
       );
     });
+
+    on<LogoutRequested>((event, emit) {
+      // Clear token, user data, etc.
+      // For now just emit Initial to trigger navigation to login
+      emit(AuthInitial());
+    });
   }
 }

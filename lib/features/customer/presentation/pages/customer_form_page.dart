@@ -2,24 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../injection_container.dart';
+import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
 import '../bloc/customer_event.dart';
 import '../bloc/customer_state.dart';
 
 class CustomerFormPage extends StatelessWidget {
-  const CustomerFormPage({super.key});
+  final Customer? customer;
+  const CustomerFormPage({super.key, this.customer});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<CustomerBloc>(),
-      child: const CustomerFormView(),
+      child: CustomerFormView(customer: customer),
     );
   }
 }
 
 class CustomerFormView extends StatefulWidget {
-  const CustomerFormView({super.key});
+  final Customer? customer;
+  const CustomerFormView({super.key, this.customer});
 
   @override
   State<CustomerFormView> createState() => _CustomerFormViewState();
@@ -27,9 +30,21 @@ class CustomerFormView extends StatefulWidget {
 
 class _CustomerFormViewState extends State<CustomerFormView> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _emailController = TextEditingController();
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emailController;
+
+  bool get isEditMode => widget.customer != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.customer?.name ?? '');
+    _phoneController =
+        TextEditingController(text: widget.customer?.phoneNumber ?? '');
+    _emailController =
+        TextEditingController(text: widget.customer?.email ?? '');
+  }
 
   @override
   void dispose() {
@@ -41,30 +56,42 @@ class _CustomerFormViewState extends State<CustomerFormView> {
 
   void _onSubmit() {
     if (_formKey.currentState!.validate()) {
-      context.read<CustomerBloc>().add(
-            CreateCustomerEvent(
-              name: _nameController.text,
-              phoneNumber: _phoneController.text,
-              email: _emailController.text,
-            ),
-          );
+      if (isEditMode) {
+        final updatedCustomer = Customer(
+          id: widget.customer!.id,
+          name: _nameController.text,
+          phoneNumber: _phoneController.text,
+          email: _emailController.text,
+        );
+        context.read<CustomerBloc>().add(UpdateCustomerEvent(updatedCustomer));
+      } else {
+        context.read<CustomerBloc>().add(
+              CreateCustomerEvent(
+                name: _nameController.text,
+                phoneNumber: _phoneController.text,
+                email: _emailController.text,
+              ),
+            );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('New Customer')),
+      appBar:
+          AppBar(title: Text(isEditMode ? 'Edit Customer' : 'New Customer')),
       body: BlocListener<CustomerBloc, CustomerState>(
         listener: (context, state) {
           if (state is CustomerOperationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
-            context.pop(); // Go back to list
+            context.pop(); // Go back
           } else if (state is CustomerError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                  content: Text(state.message), backgroundColor: Colors.red),
             );
           }
         },
@@ -92,7 +119,7 @@ class _CustomerFormViewState extends State<CustomerFormView> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _onSubmit,
-                  child: const Text('Save Customer'),
+                  child: Text(isEditMode ? 'Update Customer' : 'Save Customer'),
                 ),
               ],
             ),

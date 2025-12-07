@@ -35,7 +35,7 @@ class DashboardSidebar extends StatelessWidget {
                   icon: Icons.pie_chart_outline,
                   label: 'Laporan',
                   isActive: location.startsWith('/reports'),
-                  onTap: () {}, // TODO: Implement Report route
+                  onTap: () => context.go('/reports'),
                 ),
                 _SidebarItem(
                   icon: Icons.people_outline,
@@ -44,11 +44,34 @@ class DashboardSidebar extends StatelessWidget {
                   onTap: () => context.go('/customers'),
                 ),
                 _SidebarItem(
-                  icon: Icons.local_offer_outlined,
+                  icon: Icons.card_membership,
+                  label: 'Membership',
+                  isActive: location.startsWith('/memberships'),
+                  onTap: () => context.go('/memberships'),
+                ),
+                _SidebarItem(
+                  icon: Icons.directions_car,
+                  label: 'Kendaraan',
+                  isActive: location.startsWith('/vehicles'),
+                  onTap: () => context.go('/vehicles'),
+                ),
+                _SidebarItem(
+                  icon: Icons.cleaning_services,
                   label: 'Layanan',
+                  isActive: location.startsWith('/services'),
+                  onTap: () => context.go('/services'),
+                ),
+                _SidebarItem(
+                  icon: Icons.shopping_bag,
+                  label: 'Produk',
                   isActive: location.startsWith('/products'),
-                  onTap: () =>
-                      context.go('/products'), // Assuming products/services
+                  onTap: () => context.go('/products'),
+                ),
+                _SidebarItem(
+                  icon: Icons.manage_accounts,
+                  label: 'Pengguna',
+                  isActive: location.startsWith('/users'),
+                  onTap: () => context.go('/users'),
                 ),
               ],
             ),
@@ -74,7 +97,7 @@ class DashboardSidebar extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           const Text(
-            'MotoWash',
+            'Flashlight',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

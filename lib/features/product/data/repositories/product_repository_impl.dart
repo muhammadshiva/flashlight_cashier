@@ -41,6 +41,26 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
+  Future<Either<Failure, Product>> updateProduct(Product product) async {
+    try {
+      final model = ProductModel(
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        type: product.type,
+        stock: product.stock,
+        isAvailable: product.isAvailable,
+      );
+      final result = await remoteDataSource.updateProduct(model);
+      return Right(result.toEntity());
+    } on Failure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> deleteProduct(String id) async {
     try {
       await remoteDataSource.deleteProduct(id);

@@ -6,19 +6,21 @@ import '../../domain/entities/product.dart';
 import '../bloc/product_bloc.dart';
 
 class ProductFormPage extends StatelessWidget {
-  const ProductFormPage({super.key});
+  final Product? product;
+  const ProductFormPage({super.key, this.product});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<ProductBloc>(),
-      child: const ProductFormView(),
+      child: ProductFormView(product: product),
     );
   }
 }
 
 class ProductFormView extends StatefulWidget {
-  const ProductFormView({super.key});
+  final Product? product;
+  const ProductFormView({super.key, this.product});
 
   @override
   State<ProductFormView> createState() => _ProductFormViewState();
@@ -26,11 +28,26 @@ class ProductFormView extends StatefulWidget {
 
 class _ProductFormViewState extends State<ProductFormView> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _descController = TextEditingController();
-  final _priceController = TextEditingController();
-  final _stockController = TextEditingController();
-  String _type = 'coffee';
+  late TextEditingController _nameController;
+  late TextEditingController _descController;
+  late TextEditingController _priceController;
+  late TextEditingController _stockController;
+  late String _type;
+
+  bool get isEditMode => widget.product != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.product?.name ?? '');
+    _descController =
+        TextEditingController(text: widget.product?.description ?? '');
+    _priceController =
+        TextEditingController(text: widget.product?.price.toString() ?? '');
+    _stockController =
+        TextEditingController(text: widget.product?.stock.toString() ?? '');
+    _type = widget.product?.type ?? 'coffee';
+  }
 
   @override
   void dispose() {
@@ -43,27 +60,29 @@ class _ProductFormViewState extends State<ProductFormView> {
 
   void _onSubmit() {
     if (_formKey.currentState!.validate()) {
-      context.read<ProductBloc>().add(
-            CreateProductEvent(
-              Product(
-                id: '',
-                name: _nameController.text,
-                description: _descController.text,
-                price: int.tryParse(_priceController.text) ?? 0,
-                imageUrl: '',
-                type: _type,
-                stock: int.tryParse(_stockController.text) ?? 0,
-                isAvailable: true,
-              ),
-            ),
-          );
+      final product = Product(
+        id: isEditMode ? widget.product!.id : '',
+        name: _nameController.text,
+        description: _descController.text,
+        price: int.tryParse(_priceController.text) ?? 0,
+        imageUrl: isEditMode ? widget.product!.imageUrl : '',
+        type: _type,
+        stock: int.tryParse(_stockController.text) ?? 0,
+        isAvailable: isEditMode ? widget.product!.isAvailable : true,
+      );
+
+      if (isEditMode) {
+        context.read<ProductBloc>().add(UpdateProductEvent(product));
+      } else {
+        context.read<ProductBloc>().add(CreateProductEvent(product));
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('New Product')),
+      appBar: AppBar(title: Text(isEditMode ? 'Edit Product' : 'New Product')),
       body: BlocListener<ProductBloc, ProductState>(
         listener: (context, state) {
           if (state is ProductOperationSuccess) {
@@ -73,7 +92,8 @@ class _ProductFormViewState extends State<ProductFormView> {
             context.pop();
           } else if (state is ProductError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                  content: Text(state.message), backgroundColor: Colors.red),
             );
           }
         },
@@ -107,6 +127,8 @@ class _ProductFormViewState extends State<ProductFormView> {
                 DropdownButtonFormField<String>(
                   value: _type,
                   decoration: const InputDecoration(labelText: 'Type'),
+                  // If current type is not in list, fallback or add it?
+                  // Assuming fixed types for now.
                   items: const [
                     DropdownMenuItem(value: 'coffee', child: Text('Coffee')),
                     DropdownMenuItem(value: 'tea', child: Text('Tea')),
@@ -119,7 +141,7 @@ class _ProductFormViewState extends State<ProductFormView> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _onSubmit,
-                  child: const Text('Save Product'),
+                  child: Text(isEditMode ? 'Update Product' : 'Save Product'),
                 ),
               ],
             ),

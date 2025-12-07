@@ -14,6 +14,14 @@ import '../features/vehicle/presentation/pages/vehicle_form_page.dart';
 import '../features/vehicle/presentation/pages/vehicle_list_page.dart';
 import '../features/work_order/presentation/pages/pos_page.dart';
 import '../features/work_order/presentation/pages/work_order_list_page.dart';
+import '../features/work_order/presentation/pages/work_order_detail_page.dart';
+import '../features/user/presentation/pages/user_list_page.dart';
+import '../features/user/presentation/pages/user_form_page.dart';
+import '../features/user/domain/entities/user.dart';
+import '../features/customer/domain/entities/customer.dart';
+import '../features/product/domain/entities/product.dart';
+import '../features/report/presentation/pages/reports_page.dart';
+import '../core/widgets/session_timeout_listener.dart';
 
 final router = GoRouter(
   initialLocation: '/login',
@@ -25,7 +33,9 @@ final router = GoRouter(
     // Persistent Shell for Dashboard and Feature Pages
     ShellRoute(
       builder: (context, state, child) {
-        return DashboardLayout(child: child);
+        return SessionTimeoutListener(
+          child: DashboardLayout(child: child),
+        );
       },
       routes: [
         GoRoute(
@@ -35,6 +45,14 @@ final router = GoRouter(
         GoRoute(
           path: '/work-orders',
           builder: (context, state) => const WorkOrderListPage(),
+          routes: [
+            GoRoute(
+              path: ':id',
+              builder: (context, state) => WorkOrderDetailPage(
+                workOrderId: state.pathParameters['id']!,
+              ),
+            ),
+          ],
         ),
         GoRoute(
           path: '/customers',
@@ -43,6 +61,13 @@ final router = GoRouter(
             GoRoute(
               path: 'new',
               builder: (context, state) => const CustomerFormPage(),
+            ),
+            GoRoute(
+              path: ':id/edit',
+              builder: (context, state) {
+                final customer = state.extra as Customer?;
+                return CustomerFormPage(customer: customer);
+              },
             ),
           ],
         ),
@@ -84,7 +109,35 @@ final router = GoRouter(
               path: 'new',
               builder: (context, state) => const ProductFormPage(),
             ),
+            GoRoute(
+              path: ':id/edit',
+              builder: (context, state) {
+                final product = state.extra as Product?;
+                return ProductFormPage(product: product);
+              },
+            ),
           ],
+        ),
+        GoRoute(
+          path: '/users',
+          builder: (context, state) => const UserListPage(),
+          routes: [
+            GoRoute(
+              path: 'new',
+              builder: (context, state) => const UserFormPage(),
+            ),
+            GoRoute(
+              path: ':id/edit',
+              builder: (context, state) {
+                final user = state.extra as User?;
+                return UserFormPage(user: user);
+              },
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '/reports',
+          builder: (context, state) => const ReportsPage(),
         ),
       ],
     ),

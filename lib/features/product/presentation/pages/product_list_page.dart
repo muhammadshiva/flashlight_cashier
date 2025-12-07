@@ -51,13 +51,25 @@ class ProductListView extends StatelessWidget {
                   title: Text(product.name),
                   subtitle: Text(
                       '${product.type} - \$${product.price} (Stock: ${product.stock})'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      context
-                          .read<ProductBloc>()
-                          .add(DeleteProductEvent(product.id));
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () {
+                          context.push('/products/${product.id}/edit',
+                              extra: product);
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          context
+                              .read<ProductBloc>()
+                              .add(DeleteProductEvent(product.id));
+                        },
+                      ),
+                    ],
                   ),
                 );
               },

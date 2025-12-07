@@ -7,4 +7,5 @@ abstract class WorkOrderRepository {
   Future<Either<Failure, List<WorkOrder>>> getWorkOrders();
   Future<Either<Failure, WorkOrder>> updateWorkOrder(
       WorkOrder workOrder); // Simplified update for now
+  Future<Either<Failure, WorkOrder>> getWorkOrderById(String id);
 }
