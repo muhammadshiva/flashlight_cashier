@@ -16,6 +16,13 @@ class WorkOrderCard extends StatelessWidget {
     this.vehicleName,
   });
 
+  String _shortenId(String id) {
+    if (id.length > 8) {
+      return '${id.substring(0, 8)}...';
+    }
+    return id;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,7 +53,7 @@ class WorkOrderCard extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Text(
-              '${index + 1}', // Using index as mock queue number if needed, or workOrder.queueNumber
+              '${index + 1}', // Using index as mock queue number
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -93,28 +100,33 @@ class WorkOrderCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          customerName ??
-                              'Customer ID: ${workOrder.customerId}', // Placeholder until expanded data
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E293B),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            customerName ??
+                                'Cust: ${_shortenId(workOrder.customerId)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1E293B),
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          '0812-3456-7890', // Hardcoded mockup for now
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF64748B),
+                          const SizedBox(height: 4),
+                          const Text(
+                            '0812-3456-7890', // Hardcoded mockup for now
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF64748B),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 16),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -130,18 +142,19 @@ class WorkOrderCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
-                              'Mulai Cuci'), // Dynamic action based on status in future
+                          child: const Text('Mulai Cuci'),
                         ),
                         const SizedBox(height: 12),
                         Text(
                           vehicleName ??
-                              'Vehicle ID: ${workOrder.vehicleDataId}', // Placeholder
+                              'Vehicle: ${_shortenId(workOrder.vehicleDataId)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF1E293B),
                           ),
+                          textAlign: TextAlign.right,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const Text(
                           'B 1234 XYZ', // Hardcoded mockup
@@ -149,6 +162,7 @@ class WorkOrderCard extends StatelessWidget {
                             fontSize: 14,
                             color: Color(0xFF64748B),
                           ),
+                          textAlign: TextAlign.right,
                         ),
                       ],
                     ),
@@ -178,7 +192,8 @@ class WorkOrderCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        'Service ID: ${service.serviceId}', // Placeholder name
+                        service.service?.name ??
+                            'Svc: ${_shortenId(service.serviceId)}',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
