@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../injection_container.dart';
 import '../bloc/auth_bloc.dart';
 
@@ -36,14 +37,15 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _onLoginPressed() {
-    if (_formKey.currentState!.validate()) {
-      context.read<AuthBloc>().add(
-            LoginRequested(
-              username: _usernameController.text,
-              password: _passwordController.text,
-            ),
-          );
-    }
+    return context.go('/dashboard');
+    // if (_formKey.currentState!.validate()) {
+    //   context.read<AuthBloc>().add(
+    //         LoginRequested(
+    //           username: _usernameController.text,
+    //           password: _passwordController.text,
+    //         ),
+    //       );
+    // }
   }
 
   @override
@@ -112,8 +114,7 @@ class _LoginFormState extends State<LoginForm> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed:
-                                state is AuthLoading ? null : _onLoginPressed,
+                            onPressed: state is AuthLoading ? null : _onLoginPressed,
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.all(20),
                             ),
@@ -121,8 +122,7 @@ class _LoginFormState extends State<LoginForm> {
                                 ? const SizedBox(
                                     height: 20,
                                     width: 20,
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2),
+                                    child: CircularProgressIndicator(strokeWidth: 2),
                                   )
                                 : const Text('Login'),
                           ),
