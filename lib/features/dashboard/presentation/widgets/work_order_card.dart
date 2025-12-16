@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../work_order/domain/entities/work_order.dart';
+import '../../../customer/domain/entities/customer.dart';
+import '../../../vehicle/domain/entities/vehicle.dart';
 
 class WorkOrderCard extends StatelessWidget {
   final WorkOrder workOrder;
   final int index;
-  final String? customerName;
-  final String? vehicleName;
+  final Customer? customer;
+  final Vehicle? vehicle;
+  final VoidCallback? onActionPressed;
 
   const WorkOrderCard({
     super.key,
     required this.workOrder,
     required this.index,
-    this.customerName,
-    this.vehicleName,
+    this.customer,
+    this.vehicle,
+    this.onActionPressed,
   });
 
   String _shortenId(String id) {
@@ -21,6 +25,44 @@ class WorkOrderCard extends StatelessWidget {
       return '${id.substring(0, 8)}...';
     }
     return id;
+  }
+
+  String _getActionButtonLabel() {
+    switch (workOrder.status.toLowerCase()) {
+      case 'queued':
+        return 'Mulai Cuci';
+      case 'washing':
+        return 'Mulai Kering';
+      case 'drying':
+        return 'Mulai Inspeksi';
+      case 'inspection':
+        return 'Selesai';
+      case 'completed':
+        return 'Proses Bayar';
+      case 'paid':
+        return 'Lihat Detail';
+      default:
+        return 'Proses';
+    }
+  }
+
+  IconData _getActionButtonIcon() {
+    switch (workOrder.status.toLowerCase()) {
+      case 'queued':
+        return Icons.local_car_wash;
+      case 'washing':
+        return Icons.air;
+      case 'drying':
+        return Icons.fact_check;
+      case 'inspection':
+        return Icons.check_circle;
+      case 'completed':
+        return Icons.payment;
+      case 'paid':
+        return Icons.visibility;
+      default:
+        return Icons.arrow_forward;
+    }
   }
 
   @override
@@ -53,7 +95,7 @@ class WorkOrderCard extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Text(
-              '${index + 1}', // Using index as mock queue number
+              workOrder.queueNumber,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -91,6 +133,32 @@ class WorkOrderCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     _StatusBadge(status: workOrder.status),
+                    if (workOrder.estimatedTime.isNotEmpty) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF1F5F9),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.access_time,
+                                size: 12, color: Color(0xFF64748B)),
+                            const SizedBox(width: 4),
+                            Text(
+                              workOrder.estimatedTime,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -104,65 +172,100 @@ class WorkOrderCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            customerName ??
-                                'Cust: ${_shortenId(workOrder.customerId)}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E293B),
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                          Row(
+                            children: [
+                              const Icon(Icons.person,
+                                  size: 16, color: Color(0xFF64748B)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  customer?.name ??
+                                      'Cust: ${_shortenId(workOrder.customerId)}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1E293B),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 4),
-                          const Text(
-                            '0812-3456-7890', // Hardcoded mockup for now
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF64748B),
-                            ),
+                          Row(
+                            children: [
+                              const Icon(Icons.phone,
+                                  size: 14, color: Color(0xFF64748B)),
+                              const SizedBox(width: 8),
+                              Text(
+                                customer?.phoneNumber ?? '-',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF64748B),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              const Icon(Icons.directions_car,
+                                  size: 16, color: Color(0xFF64748B)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  vehicle != null
+                                      ? '${vehicle!.vehicleBrand} ${vehicle!.vehicleSpecs}'
+                                      : 'Vehicle: ${_shortenId(workOrder.vehicleDataId)}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF475569),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const SizedBox(width: 24),
+                              Text(
+                                vehicle?.licensePlate ?? '-',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1E293B),
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(width: 16),
+                    // Action Button
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        // Action Button
-                        ElevatedButton(
-                          onPressed: () {},
+                        ElevatedButton.icon(
+                          onPressed: onActionPressed,
+                          icon: Icon(_getActionButtonIcon(), size: 18),
+                          label: Text(_getActionButtonLabel()),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1E293B),
+                            backgroundColor: _getActionButtonColor(),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 16),
+                                horizontal: 20, vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
+                            elevation: 0,
                           ),
-                          child: const Text('Mulai Cuci'),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          vehicleName ??
-                              'Vehicle: ${_shortenId(workOrder.vehicleDataId)}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E293B),
-                          ),
-                          textAlign: TextAlign.right,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Text(
-                          'B 1234 XYZ', // Hardcoded mockup
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF64748B),
-                          ),
-                          textAlign: TextAlign.right,
                         ),
                       ],
                     ),
@@ -171,40 +274,100 @@ class WorkOrderCard extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Services
-                const Text(
-                  'Layanan:',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF94A3B8),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: workOrder.services.map((service) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        service.service?.name ??
-                            'Svc: ${_shortenId(service.serviceId)}',
-                        style: const TextStyle(
+                if (workOrder.services.isNotEmpty) ...[
+                  Row(
+                    children: const [
+                      Icon(Icons.build, size: 14, color: Color(0xFF94A3B8)),
+                      SizedBox(width: 6),
+                      Text(
+                        'Layanan:',
+                        style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF475569),
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF94A3B8),
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: workOrder.services.map((service) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: const Color(0xFFBFDBFE),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          service.service?.name ??
+                              'Svc: ${_shortenId(service.serviceId)}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1E40AF),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                ],
 
-                const SizedBox(height: 16),
+                // Products (F&B)
+                if (workOrder.products.isNotEmpty) ...[
+                  Row(
+                    children: const [
+                      Icon(Icons.fastfood, size: 14, color: Color(0xFF94A3B8)),
+                      SizedBox(width: 6),
+                      Text(
+                        'F&B:',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF94A3B8),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: workOrder.products.map((product) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFEF3C7),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: const Color(0xFFFDE68A),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          '${product.product?.name ?? 'Prod: ${_shortenId(product.productId)}'}'
+                          '${product.quantity > 1 ? ' (${product.quantity}x)' : ''}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF92400E),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+
+                // Price
                 Row(
                   children: [
                     Text(
@@ -212,36 +375,37 @@ class WorkOrderCard extends StatelessWidget {
                               locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0)
                           .format(workOrder.totalPrice),
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF1E293B),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    // Upsell Badge mockup
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFEF3C7),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.local_offer,
-                              size: 12, color: Color(0xFFD97706)),
-                          SizedBox(width: 4),
-                          Text(
-                            'Upsell',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFFD97706),
+                    // Show products count as upsell indicator
+                    if (workOrder.products.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFEF3C7),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.local_offer,
+                                size: 12, color: Color(0xFFD97706)),
+                            SizedBox(width: 4),
+                            Text(
+                              'Upsell',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFD97706),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ],
@@ -250,6 +414,25 @@ class WorkOrderCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Color _getActionButtonColor() {
+    switch (workOrder.status.toLowerCase()) {
+      case 'queued':
+        return const Color(0xFF1E40AF); // Blue
+      case 'washing':
+        return const Color(0xFFEA580C); // Orange
+      case 'drying':
+        return const Color(0xFF7C3AED); // Purple
+      case 'inspection':
+        return const Color(0xFF059669); // Green
+      case 'completed':
+        return const Color(0xFF16A34A); // Dark Green
+      case 'paid':
+        return const Color(0xFF64748B); // Gray
+      default:
+        return const Color(0xFF1E293B); // Default Dark
+    }
   }
 }
 
@@ -262,25 +445,43 @@ class _StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     Color bgColor;
     Color textColor;
-    String text = status.toUpperCase();
+    String text;
 
-    // Simple mapping logic
     switch (status.toLowerCase()) {
       case 'queued':
         bgColor = const Color(0xFFDBEAFE);
         textColor = const Color(0xFF1E40AF);
+        text = 'ANTRI';
         break;
       case 'washing':
         bgColor = const Color(0xFFFFEDD5);
         textColor = const Color(0xFF9A3412);
+        text = 'CUCI';
+        break;
+      case 'drying':
+        bgColor = const Color(0xFFE9D5FF);
+        textColor = const Color(0xFF6B21A8);
+        text = 'KERING';
+        break;
+      case 'inspection':
+        bgColor = const Color(0xFFD1FAE5);
+        textColor = const Color(0xFF065F46);
+        text = 'INSPEKSI';
         break;
       case 'completed':
         bgColor = const Color(0xFFDCFCE7);
         textColor = const Color(0xFF166534);
+        text = 'SELESAI';
+        break;
+      case 'paid':
+        bgColor = const Color(0xFFE0E7FF);
+        textColor = const Color(0xFF4338CA);
+        text = 'LUNAS';
         break;
       default:
         bgColor = const Color(0xFFF1F5F9);
         textColor = const Color(0xFF475569);
+        text = status.toUpperCase();
     }
 
     return Container(

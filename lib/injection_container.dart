@@ -241,6 +241,7 @@ Future<void> init() async {
         getWorkOrders: sl(),
         getCustomers: sl(),
         getVehicles: sl(),
+        updateWorkOrderStatus: sl(),
       ));
 
   sl.registerFactory(() => WorkOrderDetailBloc(

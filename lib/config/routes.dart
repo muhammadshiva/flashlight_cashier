@@ -1,9 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/customer/presentation/pages/customer_form_page.dart';
 import '../features/customer/presentation/pages/customer_list_page.dart';
 import '../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../features/dashboard/presentation/widgets/dashboard_layout.dart';
+import '../features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import '../features/dashboard/presentation/bloc/dashboard_event.dart';
 import '../features/membership/presentation/pages/membership_form_page.dart';
 import '../features/membership/presentation/pages/membership_list_page.dart';
 import '../features/product/presentation/pages/product_form_page.dart';
@@ -22,6 +26,7 @@ import '../features/customer/domain/entities/customer.dart';
 import '../features/product/domain/entities/product.dart';
 import '../features/report/presentation/pages/reports_page.dart';
 import '../core/widgets/session_timeout_listener.dart';
+import '../injection_container.dart' as di;
 
 final router = GoRouter(
   initialLocation: '/login',
@@ -33,8 +38,15 @@ final router = GoRouter(
     // Persistent Shell for Dashboard and Feature Pages
     ShellRoute(
       builder: (context, state, child) {
-        return SessionTimeoutListener(
-          child: DashboardLayout(child: child),
+        return BlocProvider<DashboardBloc>(
+          create: (context) => di.sl<DashboardBloc>()..add(LoadDashboardStats()),
+          child: Builder(
+            builder: (context) {
+              return SessionTimeoutListener(
+                child: DashboardLayout(child: child),
+              );
+            },
+          ),
         );
       },
       routes: [
