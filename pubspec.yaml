@@ -30,6 +30,7 @@ dependencies:
   # UI (Optional but good for modern UI)
   google_fonts: ^6.2.1
   freezed_annotation: ^3.1.0
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:

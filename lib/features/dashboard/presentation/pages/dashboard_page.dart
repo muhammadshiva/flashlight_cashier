@@ -1,7 +1,10 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../config/themes/app_colors.dart';
 import '../bloc/dashboard_bloc.dart';
 import '../bloc/dashboard_event.dart';
 import '../bloc/dashboard_state.dart';
@@ -91,159 +94,144 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildDashboardContent(BuildContext context, DashboardLoaded state) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<DashboardBloc>().add(RefreshDashboard());
-        // Wait for state to update
-        await Future.delayed(const Duration(milliseconds: 500));
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                _buildTabItem('Antrian', state.statusCounts['Semua'],
-                    isActive: true),
-                const SizedBox(width: 24),
-                _buildTabItem('Riwayat', null),
-                const SizedBox(width: 24),
-                _buildTabItem('Laporan', null),
-              ],
-            ),
-            const Divider(height: 1, color: Color(0xFFE2E8F0)),
-            const SizedBox(height: 24),
-
-            // Search and Action Bar
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    onChanged: (value) {
-                      context
-                          .read<DashboardBloc>()
-                          .add(FilterWorkOrders(searchQuery: value));
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Cari WO, Nama, Plat Nomor, atau No. HP',
-                      prefixIcon:
-                          const Icon(Icons.search, color: Color(0xFF94A3B8)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    // Show filter dialog
-                    _showFilterDialog(context);
-                  },
-                  icon: const Icon(Icons.filter_list),
-                  label: const Text('Filter'),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
-                    foregroundColor: const Color(0xFF1E293B),
-                    side: const BorderSide(color: Color(0xFFE2E8F0)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    context.go('/pos');
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('WO Baru'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1E293B),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Status Filter Chips
-            const StatusFilterBar(),
-            const SizedBox(height: 24),
-
-            // Work Orders List
-            if (state.filteredOrders.isEmpty)
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(48.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.inbox_outlined,
-                        size: 64,
-                        color: Colors.grey[400],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Tidak ada work order',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[600],
+    return Container(
+      color: AppColors.dashboardBackground,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<DashboardBloc>().add(RefreshDashboard());
+          // Wait for state to update
+          await Future.delayed(const Duration(milliseconds: 500));
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Search and Action Bar
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        context.read<DashboardBloc>().add(FilterWorkOrders(searchQuery: value));
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Cari WO, Nama, Plat Nomor, atau No. HP',
+                        prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        state.searchQuery.isNotEmpty
-                            ? 'Coba ubah kata kunci pencarian'
-                            : 'Buat work order baru untuk memulai',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              )
-            else
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.filteredOrders.length,
-                itemBuilder: (context, index) {
-                  final order = state.filteredOrders[index];
-                  final customer = state.customers[order.customerId];
-                  final vehicle = state.vehicles[order.vehicleDataId];
-
-                  return WorkOrderCard(
-                    workOrder: order,
-                    index: index,
-                    customer: customer,
-                    vehicle: vehicle,
-                    onActionPressed: () {
-                      _handleWorkOrderAction(context, order);
+                  const SizedBox(width: 16),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      // Show filter dialog
+                      _showFilterDialog(context);
                     },
-                  );
-                },
+                    icon: const Icon(Icons.filter_list),
+                    label: const Text('Filter'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      foregroundColor: const Color(0xFF1E293B),
+                      side: const BorderSide(color: Color(0xFFE2E8F0)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      context.go('/pos');
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('WO Baru'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1E293B),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-          ],
+              const SizedBox(height: 24),
+
+              // Status Filter Chips
+              const StatusFilterBar(),
+              const SizedBox(height: 24),
+
+              // Work Orders List
+              if (state.filteredOrders.isEmpty)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(48.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.inbox_outlined,
+                          size: 64,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Tidak ada work order',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          state.searchQuery.isNotEmpty
+                              ? 'Coba ubah kata kunci pencarian'
+                              : 'Buat work order baru untuk memulai',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: state.filteredOrders.length,
+                  itemBuilder: (context, index) {
+                    final order = state.filteredOrders[index];
+                    final customer = state.customers[order.customerId];
+                    final vehicle = state.vehicles[order.vehicleDataId];
+
+                    return WorkOrderCard(
+                      workOrder: order,
+                      index: index,
+                      customer: customer,
+                      vehicle: vehicle,
+                      onActionPressed: () {
+                        _handleWorkOrderAction(context, order);
+                      },
+                    );
+                  },
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -335,19 +323,19 @@ class _DashboardPageState extends State<DashboardPage> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Filter Work Order'),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Filter berdasarkan status:',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 12),
-            const Text(
+            SizedBox(height: 12),
+            Text(
               'Gunakan chip filter di bawah search bar untuk filter berdasarkan status.',
               style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
             ),
@@ -360,54 +348,6 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildTabItem(String label, int? count, {bool isActive = false}) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: isActive
-                    ? const Color(0xFF1E293B)
-                    : const Color(0xFF64748B),
-              ),
-            ),
-            if (count != null) ...[
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: isActive
-                      ? const Color(0xFFE2E8F0)
-                      : const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  count.toString(),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF64748B),
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
-        const SizedBox(height: 12),
-        if (isActive)
-          Container(
-            height: 2,
-            width: 80,
-            color: const Color(0xFF1E293B),
-          ),
-      ],
     );
   }
 }

@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
-import '../../../../core/usecase/usecase.dart';
+
 import '../../../../core/utils/dummy_data.dart';
-import '../../../work_order/domain/usecases/work_order_usecases.dart';
-import '../../../work_order/domain/usecases/update_work_order_status.dart';
+import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/domain/usecases/get_customers.dart';
+import '../../../vehicle/domain/entities/vehicle.dart';
 import '../../../vehicle/domain/usecases/vehicle_usecases.dart';
 import '../../../work_order/domain/entities/work_order.dart';
-import '../../../customer/domain/entities/customer.dart';
-import '../../../vehicle/domain/entities/vehicle.dart';
+import '../../../work_order/domain/usecases/update_work_order_status.dart';
+import '../../../work_order/domain/usecases/work_order_usecases.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
@@ -29,14 +29,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<UpdateWorkOrderStatusEvent>(_onUpdateWorkOrderStatus);
   }
 
-  Future<void> _onLoadDashboardStats(
-      LoadDashboardStats event, Emitter<DashboardState> emit) async {
+  Future<void> _onLoadDashboardStats(LoadDashboardStats event, Emitter<DashboardState> emit) async {
     emit(DashboardLoading());
     await _loadDashboardData(emit);
   }
 
-  Future<void> _onRefreshDashboard(
-      RefreshDashboard event, Emitter<DashboardState> emit) async {
+  Future<void> _onRefreshDashboard(RefreshDashboard event, Emitter<DashboardState> emit) async {
     // Refresh without showing full loading state
     await _loadDashboardData(emit);
   }
@@ -64,8 +62,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
 
       // Stats
-      final totalRevenue =
-          orders.fold(0, (sum, order) => sum + order.totalPrice);
+      final totalRevenue = orders.fold(0, (sum, order) => sum + order.totalPrice);
 
       // Status Counts
       final statusCounts = <String, int>{'Semua': orders.length};
@@ -76,8 +73,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       // Sort by date descending (newest first)
       final sortedOrders = List<WorkOrder>.from(orders)
-        ..sort((a, b) => (b.createdAt ?? DateTime.now())
-            .compareTo(a.createdAt ?? DateTime.now()));
+        ..sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
 
       emit(DashboardLoaded(
         totalOrders: orders.length,
@@ -94,8 +90,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  void _onFilterWorkOrders(
-      FilterWorkOrders event, Emitter<DashboardState> emit) {
+  void _onFilterWorkOrders(FilterWorkOrders event, Emitter<DashboardState> emit) {
     if (state is DashboardLoaded) {
       final currentState = state as DashboardLoaded;
       final allOrders = currentState.recentOrders;
@@ -107,9 +102,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       // 1. Filter by Status
       if (filterStatus != 'Semua') {
-        filtered = filtered
-            .where((o) => o.status.toLowerCase() == filterStatus.toLowerCase())
-            .toList();
+        filtered =
+            filtered.where((o) => o.status.toLowerCase() == filterStatus.toLowerCase()).toList();
       }
 
       // 2. Filter by Search Query
@@ -122,7 +116,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           final customerName = customer?.name.toLowerCase() ?? '';
           final customerPhone = customer?.phoneNumber.toLowerCase() ?? '';
           final vehicleInfo = vehicle != null
-              ? '${vehicle.vehicleBrand} ${vehicle.vehicleSpecs} ${vehicle.licensePlate}'.toLowerCase()
+              ? '${vehicle.vehicleBrand} ${vehicle.vehicleSpecs} ${vehicle.licensePlate}'
+                  .toLowerCase()
               : '';
 
           return o.workOrderCode.toLowerCase().contains(query) ||
@@ -192,15 +187,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       // Sort again
       final sortedOrders = List<WorkOrder>.from(updatedOrders)
-        ..sort((a, b) => (b.createdAt ?? DateTime.now())
-            .compareTo(a.createdAt ?? DateTime.now()));
+        ..sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
 
       // Apply current filters
       List<WorkOrder> filtered = sortedOrders;
       if (currentState.selectedStatus != 'Semua') {
         filtered = filtered
-            .where((o) => o.status.toLowerCase() ==
-                currentState.selectedStatus.toLowerCase())
+            .where((o) => o.status.toLowerCase() == currentState.selectedStatus.toLowerCase())
             .toList();
       }
       if (currentState.searchQuery.isNotEmpty) {
@@ -212,7 +205,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           final customerName = customer?.name.toLowerCase() ?? '';
           final customerPhone = customer?.phoneNumber.toLowerCase() ?? '';
           final vehicleInfo = vehicle != null
-              ? '${vehicle.vehicleBrand} ${vehicle.vehicleSpecs} ${vehicle.licensePlate}'.toLowerCase()
+              ? '${vehicle.vehicleBrand} ${vehicle.vehicleSpecs} ${vehicle.licensePlate}'
+                  .toLowerCase()
               : '';
 
           return o.workOrderCode.toLowerCase().contains(query) ||

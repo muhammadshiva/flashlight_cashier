@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../../../work_order/domain/entities/work_order.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
+import '../../../../config/themes/app_colors.dart';
 
 class WorkOrderCard extends StatelessWidget {
   final WorkOrder workOrder;
@@ -71,14 +72,15 @@ class WorkOrderCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
+        border: Border.all(color: AppColors.borderGray, width: 0.5),
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.dashboardCardShadow,
+            blurRadius: 8,
+            offset: Offset(0, 2),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -90,14 +92,25 @@ class WorkOrderCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: const BoxDecoration(
-              color: Color(0xFF1E293B),
+              gradient: LinearGradient(
+                colors: [AppColors.dashboardBlue, AppColors.dashboardTeal],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.dashboardCardShadow,
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ],
             ),
             alignment: Alignment.center,
             child: Text(
               workOrder.queueNumber,
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -419,19 +432,19 @@ class WorkOrderCard extends StatelessWidget {
   Color _getActionButtonColor() {
     switch (workOrder.status.toLowerCase()) {
       case 'queued':
-        return const Color(0xFF1E40AF); // Blue
+        return AppColors.dashboardBlue; // Blue
       case 'washing':
-        return const Color(0xFFEA580C); // Orange
+        return AppColors.dashboardOrange; // Orange
       case 'drying':
-        return const Color(0xFF7C3AED); // Purple
+        return AppColors.dashboardTeal; // Teal
       case 'inspection':
-        return const Color(0xFF059669); // Green
+        return AppColors.dashboardGreen; // Green
       case 'completed':
-        return const Color(0xFF16A34A); // Dark Green
+        return AppColors.success600; // Dark Green
       case 'paid':
-        return const Color(0xFF64748B); // Gray
+        return AppColors.textGray3; // Gray
       default:
-        return const Color(0xFF1E293B); // Default Dark
+        return AppColors.blackText900; // Default Dark
     }
   }
 }
@@ -449,38 +462,38 @@ class _StatusBadge extends StatelessWidget {
 
     switch (status.toLowerCase()) {
       case 'queued':
-        bgColor = const Color(0xFFDBEAFE);
-        textColor = const Color(0xFF1E40AF);
+        bgColor = AppColors.dashboardBlueLight;
+        textColor = AppColors.dashboardBlue;
         text = 'ANTRI';
         break;
       case 'washing':
-        bgColor = const Color(0xFFFFEDD5);
-        textColor = const Color(0xFF9A3412);
+        bgColor = AppColors.dashboardOrangeLight;
+        textColor = AppColors.dashboardOrange;
         text = 'CUCI';
         break;
       case 'drying':
-        bgColor = const Color(0xFFE9D5FF);
-        textColor = const Color(0xFF6B21A8);
+        bgColor = AppColors.dashboardTealLight;
+        textColor = AppColors.dashboardTeal;
         text = 'KERING';
         break;
       case 'inspection':
-        bgColor = const Color(0xFFD1FAE5);
-        textColor = const Color(0xFF065F46);
+        bgColor = AppColors.dashboardGreenLight;
+        textColor = AppColors.dashboardGreen;
         text = 'INSPEKSI';
         break;
       case 'completed':
-        bgColor = const Color(0xFFDCFCE7);
-        textColor = const Color(0xFF166534);
+        bgColor = AppColors.success50;
+        textColor = AppColors.success600;
         text = 'SELESAI';
         break;
       case 'paid':
-        bgColor = const Color(0xFFE0E7FF);
-        textColor = const Color(0xFF4338CA);
+        bgColor = AppColors.info50;
+        textColor = AppColors.info600;
         text = 'LUNAS';
         break;
       default:
-        bgColor = const Color(0xFFF1F5F9);
-        textColor = const Color(0xFF475569);
+        bgColor = AppColors.backgroundGrey6;
+        textColor = AppColors.textGray3;
         text = status.toUpperCase();
     }
 
