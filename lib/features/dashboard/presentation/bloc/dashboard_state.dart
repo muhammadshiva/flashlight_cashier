@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import '../../../work_order/domain/entities/work_order.dart';
+
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
+import '../../../work_order/domain/entities/work_order.dart';
 
 abstract class DashboardState extends Equatable {
   const DashboardState();

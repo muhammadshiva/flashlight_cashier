@@ -18,8 +18,7 @@ class FilterWorkOrders extends DashboardEvent {
   const FilterWorkOrders({this.status, this.searchQuery});
 
   @override
-  List<Object> get props =>
-      [if (status != null) status!, if (searchQuery != null) searchQuery!];
+  List<Object> get props => [if (status != null) status!, if (searchQuery != null) searchQuery!];
 }
 
 class UpdateWorkOrderStatusEvent extends DashboardEvent {

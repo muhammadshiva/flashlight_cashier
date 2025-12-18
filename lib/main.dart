@@ -1,8 +1,13 @@
+import 'package:flashlight_pos/config/constans/app_const.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'config/routes.dart';
-import 'injection_container.dart' as di;
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'injection_container.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,13 +24,31 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => di.sl<AuthBloc>()),
       ],
-      child: MaterialApp.router(
-        title: 'Flashlight POS',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        routerConfig: router,
+      child: ScreenUtilInit(
+        designSize: AppConst.size,
+        minTextAdapt: true,
+        splitScreenMode: true,
+        useInheritedMediaQuery: true,
+        builder: (context, child) {
+          return MaterialApp.router(
+            title: 'Flashlight POS',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            routerConfig: router,
+            locale: const Locale('id', 'ID'),
+            supportedLocales: const [
+              Locale('id', 'ID'),
+            ],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+            ],
+          );
+        },
       ),
     );
   }

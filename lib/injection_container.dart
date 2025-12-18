@@ -44,6 +44,7 @@ import 'features/work_order/domain/usecases/work_order_usecases.dart';
 import 'features/work_order/domain/usecases/update_work_order_status.dart';
 import 'features/work_order/presentation/bloc/pos_bloc.dart';
 import 'features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'features/history/presentation/bloc/history_bloc.dart';
 import 'features/work_order/domain/usecases/get_work_order.dart';
 import 'features/work_order/presentation/bloc/detail/work_order_detail_bloc.dart';
 import 'features/user/data/datasources/user_remote_data_source.dart';
@@ -242,6 +243,13 @@ Future<void> init() async {
         getCustomers: sl(),
         getVehicles: sl(),
         updateWorkOrderStatus: sl(),
+      ));
+
+  // History
+  sl.registerFactory(() => HistoryBloc(
+        getWorkOrders: sl(),
+        getCustomers: sl(),
+        getVehicles: sl(),
       ));
 
   sl.registerFactory(() => WorkOrderDetailBloc(

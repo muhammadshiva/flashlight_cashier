@@ -8,6 +8,9 @@ import '../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../features/dashboard/presentation/widgets/dashboard_layout.dart';
 import '../features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import '../features/dashboard/presentation/bloc/dashboard_event.dart';
+import '../features/history/presentation/pages/history_page.dart';
+import '../features/history/presentation/bloc/history_bloc.dart';
+import '../features/history/presentation/bloc/history_event.dart';
 import '../features/membership/presentation/pages/membership_form_page.dart';
 import '../features/membership/presentation/pages/membership_list_page.dart';
 import '../features/product/presentation/pages/product_form_page.dart';
@@ -17,7 +20,6 @@ import '../features/service/presentation/pages/service_list_page.dart';
 import '../features/vehicle/presentation/pages/vehicle_form_page.dart';
 import '../features/vehicle/presentation/pages/vehicle_list_page.dart';
 import '../features/work_order/presentation/pages/pos_page.dart';
-import '../features/work_order/presentation/pages/work_order_list_page.dart';
 import '../features/work_order/presentation/pages/work_order_detail_page.dart';
 import '../features/user/presentation/pages/user_list_page.dart';
 import '../features/user/presentation/pages/user_form_page.dart';
@@ -56,7 +58,12 @@ final router = GoRouter(
         ),
         GoRoute(
           path: '/work-orders',
-          builder: (context, state) => const WorkOrderListPage(),
+          builder: (context, state) {
+            return BlocProvider(
+              create: (context) => di.sl<HistoryBloc>()..add(LoadHistory()),
+              child: const HistoryPage(),
+            );
+          },
           routes: [
             GoRoute(
               path: ':id',
