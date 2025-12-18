@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flashlight_pos/config/routes/app_routes.dart';
+import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -237,7 +239,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  void _handleWorkOrderAction(BuildContext context, order) {
+  void _handleWorkOrderAction(BuildContext context, WorkOrder order) {
     final currentStatus = order.status.toLowerCase();
     String newStatus;
 
@@ -256,11 +258,11 @@ class _DashboardPageState extends State<DashboardPage> {
         break;
       case 'completed':
         // Navigate to payment page
-        context.go('/work-orders/${order.id}');
+        context.go(AppRoutes.workOrderDetail(order.id));
         return;
       case 'paid':
         // Navigate to detail page
-        context.go('/work-orders/${order.id}');
+        context.go(AppRoutes.workOrderDetail(order.id));
         return;
       default:
         return;
