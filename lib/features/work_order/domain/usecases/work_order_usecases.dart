@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../entities/work_order.dart';
@@ -18,6 +19,6 @@ class GetWorkOrders implements UseCase<List<WorkOrder>, NoParams> {
   GetWorkOrders(this.repository);
   @override
   Future<Either<Failure, List<WorkOrder>>> call(NoParams params) async {
-    return await repository.getWorkOrders();
+    return await repository.getWorkOrders(isPrototype: true);
   }
 }

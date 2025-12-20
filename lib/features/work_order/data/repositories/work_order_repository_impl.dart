@@ -1,11 +1,14 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
+
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/work_order.dart';
 import '../../domain/repositories/work_order_repository.dart';
 import '../datasources/work_order_remote_data_source.dart';
 import '../models/work_order_model.dart';
-import '../models/work_order_service_model.dart';
 import '../models/work_order_product_model.dart';
+import '../models/work_order_service_model.dart';
 
 class WorkOrderRepositoryImpl implements WorkOrderRepository {
   final WorkOrderRemoteDataSource remoteDataSource;
@@ -13,8 +16,7 @@ class WorkOrderRepositoryImpl implements WorkOrderRepository {
   WorkOrderRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, WorkOrder>> createWorkOrder(
-      WorkOrder workOrder) async {
+  Future<Either<Failure, WorkOrder>> createWorkOrder(WorkOrder workOrder) async {
     try {
       // Map entity to model manually to ensure deep conversion
       final model = WorkOrderModel(
@@ -63,18 +65,19 @@ class WorkOrderRepositoryImpl implements WorkOrderRepository {
   }
 
   @override
-  Future<Either<Failure, List<WorkOrder>>> getWorkOrders() async {
+  Future<Either<Failure, List<WorkOrder>>> getWorkOrders({bool isPrototype = false}) async {
     try {
-      final result = await remoteDataSource.getWorkOrders();
+      final result = await remoteDataSource.getWorkOrders(isPrototype: isPrototype);
+      // log("Check result: $result", name: "WorkOrderRepositoryImpl");
       return Right(result.map((e) => e.toEntity()).toList());
-    } on Failure catch (e) {
+    } on Failure catch (e, stackTrace) {
+      log("Check error : $e ======  stackTrace: $stackTrace", name: "WorkOrderRepositoryImpl");
       return Left(e);
     }
   }
 
   @override
-  Future<Either<Failure, WorkOrder>> updateWorkOrder(
-      WorkOrder workOrder) async {
+  Future<Either<Failure, WorkOrder>> updateWorkOrder(WorkOrder workOrder) async {
     try {
       // For update, we might not need to send full nested objects if backend handles it,
       // but let's assume standard PUT replaces resource or PATCH updates fields.

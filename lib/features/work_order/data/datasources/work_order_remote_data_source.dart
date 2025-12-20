@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
+
 import '../../../../core/error/failures.dart';
 import '../models/work_order_model.dart';
 
 abstract class WorkOrderRemoteDataSource {
   Future<WorkOrderModel> createWorkOrder(WorkOrderModel workOrder);
-  Future<List<WorkOrderModel>> getWorkOrders();
+  Future<List<WorkOrderModel>> getWorkOrders({required bool isPrototype});
   Future<WorkOrderModel> updateWorkOrder(WorkOrderModel workOrder);
   Future<WorkOrderModel> getWorkOrderById(String id);
 }
@@ -25,8 +28,13 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
   }
 
   @override
-  Future<List<WorkOrderModel>> getWorkOrders() async {
+  Future<List<WorkOrderModel>> getWorkOrders({bool isPrototype = false}) async {
     try {
+      log("Check isPrototype: $isPrototype", name: "WorkOrderRemoteDataSourceImpl");
+      if (isPrototype) {
+        return WorkOrderResponseModel.getPrototypeDataWorkOrders;
+      }
+
       final response = await dio.get('/work-orders');
       final result = WorkOrderResponseModel.fromJson(response.data);
       if (result.success) {
@@ -42,8 +50,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
   @override
   Future<WorkOrderModel> updateWorkOrder(WorkOrderModel workOrder) async {
     try {
-      final response = await dio.put('/work-orders/${workOrder.id}',
-          data: workOrder.toJson());
+      final response = await dio.put('/work-orders/${workOrder.id}', data: workOrder.toJson());
       return WorkOrderModel.fromJson(response.data);
     } on DioException catch (e) {
       throw ServerFailure(e.message ?? 'Unknown Error');

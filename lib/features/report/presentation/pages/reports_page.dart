@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../injection_container.dart';
 import '../bloc/reports_bloc.dart';
 import '../bloc/reports_event.dart';
 import '../bloc/reports_state.dart';
-import 'package:intl/intl.dart';
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
@@ -23,8 +24,7 @@ class ReportsPage extends StatelessWidget {
             } else if (state is ReportsError) {
               return Center(child: Text('Error: ${state.message}'));
             } else if (state is ReportsLoaded) {
-              final sortedDates = state.dailyRevenue.keys.toList()
-                ..sort((a, b) => b.compareTo(a));
+              final sortedDates = state.dailyRevenue.keys.toList()..sort((a, b) => b.compareTo(a));
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
@@ -35,10 +35,8 @@ class ReportsPage extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                            child: _buildSummaryCard(
-                                'Cars Washed',
-                                state.totalCarsProcessed.toString(),
-                                Icons.directions_car)),
+                            child: _buildSummaryCard('Cars Washed',
+                                state.totalCarsProcessed.toString(), Icons.directions_car)),
                         const SizedBox(width: 16),
                         // You can add more summary cards here
                       ],
@@ -46,8 +44,7 @@ class ReportsPage extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     const Text('Pendapatan per Layanan',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 16),
                     Card(
                       child: Column(
@@ -62,17 +59,14 @@ class ReportsPage extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     const Text('Pendapatan Harian',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 16),
                     Card(
                       child: Column(
                         children: sortedDates.map((date) {
                           return ListTile(
-                            title:
-                                Text(DateFormat('EEEE, d MMM y').format(date)),
-                            trailing: Text(CurrencyFormatter.format(
-                                state.dailyRevenue[date]!)),
+                            title: Text(DateFormat('EEEE, d MMM y').format(date)),
+                            trailing: Text(CurrencyFormatter.format(state.dailyRevenue[date]!)),
                           );
                         }).toList(),
                       ),
@@ -96,9 +90,7 @@ class ReportsPage extends StatelessWidget {
           children: [
             Icon(icon, size: 32, color: Colors.blue),
             const SizedBox(height: 8),
-            Text(value,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             Text(title, style: const TextStyle(color: Colors.grey)),
           ],
         ),
