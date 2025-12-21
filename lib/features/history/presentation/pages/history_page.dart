@@ -59,7 +59,15 @@ class _HistoryPageState extends State<HistoryPage> {
       },
       builder: (context, state) {
         if (state is HistoryLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const DecoratedBox(
+            decoration: BoxDecoration(
+              color: AppColors.dashboardBackground,
+            ),
+            child: Center(
+                child: CircularProgressIndicator(
+              color: AppColors.primary,
+            )),
+          );
         } else if (state is HistoryLoaded) {
           return _buildHistoryContent(context, state);
         }
@@ -85,14 +93,12 @@ class _HistoryPageState extends State<HistoryPage> {
               // Page Title
               Text(
                 'Riwayat Work Order',
-                style: TextStyleConst.poppinsBold24
-                    .copyWith(color: AppColors.blackText900),
+                style: TextStyleConst.poppinsBold24.copyWith(color: AppColors.blackText900),
               ),
               const SizedBox(height: 8),
               Text(
                 'Daftar work order yang sudah selesai dan lunas',
-                style: TextStyleConst.poppinsRegular14
-                    .copyWith(color: AppColors.textGray3),
+                style: TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
               ),
               const SizedBox(height: 24),
 
@@ -102,32 +108,26 @@ class _HistoryPageState extends State<HistoryPage> {
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        context
-                            .read<HistoryBloc>()
-                            .add(FilterHistory(searchQuery: value));
+                        context.read<HistoryBloc>().add(FilterHistory(searchQuery: value));
                       },
                       decoration: InputDecoration(
                         hintText: 'Cari WO, Nama, Plat Nomor, atau No. HP',
-                        hintStyle: TextStyleConst.poppinsRegular14
-                            .copyWith(color: AppColors.textGray3),
-                        prefixIcon: const Icon(Icons.search,
-                            color: AppColors.textGray3),
+                        hintStyle:
+                            TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
+                        prefixIcon: const Icon(Icons.search, color: AppColors.textGray3),
                         filled: true,
                         fillColor: AppColors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: AppColors.borderGray),
+                          borderSide: const BorderSide(color: AppColors.borderGray),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: AppColors.borderGray),
+                          borderSide: const BorderSide(color: AppColors.borderGray),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: AppColors.primary600, width: 2),
+                          borderSide: const BorderSide(color: AppColors.primary600, width: 2),
                         ),
                       ),
                     ),
@@ -140,8 +140,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     icon: const Icon(Icons.filter_list),
                     label: const Text('Filter'),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                       foregroundColor: AppColors.blackText900,
                       side: const BorderSide(color: AppColors.borderGray),
                       shape: RoundedRectangleBorder(
@@ -159,8 +158,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.dashboardBlue,
                       foregroundColor: AppColors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -245,16 +243,16 @@ class _HistoryPageState extends State<HistoryPage> {
                         const SizedBox(height: 16),
                         Text(
                           'Tidak ada riwayat work order',
-                          style: TextStyleConst.poppinsSemiBold18
-                              .copyWith(color: AppColors.textGray3),
+                          style:
+                              TextStyleConst.poppinsSemiBold18.copyWith(color: AppColors.textGray3),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           state.searchQuery.isNotEmpty
                               ? 'Coba ubah kata kunci pencarian'
                               : 'Riwayat work order yang selesai akan muncul di sini',
-                          style: TextStyleConst.poppinsRegular14
-                              .copyWith(color: AppColors.textGray3),
+                          style:
+                              TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
                         ),
                       ],
                     ),
@@ -308,9 +306,7 @@ class _HistoryPageState extends State<HistoryPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: isActive
-                  ? AppColors.white.withValues(alpha: 0.2)
-                  : AppColors.backgroundGrey6,
+              color: isActive ? AppColors.white.withValues(alpha: 0.2) : AppColors.backgroundGrey6,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -376,14 +372,12 @@ class _HistoryPageState extends State<HistoryPage> {
                 children: [
                   Text(
                     label,
-                    style: TextStyleConst.poppinsRegular12
-                        .copyWith(color: AppColors.textGray3),
+                    style: TextStyleConst.poppinsRegular12.copyWith(color: AppColors.textGray3),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     value,
-                    style: TextStyleConst.poppinsBold24
-                        .copyWith(color: AppColors.blackText900),
+                    style: TextStyleConst.poppinsBold24.copyWith(color: AppColors.blackText900),
                   ),
                 ],
               ),
@@ -400,8 +394,7 @@ class _HistoryPageState extends State<HistoryPage> {
       builder: (dialogContext) => AlertDialog(
         title: Text(
           'Filter Riwayat',
-          style: TextStyleConst.poppinsSemiBold18
-              .copyWith(color: AppColors.blackText900),
+          style: TextStyleConst.poppinsSemiBold18.copyWith(color: AppColors.blackText900),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -409,20 +402,17 @@ class _HistoryPageState extends State<HistoryPage> {
           children: [
             Text(
               'Filter berdasarkan status:',
-              style: TextStyleConst.poppinsMedium14
-                  .copyWith(color: AppColors.blackText900),
+              style: TextStyleConst.poppinsMedium14.copyWith(color: AppColors.blackText900),
             ),
             const SizedBox(height: 12),
             Text(
               'Gunakan chip filter di atas untuk memfilter berdasarkan status work order.',
-              style: TextStyleConst.poppinsRegular12
-                  .copyWith(color: AppColors.textGray3),
+              style: TextStyleConst.poppinsRegular12.copyWith(color: AppColors.textGray3),
             ),
             const SizedBox(height: 16),
             Text(
               'Fitur filter tanggal akan segera hadir.',
-              style: TextStyleConst.poppinsLight12
-                  .copyWith(color: AppColors.textGray3),
+              style: TextStyleConst.poppinsLight12.copyWith(color: AppColors.textGray3),
             ),
           ],
         ),
@@ -431,8 +421,7 @@ class _HistoryPageState extends State<HistoryPage> {
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               'Tutup',
-              style: TextStyleConst.poppinsMedium14
-                  .copyWith(color: AppColors.primary600),
+              style: TextStyleConst.poppinsMedium14.copyWith(color: AppColors.primary600),
             ),
           ),
         ],

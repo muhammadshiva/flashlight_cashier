@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../../core/usecase/usecase.dart';
+
 import '../../domain/entities/service_entity.dart';
 import '../../domain/usecases/service_usecases.dart';
 
@@ -19,7 +19,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }) : super(ServiceInitial()) {
     on<LoadServices>((event, emit) async {
       emit(ServiceLoading());
-      final result = await getServices(NoParams());
+      final result = await getServices(const GetServicesParams(isPrototype: true));
       result.fold(
         (failure) => emit(ServiceError(failure.message)),
         (services) => emit(ServiceLoaded(services)),

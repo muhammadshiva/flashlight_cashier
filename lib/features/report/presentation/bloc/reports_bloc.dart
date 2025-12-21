@@ -23,7 +23,7 @@ class ReportsBloc extends Bloc<ReportsEvent, ReportsState> {
     emit(ReportsLoading());
     try {
       final workOrdersResult = await getWorkOrders(NoParams());
-      final servicesResult = await getServices(NoParams());
+      final servicesResult = await getServices(const GetServicesParams(isPrototype: true));
 
       workOrdersResult.fold(
         (failure) {
