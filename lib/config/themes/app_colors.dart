@@ -96,7 +96,7 @@ class AppColors {
   static const blueOriginal100 = Color(0xffDBEAFE);
   static const blueOriginal50 = Color(0xffEFF6FF);
   static const blueOriginal900 = Color(0xff1E3A8A);
-  
+
   //* Indigo Accent Colors
   static const accent = Color(0xff3949AB);
   static const accentLight = Color(0xff3F51B5);
@@ -177,7 +177,7 @@ class AppColors {
   static const Color orangeAccent = Color(0xffED8936);
   static const Color grayLight = Color(0xffEDF2F7);
   static const Color grayMedium = Color(0xff4A5568);
-  
+
   //* Status Colors
   static const Color success600 = Color(0xff059669);
   static const Color success50 = Color(0xffECFDF5);
