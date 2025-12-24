@@ -11,20 +11,22 @@ class DashboardLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: Row(
-        children: [
-          const DashboardSidebar(),
-          Expanded(
-            child: Column(
-              children: [
-                const DashboardHeader(),
-                Expanded(
-                  child: child,
-                ),
-              ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            const DashboardHeader(),
+            Expanded(
+              child: Row(
+                children: [
+                  const DashboardSidebar(),
+                  Expanded(
+                    child: child,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -158,7 +158,7 @@ class AppColors {
   static const Color backgroundGrey4 = Color(0xff9CA3AF);
   static const Color backgroundGrey5 = Color(0xffB8B8B8);
   static const Color backgroundGrey6 = Color(0xffF3F4F6);
-  static const Color orangePrimary = Color(0xffEB933C);
+  static const Color orangePrimary = Color(0xffFF6C37);
   static const Color orangeSecondary = Color(0xffE77B70);
   static const Color white = Color(0xffFFFFFF);
   static const Color black = Color(0xff000000);

@@ -1,17 +1,18 @@
 import 'dart:async';
 
 import 'package:flashlight_pos/config/routes/app_routes.dart';
+import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
+import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
+import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../config/themes/app_colors.dart';
-import '../bloc/dashboard_bloc.dart';
-import '../bloc/dashboard_event.dart';
-import '../bloc/dashboard_state.dart';
-import '../widgets/status_filter_bar.dart';
-import '../widgets/work_order_card.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_event.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_state.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/widgets/status_filter_bar.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -97,7 +98,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildDashboardContent(BuildContext context, DashboardLoaded state) {
     return Container(
-      color: AppColors.dashboardBackground,
+      color: const Color(0xFFF8FAFC),
       child: RefreshIndicator(
         onRefresh: () async {
           context.read<DashboardBloc>().add(RefreshDashboard());
@@ -113,55 +114,75 @@ class _DashboardPageState extends State<DashboardPage> {
               // Search and Action Bar
               Row(
                 children: [
-                  Expanded(
+                  const Text(
+                    'Work Orders',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E293B),
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const Spacer(),
+                  // Search Bar
+                  Container(
+                    width: 250,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
                     child: TextField(
                       onChanged: (value) {
-                        context.read<DashboardBloc>().add(FilterWorkOrders(searchQuery: value));
+                        context
+                            .read<DashboardBloc>()
+                            .add(FilterWorkOrders(searchQuery: value));
                       },
-                      decoration: InputDecoration(
-                        hintText: 'Cari WO, Nama, Plat Nomor, atau No. HP',
-                        prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                        ),
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: const InputDecoration(
+                        hintText: 'Search...',
+                        hintStyle:
+                            TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                        prefixIcon: Icon(Icons.search,
+                            color: Color(0xFF94A3B8), size: 20),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                        isDense: true,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
+                  // Filter Button
                   OutlinedButton.icon(
-                    onPressed: () {
-                      // Show filter dialog
-                      _showFilterDialog(context);
-                    },
-                    icon: const Icon(Icons.filter_list),
-                    label: const Text('Filter'),
+                    onPressed: () => _showFilterDialog(context),
+                    icon: const Icon(Icons.filter_list, size: 18),
+                    label: const Text('By Status'),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                      foregroundColor: const Color(0xFF1E293B),
+                      foregroundColor: const Color(0xFF64748B),
+                      backgroundColor: Colors.white,
                       side: const BorderSide(color: Color(0xFFE2E8F0)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 0),
+                      fixedSize: const Size.fromHeight(44),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
+                  // Add Button
                   ElevatedButton.icon(
-                    onPressed: () {
-                      context.go('/pos');
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('WO Baru'),
+                    onPressed: () => context.push('/pos'),
+                    icon: const Icon(Icons.add, size: 18),
+                    label: const Text('New Order'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E293B),
+                      backgroundColor: AppColors.orangePrimary,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 0),
+                      fixedSize: const Size.fromHeight(44),
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -175,63 +196,79 @@ class _DashboardPageState extends State<DashboardPage> {
               const StatusFilterBar(),
               const SizedBox(height: 24),
 
-              // Work Orders List
-              if (state.filteredOrders.isEmpty)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(48.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.inbox_outlined,
-                          size: 64,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Tidak ada work order',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          state.searchQuery.isNotEmpty
-                              ? 'Coba ubah kata kunci pencarian'
-                              : 'Buat work order baru untuk memulai',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ],
+              // Work Orders Table Section
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
                     ),
-                  ),
-                )
-              else
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: state.filteredOrders.length,
-                  itemBuilder: (context, index) {
-                    final order = state.filteredOrders[index];
-                    final customer = state.customers[order.customerId];
-                    final vehicle = state.vehicles[order.vehicleDataId];
-
-                    return WorkOrderCard(
-                      workOrder: order,
-                      index: index,
-                      customer: customer,
-                      vehicle: vehicle,
-                      onActionPressed: () {
-                        _handleWorkOrderAction(context, order);
-                      },
-                    );
-                  },
+                  ],
                 ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Recent Work Orders',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF1E293B),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                    if (state.filteredOrders.isEmpty)
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(48.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.inbox_outlined,
+                                size: 64,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Tidak ada work order',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      _WorkOrderTable(
+                        orders: state.filteredOrders,
+                        customers: state.customers,
+                        vehicles: state.vehicles,
+                        onAction: (order, action) {
+                          if (action == 'view' || action == 'edit') {
+                            context.go(AppRoutes.workOrderDetail(order.id));
+                          } else if (action == 'remove') {
+                            // Implement remove logic or confirmation
+                          }
+                        },
+                      ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -239,87 +276,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  void _handleWorkOrderAction(BuildContext context, WorkOrder order) {
-    final currentStatus = order.status.toLowerCase();
-    String newStatus;
-
-    switch (currentStatus) {
-      case 'queued':
-        newStatus = 'washing';
-        break;
-      case 'washing':
-        newStatus = 'drying';
-        break;
-      case 'drying':
-        newStatus = 'inspection';
-        break;
-      case 'inspection':
-        newStatus = 'completed';
-        break;
-      case 'completed':
-        // Navigate to payment page
-        context.go(AppRoutes.workOrderDetail(order.id));
-        return;
-      case 'paid':
-        // Navigate to detail page
-        context.go(AppRoutes.workOrderDetail(order.id));
-        return;
-      default:
-        return;
-    }
-
-    // Show confirmation dialog
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Konfirmasi'),
-        content: Text(
-          'Ubah status work order ${order.workOrderCode} ke ${_getStatusLabel(newStatus)}?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              context.read<DashboardBloc>().add(
-                    UpdateWorkOrderStatusEvent(
-                      workOrderId: order.id,
-                      newStatus: newStatus,
-                    ),
-                  );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1E293B),
-            ),
-            child: const Text('Ya, Lanjutkan'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _getStatusLabel(String status) {
-    switch (status.toLowerCase()) {
-      case 'queued':
-        return 'Antri';
-      case 'washing':
-        return 'Sedang Cuci';
-      case 'drying':
-        return 'Sedang Kering';
-      case 'inspection':
-        return 'Inspeksi';
-      case 'completed':
-        return 'Selesai';
-      case 'paid':
-        return 'Lunas';
-      default:
-        return status;
-    }
-  }
-
+  // ... (Greeting and Stats widgets remain unchanged)
   void _showFilterDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -349,6 +306,257 @@ class _DashboardPageState extends State<DashboardPage> {
             child: const Text('Tutup'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _WorkOrderTable extends StatelessWidget {
+  final List<WorkOrder> orders;
+  final Map<String, Customer> customers;
+  final Map<String, Vehicle> vehicles;
+  final Function(WorkOrder, String) onAction;
+
+  const _WorkOrderTable({
+    required this.orders,
+    required this.customers,
+    required this.vehicles,
+    required this.onAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Table(
+        columnWidths: const {
+          0: FixedColumnWidth(60), // NO
+          1: FlexColumnWidth(1.5), // WORK ORDER
+          2: FlexColumnWidth(1.5), // CUSTOMER
+          3: FlexColumnWidth(2), // VEHICLE
+          4: FixedColumnWidth(130), // STATUS
+          5: FixedColumnWidth(120), // TOTAL
+          6: FixedColumnWidth(300), // ACTION (View, Edit, Remove)
+        },
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: [
+          _buildHeaderRow(),
+          ...orders.asMap().entries.map((entry) {
+            final index = entry.key;
+            final order = entry.value;
+            final customer = customers[order.customerId];
+            final vehicle = vehicles[order.vehicleDataId];
+            return _buildRow(context, index, order, customer, vehicle);
+          }),
+        ],
+      ),
+    );
+  }
+
+  TableRow _buildHeaderRow() {
+    return TableRow(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+      ),
+      children: const [
+        _HeaderCell(text: 'NO'),
+        _HeaderCell(text: 'WORK ORDER'),
+        _HeaderCell(text: 'CUSTOMER'),
+        _HeaderCell(text: 'VEHICLE'),
+        _HeaderCell(text: 'STATUS'),
+        _HeaderCell(text: 'TOTAL'),
+        _HeaderCell(text: 'ACTION'),
+      ],
+    );
+  }
+
+  TableRow _buildRow(BuildContext context, int index, WorkOrder order,
+      Customer? customer, Vehicle? vehicle) {
+    return TableRow(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+      ),
+      children: [
+        _DataCell(text: '${index + 1}'),
+        _DataCell(text: order.workOrderCode, isBold: true),
+        _DataCell(text: customer?.name ?? '-'),
+        _DataCell(
+            text: vehicle != null
+                ? '${vehicle.vehicleBrand} - ${vehicle.licensePlate}'
+                : '-'),
+        TableCell(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: _StatusBadge(status: order.status),
+          ),
+        ),
+        _DataCell(text: '\$${order.totalPrice}'),
+        TableCell(
+            child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: [
+                    _ActionButton(
+                        label: 'View',
+                        icon: Icons.visibility_outlined,
+                        onTap: () => onAction(order, 'view')),
+                    const SizedBox(width: 8),
+                    _ActionButton(
+                        label: 'Edit',
+                        icon: Icons.edit_outlined,
+                        onTap: () => onAction(order, 'edit')),
+                    const SizedBox(width: 8),
+                    _ActionButton(
+                        label: 'Remove',
+                        icon: Icons.delete_outline,
+                        color: const Color(0xFFEF4444),
+                        onTap: () => onAction(order, 'remove')),
+                  ],
+                )))
+      ],
+    );
+  }
+}
+
+class _HeaderCell extends StatelessWidget {
+  final String text;
+
+  const _HeaderCell({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return TableCell(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF94A3B8),
+            letterSpacing: 1.0,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DataCell extends StatelessWidget {
+  final String text;
+  final bool isBold;
+
+  const _DataCell({required this.text, this.isBold = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: isBold ? FontWeight.w600 : FontWeight.w500,
+            color: const Color(0xFF475569),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  final String status;
+
+  const _StatusBadge({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    Color bg;
+    Color text;
+    String label;
+
+    switch (status.toLowerCase()) {
+      case 'completed':
+      case 'paid':
+        bg = const Color(0xFFDCFCE7);
+        text = const Color(0xFF166534);
+        label = 'Completed';
+        break;
+      case 'washing':
+      case 'drying':
+      case 'inspection':
+        bg = const Color(0xFFDBEAFE);
+        text = const Color(0xFF1E40AF);
+        label = 'In Progress';
+        break;
+      case 'cancelled':
+        bg = const Color(0xFFFEE2E2);
+        text = const Color(0xFF991B1B);
+        label = 'Cancelled';
+        break;
+      default:
+        bg = const Color(0xFFF1F5F9);
+        text = const Color(0xFF64748B);
+        label = 'Queued';
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: text,
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+  final Color? color;
+
+  const _ActionButton(
+      {required this.label,
+      required this.icon,
+      required this.onTap,
+      this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: color ?? const Color(0xFF64748B)),
+            const SizedBox(width: 4),
+            Text(label,
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: color ?? const Color(0xFF475569)))
+          ],
+        ),
       ),
     );
   }
