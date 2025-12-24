@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../config/constans/text_styles_const.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../injection_container.dart';
@@ -19,17 +17,13 @@ class ReportsPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<ReportsBloc>()..add(LoadReports()),
       child: Scaffold(
-        backgroundColor: AppColors.dashboardBackground,
-        appBar: AppBar(
-          title: Text('Laporan', style: TextStyleConst.poppinsSemiBold20),
-          backgroundColor: AppColors.white,
-          foregroundColor: AppColors.blackText900,
-          elevation: 0,
-        ),
+        backgroundColor: const Color(0xFFF8FAFC), // Slate-50
         body: BlocBuilder<ReportsBloc, ReportsState>(
           builder: (context, state) {
             if (state is ReportsLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              );
             } else if (state is ReportsError) {
               return Center(
                 child: Column(
@@ -43,134 +37,100 @@ class ReportsPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'Error: ${state.message}',
-                      style: TextStyleConst.poppinsSemiBold18.copyWith(color: AppColors.error600),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.error600,
+                      ),
                     ),
                   ],
                 ),
               );
             } else if (state is ReportsLoaded) {
-              final sortedDates = state.dailyRevenue.keys.toList()..sort((a, b) => b.compareTo(a));
+              final sortedDates = state.dailyRevenue.keys.toList()
+                ..sort((a, b) => b.compareTo(a));
 
               return SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(32.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Page Title
-                    Text(
-                      'Laporan Penjualan',
-                      style: TextStyleConst.poppinsBold24.copyWith(color: AppColors.blackText900),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Ringkasan laporan penjualan harian dan per layanan',
-                      style: TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
-                    ),
-                    const SizedBox(height: 24),
+                    const _HeaderSection(),
+                    const SizedBox(height: 32),
 
                     // Summary Cards
                     Row(
                       children: [
-                        Expanded(
-                          child: _buildSummaryCard(
-                            'Total Motor Dicuci',
-                            state.totalCarsProcessed.toString(),
-                            Icons.directions_car,
-                            AppColors.dashboardBlue,
-                            AppColors.dashboardBlueLight,
-                          ),
+                        _buildSummaryCard(
+                          'Total Motor Dicuci',
+                          state.totalCarsProcessed.toString(),
+                          Icons.directions_car,
+                          AppColors.dashboardBlue,
+                          AppColors.dashboardBlueLight,
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _buildSummaryCard(
-                            'Total Pendapatan',
-                            CurrencyFormatter.format(
-                              state.dailyRevenue.values.fold(0, (sum, amount) => sum + amount),
-                            ),
-                            Icons.attach_money,
-                            AppColors.dashboardGreen,
-                            AppColors.dashboardGreenLight,
+                        const SizedBox(width: 24),
+                        _buildSummaryCard(
+                          'Total Pendapatan',
+                          CurrencyFormatter.format(
+                            state.dailyRevenue.values
+                                .fold(0, (sum, amount) => sum + amount),
                           ),
+                          Icons.attach_money,
+                          AppColors.dashboardGreen,
+                          AppColors.dashboardGreenLight,
                         ),
                       ],
                     ),
                     const SizedBox(height: 32),
 
-                    // Service Revenue Section
-                    Text(
-                      'Pendapatan per Layanan',
-                      style: TextStyleConst.poppinsBold20.copyWith(color: AppColors.blackText900),
-                    ),
-                    const SizedBox(height: 16),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(16.r)),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x0F000000),
-                            blurRadius: .5,
-                            offset: Offset(0, 0),
+                    // Tables
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Service Revenue Table
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Pendapatan per Layanan',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1E293B),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              _ServiceRevenueTable(
+                                  serviceRevenue: state.serviceRevenue),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Ringkasan pendapatan berdasarkan jenis layanan',
-                              style: TextStyleConst.poppinsMedium14
-                                  .copyWith(color: AppColors.textGray3),
-                            ),
-                            const SizedBox(height: 16),
-                            ...state.serviceRevenue.entries.map((e) {
-                              return _buildServiceRevenueItem(e.key, e.value);
-                            }),
-                          ],
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-
-                    // Daily Revenue Section
-                    Text(
-                      'Pendapatan Harian',
-                      style: TextStyleConst.poppinsBold20.copyWith(color: AppColors.blackText900),
-                    ),
-                    const SizedBox(height: 16),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x0F000000),
-                            blurRadius: .5,
-                            offset: Offset(0, 0),
+                        const SizedBox(width: 32),
+                        // Daily Revenue Table
+                        Expanded(
+                          flex: 4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Pendapatan Harian',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1E293B),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              _DailyRevenueTable(
+                                sortedDates: sortedDates,
+                                dailyRevenue: state.dailyRevenue,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(20.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Ringkasan pendapatan harian',
-                              style: TextStyleConst.poppinsMedium14
-                                  .copyWith(color: AppColors.textGray3),
-                            ),
-                            const SizedBox(height: 16),
-                            ...sortedDates.map((date) {
-                              return _buildDailyRevenueItem(date, state.dailyRevenue[date]!);
-                            }),
-                          ],
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
@@ -190,49 +150,50 @@ class ReportsPage extends StatelessWidget {
     Color color,
     Color bgColor,
   ) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.borderGray, width: 0.5),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x0F000000),
-            blurRadius: .5,
-            offset: Offset(0, 0),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
           children: [
-            Row(
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.circular(12),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Color(0xFF64748B), // Slate-500
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
-                  child: Icon(icon, color: color, size: 24),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyleConst.poppinsRegular12.copyWith(color: AppColors.textGray3),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        value,
-                        style: TextStyleConst.poppinsBold24.copyWith(color: AppColors.blackText900),
-                      ),
-                    ],
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Color(0xFF1E293B), // Slate-900
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -242,74 +203,243 @@ class ReportsPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildServiceRevenueItem(String serviceName, int revenue) {
+class _HeaderSection extends StatelessWidget {
+  const _HeaderSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Laporan Penjualan',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E293B), // Slate-900
+          ),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            const Text(
+              'Dashboard',
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xFF64748B), // Slate-500
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
+            const SizedBox(width: 8),
+            Text(
+              'Laporan',
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.orangePrimary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ServiceRevenueTable extends StatelessWidget {
+  final Map<String, int> serviceRevenue;
+
+  const _ServiceRevenueTable({required this.serviceRevenue});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.backgroundGrey6,
-        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Table(
+        columnWidths: const {
+          0: FlexColumnWidth(2), // LAYANAN
+          1: FlexColumnWidth(1.5), // PENDAPATAN
+        },
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          const TableRow(
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+            ),
+            children: [
+              _HeaderCell('LAYANAN'),
+              _HeaderCell('PENDAPATAN', align: Alignment.centerRight),
+            ],
+          ),
+          ...serviceRevenue.entries.map((entry) {
+            return TableRow(
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+              ),
               children: [
-                Text(
-                  serviceName,
-                  style: TextStyleConst.poppinsSemiBold16.copyWith(color: AppColors.blackText900),
+                _DataCell(
+                  child: Text(
+                    entry.key,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Total pendapatan',
-                  style: TextStyleConst.poppinsRegular12.copyWith(color: AppColors.textGray3),
+                _DataCell(
+                  align: Alignment.centerRight,
+                  child: Text(
+                    CurrencyFormatter.format(entry.value),
+                    style: const TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.dashboardGreen,
+                    ),
+                  ),
                 ),
               ],
-            ),
-          ),
-          Text(
-            CurrencyFormatter.format(revenue),
-            style: TextStyleConst.poppinsBold18.copyWith(color: AppColors.dashboardGreen),
-          ),
+            );
+          }),
         ],
       ),
     );
   }
+}
 
-  Widget _buildDailyRevenueItem(DateTime date, int revenue) {
+class _DailyRevenueTable extends StatelessWidget {
+  final List<DateTime> sortedDates;
+  final Map<DateTime, int> dailyRevenue;
+
+  const _DailyRevenueTable({
+    required this.sortedDates,
+    required this.dailyRevenue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.backgroundGrey6,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  DateFormat('EEEE, d MMMM yyyy').format(date),
-                  style: TextStyleConst.poppinsSemiBold16.copyWith(color: AppColors.blackText900),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Pendapatan',
-                  style: TextStyleConst.poppinsRegular12.copyWith(color: AppColors.textGray3),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            CurrencyFormatter.format(revenue),
-            style: TextStyleConst.poppinsBold18.copyWith(color: AppColors.dashboardBlue),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
+      ),
+      child: Table(
+        columnWidths: const {
+          0: FlexColumnWidth(2), // TANGGAL
+          1: FlexColumnWidth(1.5), // PENDAPATAN
+        },
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: [
+          const TableRow(
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+            ),
+            children: [
+              _HeaderCell('TANGGAL'),
+              _HeaderCell('PENDAPATAN', align: Alignment.centerRight),
+            ],
+          ),
+          ...sortedDates.map((date) {
+            final revenue = dailyRevenue[date]!;
+            return TableRow(
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+              ),
+              children: [
+                _DataCell(
+                  child: Text(
+                    DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(date),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                _DataCell(
+                  align: Alignment.centerRight,
+                  child: Text(
+                    CurrencyFormatter.format(revenue),
+                    style: const TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.dashboardBlue,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderCell extends StatelessWidget {
+  final String label;
+  final Alignment align;
+
+  const _HeaderCell(this.label, {this.align = Alignment.centerLeft});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Align(
+        alignment: align,
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF64748B), // Slate-500
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DataCell extends StatelessWidget {
+  final Widget child;
+  final Alignment align;
+
+  const _DataCell({
+    required this.child,
+    this.align = Alignment.centerLeft,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Align(
+        alignment: align,
+        child: child,
       ),
     );
   }
