@@ -330,7 +330,7 @@ class _WorkOrderTable extends StatelessWidget {
       child: Table(
         columnWidths: const {
           0: FixedColumnWidth(60), // NO
-          1: FlexColumnWidth(1.5), // WORK ORDER
+          1: FlexColumnWidth(2.5), // WORK ORDER
           2: FlexColumnWidth(1.5), // CUSTOMER
           3: FlexColumnWidth(2), // VEHICLE
           4: FixedColumnWidth(130), // STATUS
