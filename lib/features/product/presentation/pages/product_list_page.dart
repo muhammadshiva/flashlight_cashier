@@ -28,8 +28,8 @@ class _ProductContentView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _HeaderSection(),
-          const SizedBox(height: 32),
+          const _StatsAndFilterSection(),
+          const SizedBox(height: 12),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -45,7 +45,6 @@ class _ProductContentView extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const _StatsAndFilterSection(),
                   const Divider(height: 1, color: Color(0xFFF1F5F9)),
                   Expanded(
                     child: BlocConsumer<ProductBloc, ProductState>(
@@ -90,77 +89,6 @@ class _ProductContentView extends StatelessWidget {
   }
 }
 
-class _HeaderSection extends StatelessWidget {
-  const _HeaderSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Product Variants',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
-              ),
-            ),
-            ElevatedButton.icon(
-              onPressed: () => context.push('/products/new'),
-              icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add Product'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.orangePrimary,
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                elevation: 0,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        Row(
-          children: [
-            _buildTab('Active', isActive: true),
-            const SizedBox(width: 24),
-            _buildTab('All', isActive: false),
-            const SizedBox(width: 24),
-            _buildTab('Draft', isActive: false),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTab(String label, {required bool isActive}) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: isActive ? AppColors.orangePrimary : AppColors.blackText100,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          height: 2,
-          width: 24,
-          color: isActive ? AppColors.orangePrimary : Colors.transparent,
-        ),
-      ],
-    );
-  }
-}
-
 class _StatsAndFilterSection extends StatelessWidget {
   const _StatsAndFilterSection();
 
@@ -168,72 +96,64 @@ class _StatsAndFilterSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductBloc, ProductState>(
       builder: (context, state) {
-        int totalItems = 0;
-        if (state is ProductLoaded) {
-          totalItems = state.totalItems;
-        }
-
-        return Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Row(
-            children: [
-              Text(
-                '$totalItems Products',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
-                ),
+        return Row(
+          children: [
+            const Text(
+              'Products',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B),
               ),
-              const Spacer(),
-              Container(
-                width: 300,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: TextField(
-                        onChanged: (value) {
-                          context
-                              .read<ProductBloc>()
-                              .add(SearchProductsEvent(value));
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'Search product name, sku...',
-                          border: InputBorder.none,
-                          isDense: true,
-                          hintStyle:
-                              TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
-                        ),
+            ),
+            const Spacer(),
+            Container(
+              width: 300,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        context
+                            .read<ProductBloc>()
+                            .add(SearchProductsEvent(value));
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Search product name, sku...',
+                        border: InputBorder.none,
+                        isDense: true,
+                        hintStyle:
+                            TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              OutlinedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.filter_list, size: 18),
-                label: const Text('Filter'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF64748B),
-                  side: const BorderSide(color: Color(0xFFE2E8F0)),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
+            ),
+            const SizedBox(width: 16),
+            ElevatedButton.icon(
+              onPressed: () => context.push('/products/new'),
+              icon: const Icon(Icons.add, size: 14),
+              label: const Text('Add Product'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.orangePrimary,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                elevation: 0,
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
@@ -250,13 +170,12 @@ class _ProductTable extends StatelessWidget {
     return SingleChildScrollView(
       child: Table(
         columnWidths: const {
-          0: FixedColumnWidth(60), // Checkbox
-          1: FlexColumnWidth(3), // Product Name
-          2: FlexColumnWidth(1), // SKU
-          3: FlexColumnWidth(1), // Price
-          4: FlexColumnWidth(1), // Stock
-          5: FlexColumnWidth(1), // Status
-          6: FixedColumnWidth(100), // Actions
+          0: FlexColumnWidth(3), // Product Name
+          1: FlexColumnWidth(1), // SKU
+          2: FlexColumnWidth(1), // Price
+          3: FlexColumnWidth(1), // Stock
+          4: FlexColumnWidth(1), // Status
+          5: FixedColumnWidth(100), // Actions
         },
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
@@ -267,13 +186,12 @@ class _ProductTable extends StatelessWidget {
               ),
             ),
             children: [
-              _HeaderCell(''),
               _HeaderCell('PRODUCT NAME'),
               _HeaderCell('SKU'),
               _HeaderCell('PRICE'),
               _HeaderCell('STOCK'),
               _HeaderCell('STATUS'),
-              _HeaderCell(''),
+              _HeaderCell('ACTION', align: Alignment.centerRight),
             ],
           ),
           ...products.map((product) => _buildProductRow(context, product)),
@@ -305,18 +223,6 @@ class _ProductTable extends StatelessWidget {
         border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
       ),
       children: [
-        TableCell(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-            child: Checkbox(
-              value: false,
-              onChanged: (_) {},
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
-            ),
-          ),
-        ),
         TableCell(
           child: Padding(
             padding:
