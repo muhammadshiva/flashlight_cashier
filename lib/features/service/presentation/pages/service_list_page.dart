@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../config/constans/text_styles_const.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../injection_container.dart';
+import '../../domain/entities/service_entity.dart';
 import '../bloc/service_bloc.dart';
 
 class ServiceListPage extends StatelessWidget {
@@ -16,22 +16,9 @@ class ServiceListPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<ServiceBloc>()..add(LoadServices()),
       child: Scaffold(
-        backgroundColor: AppColors.dashboardBackground,
-        appBar: AppBar(
-          title: Text('Layanan', style: TextStyleConst.poppinsSemiBold20),
-          backgroundColor: AppColors.white,
-          foregroundColor: AppColors.blackText900,
-          elevation: 0,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add, color: AppColors.dashboardBlue),
-              onPressed: () => context.push('/services/new'),
-            ),
-          ],
-        ),
+        backgroundColor: const Color(0xFFF8FAFC), // Slate-50
         body: BlocConsumer<ServiceBloc, ServiceState>(
           listener: (context, state) {
-            // Show snackbar on error
             if (state is ServiceError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -46,13 +33,33 @@ class ServiceListPage extends StatelessWidget {
                   ),
                 ),
               );
+            } else if (state is ServiceOperationSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: AppColors.success600,
+                ),
+              );
             }
           },
           builder: (context, state) {
             if (state is ServiceLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                  child: CircularProgressIndicator(color: AppColors.primary));
             } else if (state is ServiceLoaded) {
-              return _buildServicesContent(context, state);
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const _HeaderSection(),
+                    const SizedBox(height: 32),
+                    const _SearchSection(),
+                    const SizedBox(height: 24),
+                    _ServiceTable(services: state.services),
+                  ],
+                ),
+              );
             }
             return const Center(child: Text('Tidak ada data'));
           },
@@ -60,281 +67,368 @@ class ServiceListPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildServicesContent(BuildContext context, ServiceLoaded state) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<ServiceBloc>().add(LoadServices());
-        await Future.delayed(const Duration(milliseconds: 500));
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
+class _HeaderSection extends StatelessWidget {
+  const _HeaderSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Page Title
-            Text(
+            const Text(
               'Daftar Layanan',
-              style: TextStyleConst.poppinsBold24.copyWith(color: AppColors.blackText900),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Kelola semua layanan yang tersedia untuk pencucian motor',
-              style: TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
-            ),
-            const SizedBox(height: 24),
-
-            // Search Bar
-            TextField(
-              onChanged: (value) {
-                // TODO: Implement search functionality
-              },
-              decoration: InputDecoration(
-                hintText: 'Cari layanan...',
-                hintStyle: TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
-                prefixIcon: const Icon(Icons.search, color: AppColors.textGray3),
-                filled: true,
-                fillColor: AppColors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.borderGray),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.borderGray),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.dashboardBlue, width: 2),
-                ),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B), // Slate-900
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Text(
+                  'Dashboard',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF64748B), // Slate-500
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
+                const SizedBox(width: 8),
+                Text(
+                  'Layanan',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.orangePrimary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        ElevatedButton.icon(
+          onPressed: () => context.push('/services/new'),
+          icon: const Icon(Icons.add, size: 18),
+          label: const Text('Tambah Layanan'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.orangePrimary,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            elevation: 0,
+          ),
+        ),
+      ],
+    );
+  }
+}
 
-            // Services Grid
-            if (state.services.isEmpty)
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(48.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+class _SearchSection extends StatelessWidget {
+  const _SearchSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        // TODO: Implement Search
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Cari layanan...',
+                        border: InputBorder.none,
+                        isDense: true,
+                        hintStyle:
+                            TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          OutlinedButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.filter_list, size: 18),
+            label: const Text('Filter'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: const Color(0xFF64748B),
+              side: const BorderSide(color: Color(0xFFE2E8F0)),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ServiceTable extends StatelessWidget {
+  final List<ServiceEntity> services;
+
+  const _ServiceTable({required this.services});
+
+  @override
+  Widget build(BuildContext context) {
+    if (services.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(48.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.miscellaneous_services_outlined,
+                size: 64,
+                color: AppColors.textGray3.withOpacity(0.5),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Tidak ada layanan',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF64748B),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Table(
+        columnWidths: const {
+          0: FlexColumnWidth(2.5), // LAYANAN
+          1: FlexColumnWidth(1), // TIPE
+          2: FlexColumnWidth(1.2), // HARGA
+          3: FlexColumnWidth(1), // STATUS
+          4: FixedColumnWidth(140), // ACTION
+        },
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: [
+          const TableRow(
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+            ),
+            children: [
+              _HeaderCell('LAYANAN'),
+              _HeaderCell('TIPE'),
+              _HeaderCell('HARGA'),
+              _HeaderCell('STATUS'),
+              _HeaderCell('ACTION', align: Alignment.centerRight),
+            ],
+          ),
+          ...services.map((service) {
+            return TableRow(
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+              ),
+              children: [
+                _DataCell(
+                  child: Row(
                     children: [
-                      Icon(
-                        Icons.miscellaneous_services_outlined,
-                        size: 64,
-                        color: AppColors.textGray3.withValues(alpha: 0.5),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF1F5F9), // Slate-100
+                          borderRadius: BorderRadius.circular(8),
+                          image: service.imageUrl.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(service.imageUrl),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: service.imageUrl.isEmpty
+                            ? const Icon(Icons.miscellaneous_services,
+                                color: Color(0xFF94A3B8), size: 20)
+                            : null,
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Tidak ada layanan',
-                        style:
-                            TextStyleConst.poppinsSemiBold18.copyWith(color: AppColors.textGray3),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Tambahkan layanan baru untuk memulai',
-                        style: TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              service.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1E293B),
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              service.description,
+                              style: const TextStyle(
+                                color: Color(0xFF94A3B8),
+                                fontSize: 12,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              )
-            else
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1.2,
+                _DataCell(
+                  child: _ServiceTypeBadge(type: service.type),
                 ),
-                itemCount: state.services.length,
-                itemBuilder: (context, index) {
-                  final service = state.services[index];
-                  return _buildServiceCard(context, service, index);
-                },
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildServiceCard(BuildContext context, dynamic service, int index) {
-    // Determine if service is favorite or default
-    bool isFavorite = service.isFavorite ?? false;
-    bool isDefault = service.isDefault ?? false;
-
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Service Type Badge
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: _getServiceTypeColor(service.type),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
+                _DataCell(
                   child: Text(
-                    service.type.toUpperCase(),
-                    style: TextStyleConst.poppinsMedium10.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w600,
+                    CurrencyFormatter.format(service.price),
+                    style: const TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
                     ),
                   ),
                 ),
-                const Spacer(),
-                if (isFavorite) const Icon(Icons.star, color: Colors.amber, size: 16),
-                if (isDefault)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: AppColors.dashboardBlue,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      'Default',
-                      style: TextStyleConst.poppinsMedium10.copyWith(
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            // Service Name
-            Text(
-              service.name,
-              style: TextStyleConst.poppinsSemiBold18.copyWith(color: AppColors.blackText900),
-            ),
-            const SizedBox(height: 8),
-
-            // Service Description
-            Text(
-              service.description,
-              style: TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 16),
-
-            // Price and Actions
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Harga',
-                      style: TextStyleConst.poppinsRegular12.copyWith(color: AppColors.textGray3),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      CurrencyFormatter.format(service.price),
-                      style: TextStyleConst.poppinsBold20.copyWith(color: AppColors.dashboardGreen),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    // Edit Button
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        context.push('/services/${service.id}/edit');
-                      },
-                      icon: const Icon(Icons.edit, size: 18),
-                      label: const Text('Edit'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        foregroundColor: AppColors.dashboardBlue,
-                        side: const BorderSide(color: AppColors.dashboardBlue),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                _DataCell(
+                  child: Row(
+                    children: [
+                      if (service.isDefault)
+                        Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFDBEAFE),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'Default',
+                            style: TextStyle(
+                              color: Color(0xFF1D4ED8),
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
+                      if (service.isActive)
+                        const Icon(Icons.check_circle,
+                            color: AppColors.success600, size: 16)
+                      else
+                        const Icon(Icons.cancel,
+                            color: AppColors.textGray3, size: 16),
+                    ],
+                  ),
+                ),
+                _DataCell(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () =>
+                              context.push('/services/${service.id}/edit'),
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          color: const Color(0xFF64748B),
+                          tooltip: 'Edit',
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(8),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _showDeleteConfirmation(context, service);
+                          },
+                          icon: const Icon(Icons.delete_outline, size: 18),
+                          color: AppColors.error600,
+                          tooltip: 'Hapus',
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(8),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    // Delete Button
-                    IconButton(
-                      onPressed: () {
-                        _showDeleteConfirmation(context, service);
-                      },
-                      icon: const Icon(Icons.delete, color: AppColors.error600, size: 20),
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.error50,
-                        padding: const EdgeInsets.all(8),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
-            ),
-          ],
-        ),
+            );
+          }),
+        ],
       ),
     );
   }
 
-  Color _getServiceTypeColor(String type) {
-    switch (type.toLowerCase()) {
-      case 'washing':
-        return AppColors.dashboardBlue;
-      case 'detailing':
-        return AppColors.dashboardGreen;
-      case 'engine':
-        return AppColors.warning600;
-      case 'protection':
-        return AppColors.warning600;
-      case 'cleaning':
-        return AppColors.dashboardGreen;
-      default:
-        return AppColors.textGray3;
-    }
-  }
-
-  void _showDeleteConfirmation(BuildContext context, dynamic service) {
+  void _showDeleteConfirmation(BuildContext context, ServiceEntity service) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(
-          'Hapus Layanan',
-          style: TextStyleConst.poppinsSemiBold18.copyWith(color: AppColors.blackText900),
-        ),
+        title: const Text('Hapus Layanan'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Apakah Anda yakin ingin menghapus layanan ini?',
-              style: TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
-            ),
-            const SizedBox(height: 12),
+            const Text('Apakah Anda yakin ingin menghapus layanan ini?'),
+            const SizedBox(height: 8),
             Text(
               service.name,
-              style: TextStyleConst.poppinsSemiBold16.copyWith(color: AppColors.blackText900),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text(
-              'Batal',
-              style: TextStyleConst.poppinsMedium14.copyWith(color: AppColors.textGray3),
-            ),
+            child: const Text('Batal'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -343,14 +437,97 @@ class ServiceListPage extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.error600,
-              foregroundColor: AppColors.white,
+              foregroundColor: Colors.white,
             ),
-            child: Text(
-              'Hapus',
-              style: TextStyleConst.poppinsMedium14,
-            ),
+            child: const Text('Hapus'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _HeaderCell extends StatelessWidget {
+  final String label;
+  final Alignment align;
+
+  const _HeaderCell(this.label, {this.align = Alignment.centerLeft});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      child: Align(
+        alignment: align,
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF64748B), // Slate-500
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DataCell extends StatelessWidget {
+  final Widget child;
+
+  const _DataCell({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      child: child,
+    );
+  }
+}
+
+class _ServiceTypeBadge extends StatelessWidget {
+  final String type;
+
+  const _ServiceTypeBadge({required this.type});
+
+  @override
+  Widget build(BuildContext context) {
+    Color bgColor;
+    Color textColor;
+
+    switch (type.toLowerCase()) {
+      case 'washing':
+        bgColor = const Color(0xFFDBEAFE); // Blue-100
+        textColor = const Color(0xFF1D4ED8); // Blue-700
+        break;
+      case 'detailing':
+        bgColor = const Color(0xFFDCFCE7); // Green-100
+        textColor = const Color(0xFF15803D); // Green-700
+        break;
+      case 'cleaning':
+        bgColor = const Color(0xFFF1F5F9); // Slate-100
+        textColor = const Color(0xFF64748B); // Slate-500
+        break;
+      default:
+        bgColor = const Color(0xFFFEF3C7); // Amber-100
+        textColor = const Color(0xFFD97706); // Amber-700
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        type.toUpperCase(),
+        style: TextStyle(
+          color: textColor,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
