@@ -45,7 +45,8 @@ class AppPages {
       ShellRoute(
         builder: (context, state, child) {
           return BlocProvider<DashboardBloc>(
-            create: (context) => di.sl<DashboardBloc>()..add(LoadDashboardStats()),
+            create: (context) =>
+                di.sl<DashboardBloc>()..add(LoadDashboardStats()),
             child: Builder(
               builder: (context) {
                 return SessionTimeoutListener(
@@ -58,16 +59,18 @@ class AppPages {
         routes: [
           GoRoute(
             path: AppRoutes.dashboard,
-            builder: (context, state) => const DashboardPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: DashboardPage(),
+            ),
           ),
           GoRoute(
             path: AppRoutes.workOrders,
-            builder: (context, state) {
-              return BlocProvider(
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
                 create: (context) => di.sl<HistoryBloc>()..add(LoadHistory()),
                 child: const HistoryPage(),
-              );
-            },
+              ),
+            ),
             routes: [
               GoRoute(
                 path: AppRoutes.childId,
@@ -79,7 +82,9 @@ class AppPages {
           ),
           GoRoute(
             path: AppRoutes.customers,
-            builder: (context, state) => const CustomerListPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: CustomerListPage(),
+            ),
             routes: [
               GoRoute(
                 path: AppRoutes.childNew,
@@ -96,7 +101,9 @@ class AppPages {
           ),
           GoRoute(
             path: AppRoutes.memberships,
-            builder: (context, state) => const MembershipListPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: MembershipListPage(),
+            ),
             routes: [
               GoRoute(
                 path: AppRoutes.childNew,
@@ -106,7 +113,9 @@ class AppPages {
           ),
           GoRoute(
             path: AppRoutes.vehicles,
-            builder: (context, state) => const VehicleListPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: VehicleListPage(),
+            ),
             routes: [
               GoRoute(
                 path: AppRoutes.childNew,
@@ -116,7 +125,9 @@ class AppPages {
           ),
           GoRoute(
             path: AppRoutes.services,
-            builder: (context, state) => const ServiceListPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ServiceListPage(),
+            ),
             routes: [
               GoRoute(
                 path: AppRoutes.childNew,
@@ -126,7 +137,9 @@ class AppPages {
           ),
           GoRoute(
             path: AppRoutes.products,
-            builder: (context, state) => const ProductListPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ProductListPage(),
+            ),
             routes: [
               GoRoute(
                 path: AppRoutes.childNew,
@@ -143,7 +156,9 @@ class AppPages {
           ),
           GoRoute(
             path: AppRoutes.users,
-            builder: (context, state) => const UserListPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: UserListPage(),
+            ),
             routes: [
               GoRoute(
                 path: AppRoutes.childNew,
@@ -160,7 +175,9 @@ class AppPages {
           ),
           GoRoute(
             path: AppRoutes.reports,
-            builder: (context, state) => const ReportsPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ReportsPage(),
+            ),
           ),
         ],
       ),
