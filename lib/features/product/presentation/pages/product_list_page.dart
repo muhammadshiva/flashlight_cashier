@@ -260,29 +260,44 @@ class _ProductTable extends StatelessWidget {
         },
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
-          _buildHeaderRow(),
+          const TableRow(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Color(0xFFE2E8F0)),
+              ),
+            ),
+            children: [
+              _HeaderCell(''),
+              _HeaderCell('PRODUCT NAME'),
+              _HeaderCell('SKU'),
+              _HeaderCell('PRICE'),
+              _HeaderCell('STOCK'),
+              _HeaderCell('STATUS'),
+              _HeaderCell(''),
+            ],
+          ),
           ...products.map((product) => _buildProductRow(context, product)),
         ],
       ),
     );
   }
 
-  TableRow _buildHeaderRow() {
-    return TableRow(
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
-      ),
-      children: [
-        _HeaderCell(child: Checkbox(value: false, onChanged: (_) {})),
-        const _HeaderCell(text: 'PRODUCT NAME'),
-        const _HeaderCell(text: 'SKU'),
-        const _HeaderCell(text: 'PRICE'),
-        const _HeaderCell(text: 'STOCK'),
-        const _HeaderCell(text: 'STATUS'),
-        const _HeaderCell(text: ''),
-      ],
-    );
-  }
+  // TableRow _buildHeaderRow() {
+  //   return TableRow(
+  //     decoration: const BoxDecoration(
+  //       border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+  //     ),
+  //     children: [
+  //       _HeaderCell(child: Checkbox(value: false, onChanged: (_) {})),
+  //       const _HeaderCell(text: 'PRODUCT NAME'),
+  //       const _HeaderCell(text: 'SKU'),
+  //       const _HeaderCell(text: 'PRICE'),
+  //       const _HeaderCell(text: 'STOCK'),
+  //       const _HeaderCell(text: 'STATUS'),
+  //       const _HeaderCell(text: ''),
+  //     ],
+  //   );
+  // }
 
   TableRow _buildProductRow(BuildContext context, Product product) {
     return TableRow(
@@ -293,7 +308,7 @@ class _ProductTable extends StatelessWidget {
         TableCell(
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: Checkbox(
               value: false,
               onChanged: (_) {},
@@ -304,7 +319,8 @@ class _ProductTable extends StatelessWidget {
         ),
         TableCell(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: Row(
               children: [
                 Container(
@@ -411,27 +427,26 @@ class _ProductTable extends StatelessWidget {
 }
 
 class _HeaderCell extends StatelessWidget {
-  final String? text;
-  final Widget? child;
+  final String label;
+  final Alignment align;
 
-  const _HeaderCell({this.text, this.child});
+  const _HeaderCell(this.label, {this.align = Alignment.centerLeft});
 
   @override
   Widget build(BuildContext context) {
-    return TableCell(
-      child: Padding(
-        padding:
-            const EdgeInsets.only(top: 24, bottom: 24, left: 16, right: 16),
-        child: child ??
-            Text(
-              text ?? '',
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF94A3B8),
-                letterSpacing: 1.0,
-              ),
-            ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Align(
+        alignment: align,
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF64748B), // Slate-500
+            letterSpacing: 0.5,
+          ),
+        ),
       ),
     );
   }
