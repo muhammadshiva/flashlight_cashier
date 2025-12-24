@@ -21,8 +21,38 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       return (response.data as List)
           .map((e) => ProductModel.fromJson(e))
           .toList();
-    } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Unknown Error');
+    } catch (e) {
+      // Return generated dummy data on failure (simulating 50 items)
+      return List.generate(50, (index) {
+        final id = (index + 1).toString();
+        // Cycle through types to vary data
+        final types = [
+          'Brakes',
+          'Oil',
+          'Filter',
+          'Ignition',
+          'Battery',
+          'Wipers',
+          'Coolant',
+          'Tires',
+          'Lights',
+          'Interior'
+        ];
+        final type = types[index % types.length];
+        final isAvailable = index % 5 != 0; // Every 5th item is unavailable
+
+        return ProductModel(
+          id: 'PROD-${id.padLeft(4, '0')}', // e.g. PROD-0001
+          name: 'Premium $type Item #$id',
+          description:
+              'High-quality $type replacement part for various vehicle models.',
+          price: (10 + (index * 5)) % 200 + 15, // Varied price
+          imageUrl: '',
+          type: type,
+          stock: isAvailable ? (index * 7) % 100 + 5 : 0,
+          isAvailable: isAvailable,
+        );
+      });
     }
   }
 

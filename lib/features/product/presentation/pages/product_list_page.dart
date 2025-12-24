@@ -61,6 +61,18 @@ class _ProductContentView extends StatelessWidget {
                           return const Center(
                               child: CircularProgressIndicator());
                         } else if (state is ProductLoaded) {
+                          if (state.products.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                'Product not found',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFF64748B),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            );
+                          }
                           return _ProductTable(products: state.products);
                         }
                         return const Center(child: Text('No products found'));
@@ -154,60 +166,76 @@ class _StatsAndFilterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Row(
-        children: [
-          const Text(
-            '128 Products', // Static for now, could be dynamic
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1E293B),
-            ),
-          ),
-          const Spacer(),
-          Container(
-            width: 300,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
-            ),
-            child: Row(
-              children: const [
-                Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
-                SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search product name, sku...',
-                      border: InputBorder.none,
-                      isDense: true,
-                      hintStyle:
-                          TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
-                    ),
-                  ),
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        int totalItems = 0;
+        if (state is ProductLoaded) {
+          totalItems = state.totalItems;
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Row(
+            children: [
+              Text(
+                '$totalItems Products',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E293B),
                 ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              Container(
+                width: 300,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          context
+                              .read<ProductBloc>()
+                              .add(SearchProductsEvent(value));
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Search product name, sku...',
+                          border: InputBorder.none,
+                          isDense: true,
+                          hintStyle:
+                              TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              OutlinedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.filter_list, size: 18),
+                label: const Text('Filter'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFF64748B),
+                  side: const BorderSide(color: Color(0xFFE2E8F0)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          OutlinedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.filter_list, size: 18),
-            label: const Text('Filter'),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(0xFF64748B),
-              side: const BorderSide(color: Color(0xFFE2E8F0)),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -327,7 +355,10 @@ class _ProductTable extends StatelessWidget {
             ),
           ),
         ),
-        _DataCell(text: product.id.substring(0, 8).toUpperCase()), // Fake SKU
+        _DataCell(
+            text: product.id.length >= 8
+                ? product.id.substring(0, 8).toUpperCase()
+                : product.id.toUpperCase()), // Fake SKU
         _DataCell(text: '\$${product.price}'),
         _DataCell(text: product.stock.toString()),
         TableCell(
@@ -435,74 +466,118 @@ class _PaginationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        if (state is! ProductLoaded) return const SizedBox.shrink();
+
+        final currentPage = state.currentPage;
+        final itemsPerPage = state.itemsPerPage;
+        final totalItems = state.totalItems;
+        final totalPages = (totalItems / itemsPerPage).ceil();
+
+        final startItem = (currentPage - 1) * itemsPerPage + 1;
+        final endItem = (startItem + state.products.length - 1);
+
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('View', style: TextStyle(color: Color(0xFF64748B))),
-              const SizedBox(width: 8),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
-                ),
-                child: Row(
-                  children: const [
-                    Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Icon(Icons.keyboard_arrow_down, size: 16),
-                  ],
-                ),
+              Row(
+                children: [
+                  const Text('View',
+                      style: TextStyle(color: Color(0xFF64748B))),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: Row(
+                      children: [
+                        Text('$itemsPerPage',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        const Icon(Icons.keyboard_arrow_down, size: 16),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text('entry per page',
+                      style: TextStyle(color: Color(0xFF64748B))),
+                ],
               ),
-              const SizedBox(width: 8),
-              const Text('entry per page',
-                  style: TextStyle(color: Color(0xFF64748B))),
+              Row(
+                children: [
+                  Text('Showing $startItem-$endItem of $totalItems entries',
+                      style: const TextStyle(color: Color(0xFF64748B))),
+                  const SizedBox(width: 24),
+                  IconButton(
+                      onPressed: currentPage > 1
+                          ? () => context
+                              .read<ProductBloc>()
+                              .add(ChangePageEvent(currentPage - 1))
+                          : null,
+                      icon: Icon(Icons.chevron_left,
+                          color: currentPage > 1
+                              ? const Color(0xFF64748B)
+                              : const Color(0xFFCBD5E1))),
+                  ...List.generate(totalPages, (index) {
+                    final page = index + 1;
+                    // Simple logic: show all pages for now, can be improved for large number of pages
+                    if (totalPages > 7 &&
+                        (page > 2 &&
+                            page < totalPages - 1 &&
+                            (page < currentPage - 1 ||
+                                page > currentPage + 1))) {
+                      return page == currentPage - 2 || page == currentPage + 2
+                          ? const Text('...',
+                              style: TextStyle(color: Color(0xFF64748B)))
+                          : const SizedBox.shrink();
+                    }
+                    return _buildPageNumber(context, page,
+                        isActive: page == currentPage);
+                  }),
+                  IconButton(
+                      onPressed: currentPage < totalPages
+                          ? () => context
+                              .read<ProductBloc>()
+                              .add(ChangePageEvent(currentPage + 1))
+                          : null,
+                      icon: Icon(Icons.chevron_right,
+                          color: currentPage < totalPages
+                              ? const Color(0xFF64748B)
+                              : const Color(0xFFCBD5E1))),
+                ],
+              ),
             ],
           ),
-          Row(
-            children: [
-              const Text('Showing 1-10 of 128 entries',
-                  style: TextStyle(color: Color(0xFF64748B))),
-              const SizedBox(width: 24),
-              IconButton(
-                  onPressed: () {},
-                  icon:
-                      const Icon(Icons.chevron_left, color: Color(0xFFCBD5E1))),
-              _buildPageNumber(1, isActive: true),
-              _buildPageNumber(2, isActive: false),
-              _buildPageNumber(3, isActive: false),
-              const Text('...', style: TextStyle(color: Color(0xFF64748B))),
-              _buildPageNumber(10, isActive: false),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.chevron_right,
-                      color: Color(0xFF64748B))),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildPageNumber(int number, {required bool isActive}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: 32,
-      height: 32,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: isActive ? AppColors.orangePrimary : Colors.transparent,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        number.toString(),
-        style: TextStyle(
-          color: isActive ? Colors.white : const Color(0xFF64748B),
-          fontWeight: FontWeight.w600,
+  Widget _buildPageNumber(BuildContext context, int number,
+      {required bool isActive}) {
+    return InkWell(
+      onTap: () => context.read<ProductBloc>().add(ChangePageEvent(number)),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        width: 32,
+        height: 32,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isActive ? AppColors.orangePrimary : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          number.toString(),
+          style: TextStyle(
+            color: isActive ? Colors.white : const Color(0xFF64748B),
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );

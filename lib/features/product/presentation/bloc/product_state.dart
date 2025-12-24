@@ -12,9 +12,30 @@ class ProductLoading extends ProductState {}
 
 class ProductLoaded extends ProductState {
   final List<Product> products;
-  const ProductLoaded(this.products);
+  final List<Product> allProducts;
+  final List<Product> sourceProducts;
+  final int currentPage;
+  final int totalItems;
+  final int itemsPerPage;
+
+  const ProductLoaded({
+    required this.products,
+    required this.allProducts,
+    required this.sourceProducts,
+    this.currentPage = 1,
+    this.totalItems = 0,
+    this.itemsPerPage = 10,
+  });
+
   @override
-  List<Object> get props => [products];
+  List<Object> get props => [
+        products,
+        allProducts,
+        sourceProducts,
+        currentPage,
+        totalItems,
+        itemsPerPage
+      ];
 }
 
 class ProductError extends ProductState {

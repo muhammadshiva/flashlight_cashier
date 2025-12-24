@@ -8,6 +8,20 @@ abstract class ProductEvent extends Equatable {
 
 class LoadProducts extends ProductEvent {}
 
+class ChangePageEvent extends ProductEvent {
+  final int page;
+  const ChangePageEvent(this.page);
+  @override
+  List<Object> get props => [page];
+}
+
+class SearchProductsEvent extends ProductEvent {
+  final String query;
+  const SearchProductsEvent(this.query);
+  @override
+  List<Object> get props => [query];
+}
+
 class CreateProductEvent extends ProductEvent {
   final Product product;
   const CreateProductEvent(this.product);
