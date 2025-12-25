@@ -47,7 +47,7 @@ class PosBloc extends Bloc<PosEvent, PosState> {
 
     // Fetch all necessary data parallelly
     final results = await Future.wait<dynamic>([
-      getServices(GetServicesParams(isPrototype: true)),
+      getServices(const GetServicesParams(isPrototype: true)),
       getProducts(NoParams()),
       getCustomers(NoParams()),
       // Vehicles will be fetched when customer is selected, or we fetch all?

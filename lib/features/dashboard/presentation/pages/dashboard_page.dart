@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:flashlight_pos/config/routes/app_routes.dart';
 import 'package:flashlight_pos/config/themes/app_colors.dart';
-import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
-import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_state.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/widgets/status_filter_bar.dart';
+import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
+import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -135,17 +134,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     child: TextField(
                       onChanged: (value) {
-                        context
-                            .read<DashboardBloc>()
-                            .add(FilterWorkOrders(searchQuery: value));
+                        context.read<DashboardBloc>().add(FilterWorkOrders(searchQuery: value));
                       },
                       textAlignVertical: TextAlignVertical.center,
                       decoration: const InputDecoration(
                         hintText: 'Search...',
-                        hintStyle:
-                            TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
-                        prefixIcon: Icon(Icons.search,
-                            color: Color(0xFF94A3B8), size: 20),
+                        hintStyle: TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                        prefixIcon: Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.symmetric(horizontal: 12),
                         isDense: true,
@@ -162,8 +157,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       foregroundColor: const Color(0xFF64748B),
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Color(0xFFE2E8F0)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                       fixedSize: const Size.fromHeight(44),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -179,8 +173,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.orangePrimary,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                       fixedSize: const Size.fromHeight(44),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -203,7 +196,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),
@@ -211,8 +204,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(24.0),
+                    const Padding(
+                      padding: EdgeInsets.all(24.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -221,7 +214,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1E293B),
+                              color: Color(0xFF1E293B),
                             ),
                           ),
                         ],
@@ -353,11 +346,11 @@ class _WorkOrderTable extends StatelessWidget {
   }
 
   TableRow _buildHeaderRow() {
-    return TableRow(
-      decoration: const BoxDecoration(
+    return const TableRow(
+      decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
       ),
-      children: const [
+      children: [
         _HeaderCell(text: 'NO'),
         _HeaderCell(text: 'WORK ORDER'),
         _HeaderCell(text: 'CUSTOMER'),
@@ -369,8 +362,8 @@ class _WorkOrderTable extends StatelessWidget {
     );
   }
 
-  TableRow _buildRow(BuildContext context, int index, WorkOrder order,
-      Customer? customer, Vehicle? vehicle) {
+  TableRow _buildRow(
+      BuildContext context, int index, WorkOrder order, Customer? customer, Vehicle? vehicle) {
     return TableRow(
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
@@ -380,9 +373,7 @@ class _WorkOrderTable extends StatelessWidget {
         _DataCell(text: order.workOrderCode, isBold: true),
         _DataCell(text: customer?.name ?? '-'),
         _DataCell(
-            text: vehicle != null
-                ? '${vehicle.vehicleBrand} - ${vehicle.licensePlate}'
-                : '-'),
+            text: vehicle != null ? '${vehicle.vehicleBrand} - ${vehicle.licensePlate}' : '-'),
         TableCell(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -392,8 +383,7 @@ class _WorkOrderTable extends StatelessWidget {
         _DataCell(text: '\$${order.totalPrice}'),
         TableCell(
             child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
                     _ActionButton(
@@ -528,11 +518,7 @@ class _ActionButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color? color;
 
-  const _ActionButton(
-      {required this.label,
-      required this.icon,
-      required this.onTap,
-      this.color});
+  const _ActionButton({required this.label, required this.icon, required this.onTap, this.color});
 
   @override
   Widget build(BuildContext context) {

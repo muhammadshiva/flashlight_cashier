@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../injection_container.dart';
 import '../../domain/entities/user.dart';
 import '../bloc/user_bloc.dart';
@@ -29,10 +30,8 @@ class _UserFormPageState extends State<UserFormPage> {
   @override
   void initState() {
     super.initState();
-    _usernameController =
-        TextEditingController(text: widget.user?.username ?? '');
-    _fullNameController =
-        TextEditingController(text: widget.user?.fullName ?? '');
+    _usernameController = TextEditingController(text: widget.user?.username ?? '');
+    _fullNameController = TextEditingController(text: widget.user?.fullName ?? '');
     _emailController = TextEditingController(text: widget.user?.email ?? '');
     _roleController = TextEditingController(text: widget.user?.role ?? 'staff');
     _passwordController = TextEditingController();
@@ -55,22 +54,20 @@ class _UserFormPageState extends State<UserFormPage> {
       child: BlocConsumer<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserOperationSuccess) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
             // Navigate back and force refresh of list if possible.
             // Since UserListPage uses BlocProvider(create: ... add(LoadUsers)), sticking back to it might not auto-refresh unless we pass a result or use a global Bus.
             // But since UserBloc creation in UserListPage does `..add(LoadUsers)`, re-entering the page will refresh.
             // For simply popping:
             context.pop();
           } else if (state is UserError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(state.message), backgroundColor: Colors.red));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message), backgroundColor: Colors.red));
           }
         },
         builder: (context, state) {
           if (state is UserLoading) {
-            return const Scaffold(
-                body: Center(child: CircularProgressIndicator()));
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
           }
           return Scaffold(
             appBar: AppBar(
@@ -101,23 +98,20 @@ class _UserFormPageState extends State<UserFormPage> {
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
-                      value: _roleController.text.isNotEmpty
-                          ? _roleController.text
-                          : 'staff',
+                      initialValue:
+                          _roleController.text.isNotEmpty ? _roleController.text : 'staff',
                       items: const [
                         DropdownMenuItem(value: 'staff', child: Text('Staff')),
                         DropdownMenuItem(value: 'admin', child: Text('Admin')),
                       ],
-                      onChanged: (val) =>
-                          setState(() => _roleController.text = val!),
+                      onChanged: (val) => setState(() => _roleController.text = val!),
                       decoration: const InputDecoration(labelText: 'Role'),
                     ),
                     const SizedBox(height: 16),
                     if (!isEditMode) ...[
                       TextFormField(
                         controller: _passwordController,
-                        decoration:
-                            const InputDecoration(labelText: 'Password'),
+                        decoration: const InputDecoration(labelText: 'Password'),
                         obscureText: true,
                         validator: (v) => v!.isEmpty ? 'Required' : null,
                       ),
@@ -135,9 +129,7 @@ class _UserFormPageState extends State<UserFormPage> {
                               role: _roleController.text,
                               status: widget.user!.status,
                             );
-                            context
-                                .read<UserBloc>()
-                                .add(UpdateUserEvent(updatedUser));
+                            context.read<UserBloc>().add(UpdateUserEvent(updatedUser));
                           } else {
                             final newUser = User(
                               id: '', // Server generated
@@ -147,8 +139,9 @@ class _UserFormPageState extends State<UserFormPage> {
                               role: _roleController.text,
                               status: 'active',
                             );
-                            context.read<UserBloc>().add(CreateUserEvent(
-                                newUser, _passwordController.text));
+                            context
+                                .read<UserBloc>()
+                                .add(CreateUserEvent(newUser, _passwordController.text));
                           }
                         }
                       },

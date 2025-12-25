@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../injection_container.dart';
 import '../../domain/entities/vehicle.dart';
 import '../bloc/vehicle_bloc.dart';
@@ -97,7 +98,7 @@ class _VehicleFormViewState extends State<VehicleFormView> {
                   validator: (v) => v!.isEmpty ? 'Required' : null,
                 ),
                 DropdownButtonFormField<String>(
-                  value: _category,
+                  initialValue: _category,
                   decoration: const InputDecoration(labelText: 'Category'),
                   items: const [
                     DropdownMenuItem(value: 'S', child: Text('Small (S)')),

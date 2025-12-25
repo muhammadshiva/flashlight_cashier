@@ -1,10 +1,10 @@
 import '../../features/customer/domain/entities/customer.dart';
+import '../../features/product/domain/entities/product.dart';
+import '../../features/service/domain/entities/service_entity.dart';
 import '../../features/vehicle/domain/entities/vehicle.dart';
 import '../../features/work_order/domain/entities/work_order.dart';
-import '../../features/work_order/domain/entities/work_order_service.dart';
 import '../../features/work_order/domain/entities/work_order_product.dart';
-import '../../features/service/domain/entities/service_entity.dart';
-import '../../features/product/domain/entities/product.dart';
+import '../../features/work_order/domain/entities/work_order_service.dart';
 
 class DummyData {
   // Dummy Customers
@@ -248,7 +248,8 @@ class DummyData {
       // Work Order 1 - Queued
       WorkOrder(
         id: 'wo-001',
-        workOrderCode: 'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-001',
+        workOrderCode:
+            'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-001',
         customerId: 'cust-001',
         vehicleDataId: 'veh-001',
         queueNumber: '1',
@@ -297,7 +298,8 @@ class DummyData {
       // Work Order 2 - Washing
       WorkOrder(
         id: 'wo-002',
-        workOrderCode: 'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-002',
+        workOrderCode:
+            'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-002',
         customerId: 'cust-002',
         vehicleDataId: 'veh-002',
         queueNumber: '2',
@@ -337,7 +339,8 @@ class DummyData {
       // Work Order 3 - Drying
       WorkOrder(
         id: 'wo-003',
-        workOrderCode: 'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-003',
+        workOrderCode:
+            'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-003',
         customerId: 'cust-003',
         vehicleDataId: 'veh-003',
         queueNumber: '3',
@@ -386,7 +389,8 @@ class DummyData {
       // Work Order 4 - Inspection
       WorkOrder(
         id: 'wo-004',
-        workOrderCode: 'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-004',
+        workOrderCode:
+            'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-004',
         customerId: 'cust-004',
         vehicleDataId: 'veh-004',
         queueNumber: '4',
@@ -435,7 +439,8 @@ class DummyData {
       // Work Order 5 - Completed
       WorkOrder(
         id: 'wo-005',
-        workOrderCode: 'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-005',
+        workOrderCode:
+            'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-005',
         customerId: 'cust-005',
         vehicleDataId: 'veh-005',
         queueNumber: '5',
@@ -465,7 +470,7 @@ class DummyData {
             service: services[2],
           ),
         ],
-        products: [],
+        products: const [],
         createdAt: now.subtract(const Duration(hours: 1, minutes: 30)),
         updatedAt: now.subtract(const Duration(minutes: 1)),
         completedAt: now.subtract(const Duration(minutes: 1)),
@@ -474,7 +479,8 @@ class DummyData {
       // Work Order 6 - Paid
       WorkOrder(
         id: 'wo-006',
-        workOrderCode: 'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-006',
+        workOrderCode:
+            'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-006',
         customerId: 'cust-006',
         vehicleDataId: 'veh-006',
         queueNumber: '6',
@@ -514,7 +520,8 @@ class DummyData {
       // Work Order 7 - Queued
       WorkOrder(
         id: 'wo-007',
-        workOrderCode: 'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-007',
+        workOrderCode:
+            'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-007',
         customerId: 'cust-007',
         vehicleDataId: 'veh-007',
         queueNumber: '7',
@@ -572,7 +579,8 @@ class DummyData {
       // Work Order 8 - Queued
       WorkOrder(
         id: 'wo-008',
-        workOrderCode: 'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-008',
+        workOrderCode:
+            'WO-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-008',
         customerId: 'cust-008',
         vehicleDataId: 'veh-008',
         queueNumber: '8',
@@ -593,7 +601,7 @@ class DummyData {
             service: services[0],
           ),
         ],
-        products: [],
+        products: const [],
         createdAt: now.subtract(const Duration(minutes: 2)),
         updatedAt: now.subtract(const Duration(minutes: 2)),
         completedAt: null,

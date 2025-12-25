@@ -21,7 +21,7 @@ class DashboardSidebar extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                _SidebarGroupTitle(title: 'Overview'),
+                const _SidebarGroupTitle(title: 'Overview'),
                 _SidebarItem(
                   icon: Icons.dashboard_outlined,
                   label: 'Dashboard',
@@ -29,7 +29,7 @@ class DashboardSidebar extends StatelessWidget {
                   onTap: () => context.go(AppRoutes.dashboard),
                 ),
                 const SizedBox(height: 24),
-                _SidebarGroupTitle(title: 'Inventory'),
+                const _SidebarGroupTitle(title: 'Inventory'),
                 _SidebarItem(
                   icon: Icons.shopping_bag_outlined,
                   label: 'Products',
@@ -49,7 +49,7 @@ class DashboardSidebar extends StatelessWidget {
                   onTap: () {},
                 ),
                 const SizedBox(height: 24),
-                _SidebarGroupTitle(title: 'Management'),
+                const _SidebarGroupTitle(title: 'Management'),
                 _SidebarItem(
                   icon: Icons.history,
                   label: 'Riwayat',
@@ -145,7 +145,7 @@ class _SidebarItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   )
@@ -157,7 +157,7 @@ class _SidebarItem extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
-          hoverColor: Colors.white.withOpacity(0.5),
+          hoverColor: Colors.white.withValues(alpha: 0.05),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             child: Row(
@@ -165,9 +165,7 @@ class _SidebarItem extends StatelessWidget {
                 Icon(
                   icon,
                   size: 20,
-                  color: isActive
-                      ? AppColors.white
-                      : const Color(0xFF64748B), // Gray for inactive
+                  color: isActive ? AppColors.white : const Color(0xFF64748B), // Gray for inactive
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -175,16 +173,13 @@ class _SidebarItem extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-                    color: isActive
-                        ? AppColors.white
-                        : AppColors.blackFoundation600,
+                    color: isActive ? AppColors.white : AppColors.blackFoundation600,
                   ),
                 ),
                 if (isActive) ...[
                   const Spacer(),
                   const Icon(Icons.keyboard_arrow_down,
-                      color: AppColors.white,
-                      size: 16) // Dropdown indicator implies active
+                      color: AppColors.white, size: 16) // Dropdown indicator implies active
                 ]
               ],
             ),

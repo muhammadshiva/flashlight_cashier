@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flashlight_pos/config/constans/text_styles_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -70,7 +69,7 @@ class _HistoryPageState extends State<HistoryPage> {
           );
         } else if (state is HistoryLoaded) {
           return Scaffold(
-            backgroundColor: Color(0xFFF8FAFC),
+            backgroundColor: const Color(0xFFF8FAFC),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(32.0),
               child: Column(
@@ -111,21 +110,20 @@ class _HeaderSection extends StatelessWidget {
               children: [
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 500),
-                  child: Text(
+                  child: const Text(
                     'Riwayat Transaksi',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E293B), // Slate-900
                     ),
-                    overflow: TextOverflow
-                        .ellipsis, // Add ellipsis if text is too long
+                    overflow: TextOverflow.ellipsis, // Add ellipsis if text is too long
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 4),
-            Row(
+            const Row(
               children: [
                 Text(
                   'Dashboard',
@@ -134,9 +132,9 @@ class _HeaderSection extends StatelessWidget {
                     color: Color(0xFF64748B), // Slate-500
                   ),
                 ),
-                const SizedBox(width: 8),
-                const Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
+                Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
+                SizedBox(width: 8),
                 Text(
                   'Riwayat',
                   style: TextStyle(
@@ -166,26 +164,14 @@ class _StatsAndFilterSection extends StatelessWidget {
         // Stats Cards
         Row(
           children: [
-            _buildStatCard(
-                'Total Transaksi',
-                state.historyOrders.length.toString(),
-                Icons.receipt_long,
-                AppColors.dashboardBlue,
-                AppColors.dashboardBlueLight),
+            _buildStatCard('Total Transaksi', state.historyOrders.length.toString(),
+                Icons.receipt_long, AppColors.dashboardBlue, AppColors.dashboardBlueLight),
             const SizedBox(width: 16),
-            _buildStatCard(
-                'Selesai',
-                (state.statusCounts['completed'] ?? 0).toString(),
-                Icons.check_circle,
-                AppColors.success600,
-                AppColors.success50),
+            _buildStatCard('Selesai', (state.statusCounts['completed'] ?? 0).toString(),
+                Icons.check_circle, AppColors.success600, AppColors.success50),
             const SizedBox(width: 16),
-            _buildStatCard(
-                'Lunas',
-                (state.statusCounts['paid'] ?? 0).toString(),
-                Icons.monetization_on,
-                AppColors.dashboardGreen,
-                AppColors.dashboardGreenLight),
+            _buildStatCard('Lunas', (state.statusCounts['paid'] ?? 0).toString(),
+                Icons.monetization_on, AppColors.dashboardGreen, AppColors.dashboardGreenLight),
           ],
         ),
         const SizedBox(height: 24),
@@ -198,7 +184,7 @@ class _StatsAndFilterSection extends StatelessWidget {
             border: Border.all(color: const Color(0xFFE2E8F0)), // Slate-200
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: 0.02),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -218,22 +204,18 @@ class _StatsAndFilterSection extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.search,
-                              color: Color(0xFF94A3B8), size: 20),
+                          const Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
                           const SizedBox(width: 12),
                           Expanded(
                             child: TextField(
                               onChanged: (value) {
-                                context
-                                    .read<HistoryBloc>()
-                                    .add(FilterHistory(searchQuery: value));
+                                context.read<HistoryBloc>().add(FilterHistory(searchQuery: value));
                               },
                               decoration: const InputDecoration(
                                 hintText: 'Cari WO, Pelanggan, atau Plat Nomor',
                                 border: InputBorder.none,
                                 isDense: true,
-                                hintStyle: TextStyle(
-                                    color: Color(0xFF94A3B8), fontSize: 14),
+                                hintStyle: TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
                               ),
                             ),
                           ),
@@ -247,19 +229,15 @@ class _StatsAndFilterSection extends StatelessWidget {
                       _showFilterDialog(context, state);
                     },
                     icon: const Icon(Icons.filter_list, size: 18),
-                    label: Text(state.selectedStatus == 'Semua'
-                        ? 'Filter'
-                        : state.selectedStatus),
+                    label: Text(state.selectedStatus == 'Semua' ? 'Filter' : state.selectedStatus),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFF64748B), // Slate-500
                       side: BorderSide(
                           color: state.selectedStatus == 'Semua'
                               ? const Color(0xFFE2E8F0)
                               : AppColors.orangePrimary),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
                 ],
@@ -271,8 +249,7 @@ class _StatsAndFilterSection extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(
-      String title, String value, IconData icon, Color color, Color bgColor) {
+  Widget _buildStatCard(String title, String value, IconData icon, Color color, Color bgColor) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(24),
@@ -282,7 +259,7 @@ class _StatsAndFilterSection extends StatelessWidget {
           border: Border.all(color: const Color(0xFFE2E8F0)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -337,18 +314,16 @@ class _StatsAndFilterSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildFilterOption(context, dialogContext, 'Semua', state),
-            _buildFilterOption(context, dialogContext, 'completed', state,
-                label: 'Selesai'),
-            _buildFilterOption(context, dialogContext, 'paid', state,
-                label: 'Lunas'),
+            _buildFilterOption(context, dialogContext, 'completed', state, label: 'Selesai'),
+            _buildFilterOption(context, dialogContext, 'paid', state, label: 'Lunas'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFilterOption(BuildContext context, BuildContext dialogContext,
-      String status, HistoryLoaded state,
+  Widget _buildFilterOption(
+      BuildContext context, BuildContext dialogContext, String status, HistoryLoaded state,
       {String? label}) {
     final isSelected = state.selectedStatus == status;
     return ListTile(
@@ -411,7 +386,7 @@ class _HistoryTable extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -468,8 +443,7 @@ class _HistoryTable extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         order.completedAt != null
-                            ? DateFormat('dd MMM yyyy, HH:mm')
-                                .format(order.completedAt!)
+                            ? DateFormat('dd MMM yyyy, HH:mm').format(order.completedAt!)
                             : '-',
                         style: const TextStyle(
                           color: Color(0xFF94A3B8), // Slate-400
@@ -484,11 +458,10 @@ class _HistoryTable extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundColor:
-                            AppColors.orangePrimary.withOpacity(0.1),
+                        backgroundColor: AppColors.orangePrimary.withValues(alpha: 0.1),
                         child: Text(
                           (customer?.name ?? 'U').substring(0, 1).toUpperCase(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: AppColors.orangePrimary,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../injection_container.dart';
 import '../../domain/entities/product.dart';
 import '../bloc/product_bloc.dart';
@@ -40,12 +41,9 @@ class _ProductFormViewState extends State<ProductFormView> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.product?.name ?? '');
-    _descController =
-        TextEditingController(text: widget.product?.description ?? '');
-    _priceController =
-        TextEditingController(text: widget.product?.price.toString() ?? '');
-    _stockController =
-        TextEditingController(text: widget.product?.stock.toString() ?? '');
+    _descController = TextEditingController(text: widget.product?.description ?? '');
+    _priceController = TextEditingController(text: widget.product?.price.toString() ?? '');
+    _stockController = TextEditingController(text: widget.product?.stock.toString() ?? '');
     _type = widget.product?.type ?? 'coffee';
   }
 
@@ -92,8 +90,7 @@ class _ProductFormViewState extends State<ProductFormView> {
             context.pop();
           } else if (state is ProductError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(state.message), backgroundColor: Colors.red),
+              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
             );
           }
         },
@@ -125,7 +122,7 @@ class _ProductFormViewState extends State<ProductFormView> {
                   validator: (v) => v!.isEmpty ? 'Required' : null,
                 ),
                 DropdownButtonFormField<String>(
-                  value: _type,
+                  initialValue: _type,
                   decoration: const InputDecoration(labelText: 'Type'),
                   // If current type is not in list, fallback or add it?
                   // Assuming fixed types for now.

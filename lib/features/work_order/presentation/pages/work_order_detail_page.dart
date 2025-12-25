@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../injection_container.dart';
 import '../../domain/entities/work_order.dart';
 import '../bloc/detail/work_order_detail_bloc.dart';
@@ -15,13 +16,11 @@ class WorkOrderDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          sl<WorkOrderDetailBloc>()..add(LoadWorkOrderDetail(workOrderId)),
+      create: (_) => sl<WorkOrderDetailBloc>()..add(LoadWorkOrderDetail(workOrderId)),
       child: Scaffold(
         backgroundColor: const Color(0xFFF8F9FC),
         appBar: AppBar(
-          title: const Text('Detail Work Order',
-              style: TextStyle(color: Color(0xFF1E293B))),
+          title: const Text('Detail Work Order', style: TextStyle(color: Color(0xFF1E293B))),
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
@@ -163,8 +162,7 @@ class WorkOrderDetailPage extends StatelessWidget {
                   ),
                 ],
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(8),
@@ -172,8 +170,7 @@ class WorkOrderDetailPage extends StatelessWidget {
                   ),
                   child: const Row(
                     children: [
-                      Text('Update Status',
-                          style: TextStyle(color: Colors.blue)),
+                      Text('Update Status', style: TextStyle(color: Colors.blue)),
                       SizedBox(width: 8),
                       Icon(Icons.arrow_drop_down, color: Colors.blue),
                     ],
@@ -231,9 +228,7 @@ class WorkOrderDetailPage extends StatelessWidget {
           children: [
             Text(title,
                 style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B))),
+                    fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
             const Divider(height: 24),
             ...children,
           ],
@@ -250,13 +245,11 @@ class WorkOrderDetailPage extends StatelessWidget {
         children: [
           SizedBox(
             width: 120,
-            child:
-                Text(label, style: const TextStyle(color: Color(0xFF64748B))),
+            child: Text(label, style: const TextStyle(color: Color(0xFF64748B))),
           ),
           Expanded(
             child: Text(value,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Color(0xFF1E293B))),
+                style: const TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF1E293B))),
           ),
         ],
       ),
@@ -276,25 +269,21 @@ class WorkOrderDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Item Pekerjaan & Produk',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B))),
+                style:
+                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
             const Divider(height: 24),
             if (wo.services.isNotEmpty) ...[
-              const Text('Jasa (Services)',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text('Jasa (Services)', style: TextStyle(fontWeight: FontWeight.w600)),
               const SizedBox(height: 8),
-              ...wo.services.map((s) => _buildItemRow(s.serviceId, s.quantity,
-                  s.priceAtOrder, s.subtotal)), // Using ID as name for now
+              ...wo.services.map((s) => _buildItemRow(
+                  s.serviceId, s.quantity, s.priceAtOrder, s.subtotal)), // Using ID as name for now
               const SizedBox(height: 16),
             ],
             if (wo.products.isNotEmpty) ...[
-              const Text('Produk (F&B)',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text('Produk (F&B)', style: TextStyle(fontWeight: FontWeight.w600)),
               const SizedBox(height: 8),
-              ...wo.products.map((p) => _buildItemRow(
-                  p.productId, p.quantity, p.priceAtOrder, p.subtotal)),
+              ...wo.products
+                  .map((p) => _buildItemRow(p.productId, p.quantity, p.priceAtOrder, p.subtotal)),
             ],
           ],
         ),
@@ -310,14 +299,11 @@ class WorkOrderDetailPage extends StatelessWidget {
           Expanded(child: Text(name)), // TODO: Resolve Name
           Text('${qty}x'),
           const SizedBox(width: 16),
-          SizedBox(
-              width: 100,
-              child: Text(_formatCurrency(price), textAlign: TextAlign.right)),
+          SizedBox(width: 100, child: Text(_formatCurrency(price), textAlign: TextAlign.right)),
           SizedBox(
               width: 100,
               child: Text(_formatCurrency(subtotal),
-                  textAlign: TextAlign.right,
-                  style: TextStyle(fontWeight: FontWeight.bold))),
+                  textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.bold))),
         ],
       ),
     );
@@ -337,33 +323,25 @@ class WorkOrderDetailPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Total Biaya',
-                    style: TextStyle(color: Colors.white70, fontSize: 16)),
+                const Text('Total Biaya', style: TextStyle(color: Colors.white70, fontSize: 16)),
                 Text(_formatCurrency(wo.totalPrice),
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold)),
+                        color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Status Pembayaran',
-                    style: TextStyle(color: Colors.white70)),
+                const Text('Status Pembayaran', style: TextStyle(color: Colors.white70)),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: wo.paymentStatus == 'paid'
-                        ? Colors.green
-                        : Colors.orange,
+                    color: wo.paymentStatus == 'paid' ? Colors.green : Colors.orange,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(wo.paymentStatus?.toUpperCase() ?? 'PENDING',
-                      style:
-                          const TextStyle(color: Colors.white, fontSize: 12)),
+                      style: const TextStyle(color: Colors.white, fontSize: 12)),
                 ),
               ],
             ),
@@ -374,8 +352,7 @@ class WorkOrderDetailPage extends StatelessWidget {
   }
 
   String _formatCurrency(int amount) {
-    final format =
-        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final format = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     return format.format(amount);
   }
 }

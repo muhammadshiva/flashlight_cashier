@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../injection_container.dart';
 import '../../domain/entities/service_entity.dart';
 import '../bloc/service_bloc.dart';
@@ -98,13 +99,12 @@ class _ServiceFormViewState extends State<ServiceFormView> {
                   validator: (v) => v!.isEmpty ? 'Required' : null,
                 ),
                 DropdownButtonFormField<String>(
-                  value: _type,
+                  initialValue: _type,
                   decoration: const InputDecoration(labelText: 'Type'),
                   items: const [
                     DropdownMenuItem(value: 'wash', child: Text('Wash')),
                     DropdownMenuItem(value: 'wax', child: Text('Wax')),
-                    DropdownMenuItem(
-                        value: 'detailing', child: Text('Detailing')),
+                    DropdownMenuItem(value: 'detailing', child: Text('Detailing')),
                     DropdownMenuItem(value: 'premium', child: Text('Premium')),
                   ],
                   onChanged: (v) => setState(() => _type = v!),

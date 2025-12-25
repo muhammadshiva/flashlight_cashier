@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../injection_container.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
@@ -47,8 +48,7 @@ class PosView extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state.status == PosStatus.loading &&
-              state.availableServices.isEmpty) {
+          if (state.status == PosStatus.loading && state.availableServices.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -128,7 +128,7 @@ class _CustomerVehicleSelection extends StatelessWidget {
       child: Column(
         children: [
           DropdownButtonFormField<Customer>(
-            value: state.selectedCustomer,
+            initialValue: state.selectedCustomer,
             decoration: const InputDecoration(labelText: 'Select Customer'),
             items: state.customers.map((c) {
               return DropdownMenuItem(value: c, child: Text(c.name));
@@ -139,12 +139,11 @@ class _CustomerVehicleSelection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           DropdownButtonFormField<Vehicle>(
-            value: state.selectedVehicle,
+            initialValue: state.selectedVehicle,
             decoration: const InputDecoration(labelText: 'Select Vehicle'),
             items: state.customerVehicles.map((v) {
               return DropdownMenuItem(
-                  value: v,
-                  child: Text('${v.vehicleBrand} - ${v.licensePlate}'));
+                  value: v, child: Text('${v.vehicleBrand} - ${v.licensePlate}'));
             }).toList(),
             onChanged: (v) {
               if (v != null) context.read<PosBloc>().add(SelectVehicle(v));
@@ -190,9 +189,7 @@ class _CatalogView extends StatelessWidget {
                     final service = state.availableServices[index];
                     return Card(
                       child: InkWell(
-                        onTap: () => context
-                            .read<PosBloc>()
-                            .add(AddServiceToCart(service)),
+                        onTap: () => context.read<PosBloc>().add(AddServiceToCart(service)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -200,8 +197,7 @@ class _CatalogView extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(service.name, textAlign: TextAlign.center),
                             Text('\$${service.price}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
@@ -222,9 +218,7 @@ class _CatalogView extends StatelessWidget {
                     final product = state.availableProducts[index];
                     return Card(
                       child: InkWell(
-                        onTap: () => context
-                            .read<PosBloc>()
-                            .add(AddProductToCart(product)),
+                        onTap: () => context.read<PosBloc>().add(AddProductToCart(product)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -232,8 +226,7 @@ class _CatalogView extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(product.name, textAlign: TextAlign.center),
                             Text('\$${product.price}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
@@ -268,8 +261,7 @@ class _CartViewState extends State<_CartView> {
           padding: const EdgeInsets.all(16),
           color: Colors.grey.shade200,
           width: double.infinity,
-          child: Text('Current Order',
-              style: Theme.of(context).textTheme.headlineSmall),
+          child: Text('Current Order', style: Theme.of(context).textTheme.headlineSmall),
         ),
         Expanded(
           child: ListView.builder(
@@ -282,13 +274,10 @@ class _CartViewState extends State<_CartView> {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('\$${item.subtotal}',
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text('\$${item.subtotal}', style: const TextStyle(fontWeight: FontWeight.bold)),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.grey),
-                      onPressed: () => context
-                          .read<PosBloc>()
-                          .add(RemoveItemFromCart(index)),
+                      onPressed: () => context.read<PosBloc>().add(RemoveItemFromCart(index)),
                     ),
                   ],
                 ),
@@ -310,12 +299,10 @@ class _CartViewState extends State<_CartView> {
                     items: const [
                       DropdownMenuItem(value: 'cash', child: Text('Cash')),
                       DropdownMenuItem(value: 'card', child: Text('Card')),
-                      DropdownMenuItem(
-                          value: 'transfer', child: Text('Transfer')),
+                      DropdownMenuItem(value: 'transfer', child: Text('Transfer')),
                     ],
                     onChanged: (val) {
-                      if (val != null)
-                        setState(() => _selectedPaymentMethod = val);
+                      if (val != null) setState(() => _selectedPaymentMethod = val);
                     },
                   ),
                 ],
@@ -324,14 +311,10 @@ class _CartViewState extends State<_CartView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Total:',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const Text('Total:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Text('\$${widget.state.totalAmount}',
                       style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green)),
+                          fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
                 ],
               ),
               const SizedBox(height: 16),
@@ -345,11 +328,12 @@ class _CartViewState extends State<_CartView> {
                   onPressed: widget.state.cartItems.isEmpty
                       ? null
                       : () {
-                          context.read<PosBloc>().add(SubmitOrder(
-                              paymentMethod: _selectedPaymentMethod));
+                          context
+                              .read<PosBloc>()
+                              .add(SubmitOrder(paymentMethod: _selectedPaymentMethod));
                         },
-                  child: const Text('Checkout',
-                      style: TextStyle(color: Colors.white, fontSize: 18)),
+                  child:
+                      const Text('Checkout', style: TextStyle(color: Colors.white, fontSize: 18)),
                 ),
               ),
             ],

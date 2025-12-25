@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../work_order/domain/entities/work_order.dart';
+
+import '../../../../config/themes/app_colors.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
-import '../../../../config/themes/app_colors.dart';
+import '../../../work_order/domain/entities/work_order.dart';
 
 class WorkOrderCard extends StatelessWidget {
   final WorkOrder workOrder;
@@ -149,16 +150,14 @@ class WorkOrderCard extends StatelessWidget {
                     if (workOrder.estimatedTime.isNotEmpty) ...[
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF1F5F9),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.access_time,
-                                size: 12, color: Color(0xFF64748B)),
+                            const Icon(Icons.access_time, size: 12, color: Color(0xFF64748B)),
                             const SizedBox(width: 4),
                             Text(
                               workOrder.estimatedTime,
@@ -187,13 +186,11 @@ class WorkOrderCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.person,
-                                  size: 16, color: Color(0xFF64748B)),
+                              const Icon(Icons.person, size: 16, color: Color(0xFF64748B)),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  customer?.name ??
-                                      'Cust: ${_shortenId(workOrder.customerId)}',
+                                  customer?.name ?? 'Cust: ${_shortenId(workOrder.customerId)}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -208,8 +205,7 @@ class WorkOrderCard extends StatelessWidget {
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              const Icon(Icons.phone,
-                                  size: 14, color: Color(0xFF64748B)),
+                              const Icon(Icons.phone, size: 14, color: Color(0xFF64748B)),
                               const SizedBox(width: 8),
                               Text(
                                 customer?.phoneNumber ?? '-',
@@ -223,8 +219,7 @@ class WorkOrderCard extends StatelessWidget {
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              const Icon(Icons.directions_car,
-                                  size: 16, color: Color(0xFF64748B)),
+                              const Icon(Icons.directions_car, size: 16, color: Color(0xFF64748B)),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
@@ -272,8 +267,7 @@ class WorkOrderCard extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: _getActionButtonColor(),
                             foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 14),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -288,8 +282,8 @@ class WorkOrderCard extends StatelessWidget {
 
                 // Services
                 if (workOrder.services.isNotEmpty) ...[
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Icon(Icons.build, size: 14, color: Color(0xFF94A3B8)),
                       SizedBox(width: 6),
                       Text(
@@ -308,8 +302,7 @@ class WorkOrderCard extends StatelessWidget {
                     runSpacing: 8,
                     children: workOrder.services.map((service) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFEFF6FF),
                           borderRadius: BorderRadius.circular(6),
@@ -319,8 +312,7 @@ class WorkOrderCard extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          service.service?.name ??
-                              'Svc: ${_shortenId(service.serviceId)}',
+                          service.service?.name ?? 'Svc: ${_shortenId(service.serviceId)}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -335,8 +327,8 @@ class WorkOrderCard extends StatelessWidget {
 
                 // Products (F&B)
                 if (workOrder.products.isNotEmpty) ...[
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Icon(Icons.fastfood, size: 14, color: Color(0xFF94A3B8)),
                       SizedBox(width: 6),
                       Text(
@@ -355,8 +347,7 @@ class WorkOrderCard extends StatelessWidget {
                     runSpacing: 8,
                     children: workOrder.products.map((product) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
                           borderRadius: BorderRadius.circular(6),
@@ -384,8 +375,7 @@ class WorkOrderCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      NumberFormat.currency(
-                              locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0)
+                      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0)
                           .format(workOrder.totalPrice),
                       style: const TextStyle(
                         fontSize: 20,
@@ -397,16 +387,14 @@ class WorkOrderCard extends StatelessWidget {
                     // Show products count as upsell indicator
                     if (workOrder.products.isNotEmpty)
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.local_offer,
-                                size: 12, color: Color(0xFFD97706)),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.local_offer, size: 12, color: Color(0xFFD97706)),
                             SizedBox(width: 4),
                             Text(
                               'Upsell',

@@ -44,8 +44,7 @@ class ServiceListPage extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is ServiceLoading) {
-              return const Center(
-                  child: CircularProgressIndicator(color: AppColors.primary));
+              return const Center(child: CircularProgressIndicator(color: AppColors.primary));
             } else if (state is ServiceLoaded) {
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(32.0),
@@ -77,10 +76,10 @@ class _HeaderSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Daftar Layanan',
               style: TextStyle(
                 fontSize: 24,
@@ -88,19 +87,19 @@ class _HeaderSection extends StatelessWidget {
                 color: Color(0xFF1E293B), // Slate-900
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Row(
               children: [
-                const Text(
+                Text(
                   'Dashboard',
                   style: TextStyle(
                     fontSize: 14,
                     color: Color(0xFF64748B), // Slate-500
                   ),
                 ),
-                const SizedBox(width: 8),
-                const Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
+                Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
+                SizedBox(width: 8),
                 Text(
                   'Layanan',
                   style: TextStyle(
@@ -121,8 +120,7 @@ class _HeaderSection extends StatelessWidget {
             backgroundColor: AppColors.orangePrimary,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 0,
           ),
         ),
@@ -144,7 +142,7 @@ class _SearchSection extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -173,8 +171,7 @@ class _SearchSection extends StatelessWidget {
                         hintText: 'Cari layanan...',
                         border: InputBorder.none,
                         isDense: true,
-                        hintStyle:
-                            TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                        hintStyle: TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
                       ),
                     ),
                   ),
@@ -191,8 +188,7 @@ class _SearchSection extends StatelessWidget {
               foregroundColor: const Color(0xFF64748B),
               side: const BorderSide(color: Color(0xFFE2E8F0)),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
         ],
@@ -218,7 +214,7 @@ class _ServiceTable extends StatelessWidget {
               Icon(
                 Icons.miscellaneous_services_outlined,
                 size: 64,
-                color: AppColors.textGray3.withOpacity(0.5),
+                color: AppColors.textGray3.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               const Text(
@@ -242,7 +238,7 @@ class _ServiceTable extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -345,8 +341,7 @@ class _ServiceTable extends StatelessWidget {
                       if (service.isDefault)
                         Container(
                           margin: const EdgeInsets.only(right: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFFDBEAFE),
                             borderRadius: BorderRadius.circular(4),
@@ -361,11 +356,9 @@ class _ServiceTable extends StatelessWidget {
                           ),
                         ),
                       if (service.isActive)
-                        const Icon(Icons.check_circle,
-                            color: AppColors.success600, size: 16)
+                        const Icon(Icons.check_circle, color: AppColors.success600, size: 16)
                       else
-                        const Icon(Icons.cancel,
-                            color: AppColors.textGray3, size: 16),
+                        const Icon(Icons.cancel, color: AppColors.textGray3, size: 16),
                     ],
                   ),
                 ),
@@ -376,8 +369,7 @@ class _ServiceTable extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          onPressed: () =>
-                              context.push('/services/${service.id}/edit'),
+                          onPressed: () => context.push('/services/${service.id}/edit'),
                           icon: const Icon(Icons.edit_outlined, size: 18),
                           color: const Color(0xFF64748B),
                           tooltip: 'Edit',

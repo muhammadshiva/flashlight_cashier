@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../injection_container.dart';
 import '../../domain/entities/membership.dart';
 import '../bloc/membership_bloc.dart';
@@ -82,12 +83,11 @@ class _MembershipFormViewState extends State<MembershipFormView> {
                   validator: (v) => v!.isEmpty ? 'Required' : null,
                 ),
                 DropdownButtonFormField<String>(
-                  value: _type,
+                  initialValue: _type,
                   decoration: const InputDecoration(labelText: 'Type'),
                   items: const [
                     DropdownMenuItem(value: 'member', child: Text('Member')),
-                    DropdownMenuItem(
-                        value: 'nonMember', child: Text('Non-Member')),
+                    DropdownMenuItem(value: 'nonMember', child: Text('Non-Member')),
                   ],
                   onChanged: (v) => setState(() => _type = v!),
                 ),
