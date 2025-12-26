@@ -20,6 +20,9 @@ import '../../features/membership/presentation/pages/membership_list_page.dart';
 import '../../features/product/domain/entities/product.dart';
 import '../../features/product/presentation/pages/product_form_page.dart';
 import '../../features/product/presentation/pages/product_list_page.dart';
+import '../../features/category/domain/entities/category.dart';
+import '../../features/category/presentation/pages/category_form_page.dart';
+import '../../features/category/presentation/pages/category_list_page.dart';
 import '../../features/report/presentation/pages/reports_page.dart';
 import '../../features/service/presentation/pages/service_form_page.dart';
 import '../../features/service/presentation/pages/service_list_page.dart';
@@ -156,6 +159,25 @@ class AppPages {
                 builder: (context, state) {
                   final product = state.extra as Product?;
                   return ProductFormPage(product: product);
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: AppRoutes.categories,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: CategoryListPage(),
+            ),
+            routes: [
+              GoRoute(
+                path: AppRoutes.childNew,
+                builder: (context, state) => const CategoryFormPage(),
+              ),
+              GoRoute(
+                path: AppRoutes.childIdEdit,
+                builder: (context, state) {
+                  final category = state.extra as Category?;
+                  return CategoryFormPage(category: category);
                 },
               ),
             ],

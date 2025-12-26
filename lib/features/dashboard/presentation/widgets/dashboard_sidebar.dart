@@ -39,8 +39,8 @@ class DashboardSidebar extends StatelessWidget {
                 _SidebarItem(
                   icon: Icons.category_outlined,
                   label: 'Categories',
-                  isActive: false, // Placeholder
-                  onTap: () {},
+                  isActive: location.startsWith(AppRoutes.categories),
+                  onTap: () => context.go(AppRoutes.categories),
                 ),
                 _SidebarItem(
                   icon: Icons.inventory_2_outlined,

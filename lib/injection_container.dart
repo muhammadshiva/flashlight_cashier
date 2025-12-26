@@ -35,6 +35,11 @@ import 'features/product/domain/repositories/product_repository.dart';
 import 'features/product/domain/usecases/product_usecases.dart';
 import 'features/product/domain/usecases/update_product.dart';
 import 'features/product/presentation/bloc/product_bloc.dart';
+import 'features/category/data/datasources/category_remote_data_source.dart';
+import 'features/category/data/repositories/category_repository_impl.dart';
+import 'features/category/domain/repositories/category_repository.dart';
+import 'features/category/domain/usecases/category_usecases.dart';
+import 'features/category/presentation/bloc/category_bloc.dart';
 
 import 'features/vehicle/presentation/bloc/vehicle_bloc.dart';
 import 'features/work_order/data/datasources/work_order_remote_data_source.dart';
@@ -214,6 +219,33 @@ Future<void> init() async {
   // Data sources
   sl.registerLazySingleton<ProductRemoteDataSource>(
     () => ProductRemoteDataSourceImpl(dio: sl<DioClient>().dio),
+  );
+
+  //! Features - Category
+  // Bloc
+  sl.registerFactory(
+    () => CategoryBloc(
+      getCategories: sl(),
+      createCategory: sl(),
+      updateCategory: sl(),
+      deleteCategory: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetCategories(sl()));
+  sl.registerLazySingleton(() => CreateCategory(sl()));
+  sl.registerLazySingleton(() => UpdateCategory(sl()));
+  sl.registerLazySingleton(() => DeleteCategory(sl()));
+
+  // Repository
+  sl.registerLazySingleton<CategoryRepository>(
+    () => CategoryRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<CategoryRemoteDataSource>(
+    () => CategoryRemoteDataSourceImpl(dio: sl<DioClient>().dio),
   );
 
   //! Features - Work Order
