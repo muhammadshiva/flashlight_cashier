@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../core/widgets/session_timeout_listener.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/sign_up_page.dart';
+import '../../features/customer/domain/entities/customer.dart';
 import '../../features/customer/presentation/pages/customer_form_page.dart';
 import '../../features/customer/presentation/pages/customer_list_page.dart';
-import '../../features/dashboard/presentation/pages/dashboard_page.dart';
-import '../../features/dashboard/presentation/widgets/dashboard_layout.dart';
 import '../../features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import '../../features/dashboard/presentation/bloc/dashboard_event.dart';
-import '../../features/history/presentation/pages/history_page.dart';
+import '../../features/dashboard/presentation/pages/dashboard_page.dart';
+import '../../features/dashboard/presentation/widgets/dashboard_layout.dart';
 import '../../features/history/presentation/bloc/history_bloc.dart';
 import '../../features/history/presentation/bloc/history_event.dart';
+import '../../features/history/presentation/pages/history_page.dart';
 import '../../features/membership/presentation/pages/membership_form_page.dart';
 import '../../features/membership/presentation/pages/membership_list_page.dart';
+import '../../features/product/domain/entities/product.dart';
 import '../../features/product/presentation/pages/product_form_page.dart';
 import '../../features/product/presentation/pages/product_list_page.dart';
+import '../../features/report/presentation/pages/reports_page.dart';
 import '../../features/service/presentation/pages/service_form_page.dart';
 import '../../features/service/presentation/pages/service_list_page.dart';
+import '../../features/user/domain/entities/user.dart';
+import '../../features/user/presentation/pages/user_form_page.dart';
+import '../../features/user/presentation/pages/user_list_page.dart';
 import '../../features/vehicle/presentation/pages/vehicle_form_page.dart';
 import '../../features/vehicle/presentation/pages/vehicle_list_page.dart';
 import '../../features/work_order/presentation/pages/pos_page.dart';
 import '../../features/work_order/presentation/pages/work_order_detail_page.dart';
-import '../../features/user/presentation/pages/user_list_page.dart';
-import '../../features/user/presentation/pages/user_form_page.dart';
-import '../../features/user/domain/entities/user.dart';
-import '../../features/customer/domain/entities/customer.dart';
-import '../../features/product/domain/entities/product.dart';
-import '../../features/report/presentation/pages/reports_page.dart';
-import '../../core/widgets/session_timeout_listener.dart';
 import '../../injection_container.dart' as di;
 import '../routes/app_routes.dart';
 
@@ -41,12 +43,16 @@ class AppPages {
         path: AppRoutes.login,
         builder: (context, state) => const LoginPage(),
       ),
+      GoRoute(
+        path: AppRoutes.signUp,
+        builder: (context, state) => const SignUpPage(),
+      ),
+
       // Persistent Shell for Dashboard and Feature Pages
       ShellRoute(
         builder: (context, state, child) {
           return BlocProvider<DashboardBloc>(
-            create: (context) =>
-                di.sl<DashboardBloc>()..add(LoadDashboardStats()),
+            create: (context) => di.sl<DashboardBloc>()..add(LoadDashboardStats()),
             child: Builder(
               builder: (context) {
                 return SessionTimeoutListener(

@@ -3,6 +3,7 @@ class AppRoutes {
 
   // Auth
   static const String login = '/login';
+  static const String signUp = '/signup';
 
   // Dashboard & Main
   static const String dashboard = '/dashboard';
