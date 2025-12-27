@@ -175,6 +175,20 @@ class _CategoryTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Prevent rendering if empty (should not happen due to parent check, but just in case)
+    if (categories.isEmpty) {
+      return const Center(
+        child: Text(
+          'No categories found',
+          style: TextStyle(
+            fontSize: 16,
+            color: Color(0xFF64748B),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       child: Table(
         columnWidths: const {
@@ -370,6 +384,10 @@ Widget _buildPaginationSection(BuildContext context) {
       final currentPage = state.currentPage;
       final itemsPerPage = state.itemsPerPage;
       final totalItems = state.totalItems;
+
+      // Don't show pagination if no items
+      if (totalItems == 0) return const SizedBox.shrink();
+
       final totalPages = (totalItems / itemsPerPage).ceil();
 
       final startItem = (currentPage - 1) * itemsPerPage + 1;

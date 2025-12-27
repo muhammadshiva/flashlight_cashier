@@ -40,6 +40,9 @@ class AppRoutes {
   static const String categoryNew = '/categories/new';
   static String categoryEdit(String id) => '/categories/$id/edit';
 
+  // Stock Control
+  static const String stockControl = '/stock-control';
+
   // Users
   static const String users = '/users';
   static const String userNew = '/users/new';

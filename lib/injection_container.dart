@@ -40,6 +40,11 @@ import 'features/category/data/repositories/category_repository_impl.dart';
 import 'features/category/domain/repositories/category_repository.dart';
 import 'features/category/domain/usecases/category_usecases.dart';
 import 'features/category/presentation/bloc/category_bloc.dart';
+import 'features/stock/data/datasources/stock_remote_data_source.dart';
+import 'features/stock/data/repositories/stock_repository_impl.dart';
+import 'features/stock/domain/repositories/stock_repository.dart';
+import 'features/stock/domain/usecases/stock_usecases.dart';
+import 'features/stock/presentation/bloc/stock_bloc.dart';
 
 import 'features/vehicle/presentation/bloc/vehicle_bloc.dart';
 import 'features/work_order/data/datasources/work_order_remote_data_source.dart';
@@ -246,6 +251,31 @@ Future<void> init() async {
   // Data sources
   sl.registerLazySingleton<CategoryRemoteDataSource>(
     () => CategoryRemoteDataSourceImpl(dio: sl<DioClient>().dio),
+  );
+
+  //! Features - Stock Control
+  // Bloc
+  sl.registerFactory(
+    () => StockBloc(
+      getStockItems: sl(),
+      adjustStock: sl(),
+      getStockHistory: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetStockItems(sl()));
+  sl.registerLazySingleton(() => AdjustStock(sl()));
+  sl.registerLazySingleton(() => GetStockHistory(sl()));
+
+  // Repository
+  sl.registerLazySingleton<StockRepository>(
+    () => StockRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<StockRemoteDataSource>(
+    () => StockRemoteDataSourceImpl(dio: sl<DioClient>().dio),
   );
 
   //! Features - Work Order

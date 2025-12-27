@@ -23,6 +23,7 @@ import '../../features/product/presentation/pages/product_list_page.dart';
 import '../../features/category/domain/entities/category.dart';
 import '../../features/category/presentation/pages/category_form_page.dart';
 import '../../features/category/presentation/pages/category_list_page.dart';
+import '../../features/stock/presentation/pages/stock_control_page.dart';
 import '../../features/report/presentation/pages/reports_page.dart';
 import '../../features/service/presentation/pages/service_form_page.dart';
 import '../../features/service/presentation/pages/service_list_page.dart';
@@ -181,6 +182,12 @@ class AppPages {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            path: AppRoutes.stockControl,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: StockControlPage(),
+            ),
           ),
           GoRoute(
             path: AppRoutes.users,

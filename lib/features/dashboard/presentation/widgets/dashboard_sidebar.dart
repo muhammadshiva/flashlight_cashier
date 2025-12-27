@@ -45,8 +45,8 @@ class DashboardSidebar extends StatelessWidget {
                 _SidebarItem(
                   icon: Icons.inventory_2_outlined,
                   label: 'Stock Control',
-                  isActive: false, // Placeholder
-                  onTap: () {},
+                  isActive: location.startsWith(AppRoutes.stockControl),
+                  onTap: () => context.go(AppRoutes.stockControl),
                 ),
                 const SizedBox(height: 24),
                 const _SidebarGroupTitle(title: 'Management'),
