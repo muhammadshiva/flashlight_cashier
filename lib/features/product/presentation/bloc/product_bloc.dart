@@ -78,8 +78,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             ? source
             : source
                 .where((p) =>
-                    p.name.toLowerCase().contains(query) ||
-                    p.id.toLowerCase().contains(query))
+                    p.name.toLowerCase().contains(query) || p.id.toLowerCase().contains(query))
                 .toList();
 
         const itemsPerPage = 10;
@@ -93,6 +92,32 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           sourceProducts: source, // Keep master source
           currentPage: 1,
           totalItems: totalItems,
+          itemsPerPage: itemsPerPage,
+        ));
+      }
+    });
+
+    on<ChangeItemsPerPageEvent>((event, emit) {
+      if (state is ProductLoaded) {
+        final currentState = state as ProductLoaded;
+        final allProducts = currentState.allProducts;
+        final itemsPerPage = event.itemsPerPage;
+
+        // Reset to page 1 when changing items per page
+        const currentPage = 1;
+        final startIndex = (currentPage - 1) * itemsPerPage;
+        final endIndex = (startIndex + itemsPerPage) > allProducts.length
+            ? allProducts.length
+            : startIndex + itemsPerPage;
+
+        final paginatedProducts = allProducts.sublist(startIndex, endIndex);
+
+        emit(ProductLoaded(
+          products: paginatedProducts,
+          allProducts: allProducts,
+          sourceProducts: currentState.sourceProducts,
+          currentPage: currentPage,
+          totalItems: allProducts.length,
           itemsPerPage: itemsPerPage,
         ));
       }

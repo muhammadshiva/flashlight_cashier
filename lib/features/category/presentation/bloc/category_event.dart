@@ -27,6 +27,13 @@ class ChangePageEvent extends CategoryEvent {
   List<Object> get props => [page];
 }
 
+class ChangeItemsPerPageEvent extends CategoryEvent {
+  final int itemsPerPage;
+  const ChangeItemsPerPageEvent(this.itemsPerPage);
+  @override
+  List<Object> get props => [itemsPerPage];
+}
+
 class CreateCategoryEvent extends CategoryEvent {
   final Category category;
 

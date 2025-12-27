@@ -97,6 +97,32 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       }
     });
 
+    on<ChangeItemsPerPageEvent>((event, emit) {
+      if (state is CategoryLoaded) {
+        final currentState = state as CategoryLoaded;
+        final allCategories = currentState.allCategories;
+        final itemsPerPage = event.itemsPerPage;
+
+        // Reset to page 1 when changing items per page
+        const currentPage = 1;
+        final startIndex = (currentPage - 1) * itemsPerPage;
+        final endIndex = (startIndex + itemsPerPage) > allCategories.length
+            ? allCategories.length
+            : startIndex + itemsPerPage;
+
+        final paginatedCategories = allCategories.sublist(startIndex, endIndex);
+
+        emit(CategoryLoaded(
+          categories: paginatedCategories,
+          allCategories: allCategories,
+          sourceCategories: currentState.sourceCategories,
+          currentPage: currentPage,
+          totalItems: allCategories.length,
+          itemsPerPage: itemsPerPage,
+        ));
+      }
+    });
+
     on<CreateCategoryEvent>((event, emit) async {
       emit(CategoryLoading());
       final result = await createCategory(event.category);
