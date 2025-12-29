@@ -42,3 +42,17 @@ class UpdateCustomerEvent extends CustomerEvent {
   @override
   List<Object> get props => [customer];
 }
+
+class ChangePageEvent extends CustomerEvent {
+  final int page;
+  const ChangePageEvent(this.page);
+  @override
+  List<Object> get props => [page];
+}
+
+class SearchCustomersEvent extends CustomerEvent {
+  final String query;
+  const SearchCustomersEvent(this.query);
+  @override
+  List<Object> get props => [query];
+}

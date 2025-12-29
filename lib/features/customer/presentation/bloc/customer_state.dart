@@ -14,11 +14,30 @@ class CustomerLoading extends CustomerState {}
 
 class CustomerLoaded extends CustomerState {
   final List<Customer> customers;
+  final List<Customer> allCustomers;
+  final List<Customer> sourceCustomers;
+  final int currentPage;
+  final int totalItems;
+  final int itemsPerPage;
 
-  const CustomerLoaded(this.customers);
+  const CustomerLoaded({
+    required this.customers,
+    required this.allCustomers,
+    required this.sourceCustomers,
+    this.currentPage = 1,
+    this.totalItems = 0,
+    this.itemsPerPage = 10,
+  });
 
   @override
-  List<Object> get props => [customers];
+  List<Object> get props => [
+        customers,
+        allCustomers,
+        sourceCustomers,
+        currentPage,
+        totalItems,
+        itemsPerPage
+      ];
 }
 
 class CustomerOperationSuccess extends CustomerState {
