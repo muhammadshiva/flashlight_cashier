@@ -36,13 +36,33 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DashboardBloc, DashboardState>(
+      // Only listen when state changes to error (not on every rebuild)
+      listenWhen: (previous, current) {
+        // Only show snackbar when transitioning TO error state
+        // or when the error message changes
+        return current is DashboardError &&
+            (previous is! DashboardError ||
+                previous.message != current.message);
+      },
       listener: (context, state) {
         // Show snackbar on error
         if (state is DashboardError) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          // Log technical error
+          debugPrint('Dashboard Error: ${state.message}');
+
+          final messenger = ScaffoldMessenger.of(context);
+
+          // Clear any existing snackbars before showing new one
+          messenger.clearSnackBars();
+
+          messenger.showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content:
+                  const Text('Gagal memuat data dashboard. Silakan coba lagi.'),
               backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating, // Make it less intrusive
+              margin: const EdgeInsets.all(16),
+              duration: const Duration(seconds: 3),
               action: SnackBarAction(
                 label: 'Retry',
                 textColor: Colors.white,
@@ -52,6 +72,16 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ),
           );
+
+          // Failsafe: Explicitly hide snackbar after 3 seconds
+          // This ensures it disappears even if the framework/scaffold state is complex
+          Future.delayed(const Duration(seconds: 3), () {
+            try {
+              messenger.hideCurrentSnackBar();
+            } catch (_) {
+              // Ignore errors if widget is disposed
+            }
+          });
         }
       },
       builder: (context, state) {
@@ -85,7 +115,15 @@ class _DashboardPageState extends State<DashboardPage> {
         } else if (state is DashboardLoaded) {
           return _buildDashboardContent(context, state);
         }
-        return const Center(child: Text('Tidak ada data'));
+        // Fallback for other states (e.g. initial) - Show empty dashboard layout
+        return _buildDashboardContent(
+          context,
+          const DashboardLoaded(
+            totalOrders: 0,
+            totalRevenue: 0,
+            recentOrders: [],
+          ),
+        );
       },
     );
   }

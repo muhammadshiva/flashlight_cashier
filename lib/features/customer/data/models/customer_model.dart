@@ -2,6 +2,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/customer.dart';
+import '../../../membership/data/models/membership_model.dart';
+import '../../../work_order/data/models/work_order_model.dart';
 import 'dart:convert';
 
 part 'customer_model.freezed.dart';
@@ -21,6 +23,8 @@ abstract class CustomerModel with _$CustomerModel {
     @JsonKey(name: "name") required String name,
     @JsonKey(name: "phoneNumber") required String phoneNumber,
     @JsonKey(name: "email") required String email,
+    @JsonKey(name: "membership") MembershipModel? membership,
+    @JsonKey(name: "workOrders") List<WorkOrderModel>? workOrders,
   }) = _CustomerModel;
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) =>
@@ -31,5 +35,7 @@ abstract class CustomerModel with _$CustomerModel {
         name: name,
         phoneNumber: phoneNumber,
         email: email,
+        membership: membership?.toEntity(),
+        workOrders: workOrders?.map((e) => e.toEntity()).toList(),
       );
 }

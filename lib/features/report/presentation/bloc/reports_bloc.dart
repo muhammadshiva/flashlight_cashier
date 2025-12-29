@@ -36,9 +36,9 @@ class ReportsBloc extends Bloc<ReportsEvent, ReportsState> {
               log("Check servicesResult error : $failure", name: "ReportsBloc");
               emit(ReportsError(failure.message));
             },
-            (services) {
+            (paginatedServices) {
               // Calculation
-              final serviceMap = {for (var s in services) s.id: s.name};
+              final serviceMap = {for (var s in paginatedServices.data) s.id: s.name};
 
               final dailyRevenue = <DateTime, int>{};
               final serviceRevenue = <String, int>{};

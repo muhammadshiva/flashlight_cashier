@@ -12,6 +12,13 @@ _CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       phoneNumber: json['phoneNumber'] as String,
       email: json['email'] as String,
+      membership: json['membership'] == null
+          ? null
+          : MembershipModel.fromJson(
+              json['membership'] as Map<String, dynamic>),
+      workOrders: (json['workOrders'] as List<dynamic>?)
+          ?.map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$CustomerModelToJson(_CustomerModel instance) =>
@@ -20,4 +27,6 @@ Map<String, dynamic> _$CustomerModelToJson(_CustomerModel instance) =>
       'name': instance.name,
       'phoneNumber': instance.phoneNumber,
       'email': instance.email,
+      'membership': instance.membership,
+      'workOrders': instance.workOrders,
     };

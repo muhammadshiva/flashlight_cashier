@@ -47,6 +47,10 @@ import 'features/work_order/domain/usecases/work_order_usecases.dart';
 import 'features/work_order/domain/usecases/update_work_order_status.dart';
 import 'features/work_order/presentation/bloc/pos_bloc.dart';
 import 'features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'features/dashboard/domain/usecases/get_dashboard_stats.dart';
+import 'features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import 'features/history/presentation/bloc/history_bloc.dart';
 import 'features/work_order/domain/usecases/get_work_order.dart';
 import 'features/work_order/presentation/bloc/detail/work_order_detail_bloc.dart';
@@ -56,6 +60,10 @@ import 'features/user/domain/repositories/user_repository.dart';
 import 'features/user/domain/usecases/user_usecases.dart';
 import 'features/user/presentation/bloc/user_bloc.dart';
 import 'features/report/presentation/bloc/reports_bloc.dart';
+import 'features/report/domain/usecases/generate_report.dart';
+import 'features/report/domain/repositories/report_repository.dart';
+import 'features/report/data/repositories/report_repository_impl.dart';
+import 'features/report/data/datasources/report_remote_data_source.dart';
 
 final sl = GetIt.instance;
 
@@ -182,6 +190,7 @@ Future<void> init() async {
   // Use cases
   sl.registerLazySingleton(() => GetServices(sl()));
   sl.registerLazySingleton(() => CreateService(sl()));
+  sl.registerLazySingleton(() => UpdateService(sl()));
   sl.registerLazySingleton(() => DeleteService(sl()));
 
   // Repository
@@ -247,13 +256,28 @@ Future<void> init() async {
   sl.registerLazySingleton<WorkOrderRemoteDataSource>(
     () => WorkOrderRemoteDataSourceImpl(dio: sl<DioClient>().dio),
   );
-  // Dashboard
+  //! Features - Dashboard
+  // Bloc
   sl.registerFactory(() => DashboardBloc(
+        getDashboardStats: sl(),
         getWorkOrders: sl(),
         getCustomers: sl(),
         getVehicles: sl(),
         updateWorkOrderStatus: sl(),
       ));
+
+  // Use cases
+  sl.registerLazySingleton(() => GetDashboardStats(sl()));
+
+  // Repository
+  sl.registerLazySingleton<DashboardRepository>(
+    () => DashboardRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<DashboardRemoteDataSource>(
+    () => DashboardRemoteDataSourceImpl(dio: sl<DioClient>().dio),
+  );
 
   // History
   sl.registerFactory(() => HistoryBloc(
@@ -294,8 +318,22 @@ Future<void> init() async {
   );
 
   //! Features - Reports
+  // Bloc
   sl.registerFactory(() => ReportsBloc(
         getWorkOrders: sl(),
         getServices: sl(),
       ));
+
+  // Use cases
+  sl.registerLazySingleton(() => GenerateReport(sl()));
+
+  // Repository
+  sl.registerLazySingleton<ReportRepository>(
+    () => ReportRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<ReportRemoteDataSource>(
+    () => ReportRemoteDataSourceImpl(dio: sl<DioClient>().dio),
+  );
 }

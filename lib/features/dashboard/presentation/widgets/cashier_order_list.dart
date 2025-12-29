@@ -3,6 +3,7 @@ import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flashlight_pos/core/utils/currency_formatter.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/widgets/dashboard_empty_state.dart';
 
 class CashierOrderList extends StatelessWidget {
   final List<WorkOrder> orders;
@@ -23,19 +24,7 @@ class CashierOrderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (orders.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.inbox_outlined, size: 48, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text(
-              'No active orders',
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-          ],
-        ),
-      );
+      return const Center(child: DashboardEmptyState());
     }
 
     return ListView.separated(

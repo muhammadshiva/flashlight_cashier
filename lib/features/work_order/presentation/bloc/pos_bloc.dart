@@ -50,7 +50,7 @@ class PosBloc extends Bloc<PosEvent, PosState> {
     final results = await Future.wait<dynamic>([
       getServices(const GetServicesParams(isPrototype: true)),
       getProducts(const GetProductsParams()),
-      getCustomers(NoParams()),
+      getCustomers(const GetCustomersParams()),
       // Vehicles will be fetched when customer is selected, or we fetch all?
       // For now let's assume we fetch vehicles later or filter them.
       // But GetVehicles usecase usually returns all vehicles.
@@ -59,7 +59,7 @@ class PosBloc extends Bloc<PosEvent, PosState> {
 
     final servicesResult = results[0]; // Either<Failure, List<ServiceEntity>>
     final productsResult = results[1]; // Either<Failure, List<Product>>
-    final customersResult = results[2]; // Either<Failure, List<Customer>>
+    final customersResult = results[2]; // Either<Failure, PaginatedResponse<Customer>>
     // final vehiclesResult = results[3]; // Either<Failure, List<Vehicle>> (Unused for now)
 
     List<ServiceEntity> services = [];
@@ -70,7 +70,7 @@ class PosBloc extends Bloc<PosEvent, PosState> {
     // Helper to unwrap
     servicesResult.fold((l) => /* log error */ null, (r) => services = r);
     productsResult.fold((l) => /* log error */ null, (r) => products = r);
-    customersResult.fold((l) => /* log error */ null, (r) => customers = r);
+    customersResult.fold((l) => /* log error */ null, (r) => customers = r.data);
     // vehiclesResult.fold(
     //     (l) => print('Error vehicles: ${l.message}'), (r) => vehicles = r);
 

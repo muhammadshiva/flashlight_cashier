@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/pagination/pagination_params.dart';
+import '../../../../core/pagination/paginated_response.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../datasources/product_remote_data_source.dart';
@@ -11,10 +13,16 @@ class ProductRepositoryImpl implements ProductRepository {
   ProductRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<Product>>> getProducts({String? type}) async {
+  Future<Either<Failure, PaginatedResponse<Product>>> getProducts({
+    String? type,
+    PaginationParams? pagination,
+  }) async {
     try {
-      final result = await remoteDataSource.getProducts(type: type);
-      return Right(result.map((e) => e.toEntity()).toList());
+      final result = await remoteDataSource.getProducts(
+        type: type,
+        pagination: pagination,
+      );
+      return Right(result.toEntity((model) => model.toEntity()));
     } on Failure catch (e) {
       return Left(e);
     }

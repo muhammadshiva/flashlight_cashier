@@ -22,7 +22,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       final result = await getServices(const GetServicesParams(isPrototype: true));
       result.fold(
         (failure) => emit(ServiceError(failure.message)),
-        (services) => emit(ServiceLoaded(services)),
+        (paginatedServices) => emit(ServiceLoaded(paginatedServices.data)),
       );
     });
 

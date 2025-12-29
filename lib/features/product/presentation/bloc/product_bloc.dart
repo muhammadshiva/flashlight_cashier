@@ -25,15 +25,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final result = await getProducts(const GetProductsParams());
       result.fold(
         (failure) => emit(ProductError(failure.message)),
-        (products) {
+        (paginatedProducts) {
+          final productList = paginatedProducts.data;
           const itemsPerPage = 10;
-          final totalItems = products.length;
-          final paginatedProducts = products.take(itemsPerPage).toList();
+          final totalItems = productList.length;
+          final firstPageProducts = productList.take(itemsPerPage).toList();
 
           emit(ProductLoaded(
-            products: paginatedProducts,
-            allProducts: products, // Initial list is full list
-            sourceProducts: products, // Master source
+            products: firstPageProducts,
+            allProducts: productList, // Initial list is full list
+            sourceProducts: productList, // Master source
             currentPage: 1,
             totalItems: totalItems,
             itemsPerPage: itemsPerPage,

@@ -1,13 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
 
-import '../../../../core/utils/dummy_data.dart';
+import '../../../../core/usecase/usecase.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/domain/usecases/get_customers.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
 import '../../../vehicle/domain/usecases/vehicle_usecases.dart';
 import '../../../work_order/domain/entities/work_order.dart';
 import '../../../work_order/domain/usecases/update_work_order_status.dart';
+import '../../domain/usecases/get_dashboard_stats.dart';
 
 import '../../../service/domain/entities/service_entity.dart';
 import '../../../product/domain/entities/product.dart';
@@ -17,12 +18,14 @@ import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
+  final GetDashboardStats getDashboardStats;
   final GetWorkOrders getWorkOrders;
   final GetCustomers getCustomers;
   final GetVehicles getVehicles;
   final UpdateWorkOrderStatus updateWorkOrderStatus;
 
   DashboardBloc({
+    required this.getDashboardStats,
     required this.getWorkOrders,
     required this.getCustomers,
     required this.getVehicles,
@@ -49,15 +52,33 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   Future<void> _loadDashboardData(Emitter<DashboardState> emit) async {
-    // Use dummy data instead of API
-    await Future.delayed(
-        const Duration(milliseconds: 500)); // Simulate network delay
-
     try {
-      // Get dummy data
-      final orders = DummyData.getWorkOrders();
-      final customers = DummyData.customers;
-      final vehicles = DummyData.vehicles;
+      // Get dashboard stats from API
+      final statsResult = await getDashboardStats(NoParams());
+
+      // Get work orders, customers, and vehicles for detailed view
+      final ordersResult = await getWorkOrders(NoParams());
+      final customersResult = await getCustomers(const GetCustomersParams());
+      final vehiclesResult = await getVehicles(NoParams());
+
+      // Handle failures
+      if (statsResult.isLeft()) {
+        final failure = statsResult.fold((l) => l, (r) => null);
+        emit(DashboardError('Failed to load dashboard stats: ${failure?.message ?? "Unknown error"}'));
+        return;
+      }
+
+      if (ordersResult.isLeft()) {
+        final failure = ordersResult.fold((l) => l, (r) => null);
+        emit(DashboardError('Failed to load work orders: ${failure?.message ?? "Unknown error"}'));
+        return;
+      }
+
+      // Extract data
+      final stats = statsResult.fold((l) => null, (r) => r)!;
+      final orders = ordersResult.fold((l) => [], (r) => r);
+      final customers = customersResult.fold((l) => <Customer>[], (r) => r.data);
+      final vehicles = vehiclesResult.fold((l) => [], (r) => r);
 
       // Build Customer Map
       final customerMap = <String, Customer>{};
@@ -71,25 +92,20 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         vehicleMap[v.id] = v;
       }
 
-      // Stats
-      final totalRevenue =
-          orders.fold(0, (sum, order) => sum + order.totalPrice);
+      // Build status counts with "Semua" (All)
+      final statusCounts = <String, int>{
+        'Semua': stats.totalOrders,
+        ...stats.statusCounts,
+      };
 
-      // Status Counts
-      final statusCounts = <String, int>{'Semua': orders.length};
-      for (var order in orders) {
-        final status = order.status;
-        statusCounts[status] = (statusCounts[status] ?? 0) + 1;
-      }
-
-      // Sort by date descending (newest first)
+      // Sort orders by date descending (newest first)
       final sortedOrders = List<WorkOrder>.from(orders)
         ..sort((a, b) => (b.createdAt ?? DateTime.now())
             .compareTo(a.createdAt ?? DateTime.now()));
 
       emit(DashboardLoaded(
-        totalOrders: orders.length,
-        totalRevenue: totalRevenue,
+        totalOrders: stats.totalOrders,
+        totalRevenue: stats.totalRevenue,
         recentOrders: sortedOrders,
         filteredOrders: sortedOrders,
         customers: customerMap,
@@ -98,7 +114,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         selectedStatus: 'Semua',
       ));
     } catch (e) {
-      emit(DashboardError('Failed to load data: ${e.toString()}'));
+      emit(DashboardError('Failed to load dashboard data: ${e.toString()}'));
     }
   }
 

@@ -22,6 +22,10 @@ mixin _$CustomerModel {
   String get phoneNumber;
   @JsonKey(name: "email")
   String get email;
+  @JsonKey(name: "membership")
+  MembershipModel? get membership;
+  @JsonKey(name: "workOrders")
+  List<WorkOrderModel>? get workOrders;
 
   /// Create a copy of CustomerModel
   /// with the given fields replaced by the non-null parameter values.
@@ -43,16 +47,21 @@ mixin _$CustomerModel {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
-            (identical(other.email, email) || other.email == email));
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.membership, membership) ||
+                other.membership == membership) &&
+            const DeepCollectionEquality()
+                .equals(other.workOrders, workOrders));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, phoneNumber, email);
+  int get hashCode => Object.hash(runtimeType, id, name, phoneNumber, email,
+      membership, const DeepCollectionEquality().hash(workOrders));
 
   @override
   String toString() {
-    return 'CustomerModel(id: $id, name: $name, phoneNumber: $phoneNumber, email: $email)';
+    return 'CustomerModel(id: $id, name: $name, phoneNumber: $phoneNumber, email: $email, membership: $membership, workOrders: $workOrders)';
   }
 }
 
@@ -66,7 +75,11 @@ abstract mixin class $CustomerModelCopyWith<$Res> {
       {@JsonKey(name: "id") String id,
       @JsonKey(name: "name") String name,
       @JsonKey(name: "phoneNumber") String phoneNumber,
-      @JsonKey(name: "email") String email});
+      @JsonKey(name: "email") String email,
+      @JsonKey(name: "membership") MembershipModel? membership,
+      @JsonKey(name: "workOrders") List<WorkOrderModel>? workOrders});
+
+  $MembershipModelCopyWith<$Res>? get membership;
 }
 
 /// @nodoc
@@ -86,6 +99,8 @@ class _$CustomerModelCopyWithImpl<$Res>
     Object? name = null,
     Object? phoneNumber = null,
     Object? email = null,
+    Object? membership = freezed,
+    Object? workOrders = freezed,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -104,7 +119,29 @@ class _$CustomerModelCopyWithImpl<$Res>
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      membership: freezed == membership
+          ? _self.membership
+          : membership // ignore: cast_nullable_to_non_nullable
+              as MembershipModel?,
+      workOrders: freezed == workOrders
+          ? _self.workOrders
+          : workOrders // ignore: cast_nullable_to_non_nullable
+              as List<WorkOrderModel>?,
     ));
+  }
+
+  /// Create a copy of CustomerModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $MembershipModelCopyWith<$Res>? get membership {
+    if (_self.membership == null) {
+      return null;
+    }
+
+    return $MembershipModelCopyWith<$Res>(_self.membership!, (value) {
+      return _then(_self.copyWith(membership: value));
+    });
   }
 }
 
@@ -205,14 +242,17 @@ extension CustomerModelPatterns on CustomerModel {
             @JsonKey(name: "id") String id,
             @JsonKey(name: "name") String name,
             @JsonKey(name: "phoneNumber") String phoneNumber,
-            @JsonKey(name: "email") String email)?
+            @JsonKey(name: "email") String email,
+            @JsonKey(name: "membership") MembershipModel? membership,
+            @JsonKey(name: "workOrders") List<WorkOrderModel>? workOrders)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _CustomerModel() when $default != null:
-        return $default(_that.id, _that.name, _that.phoneNumber, _that.email);
+        return $default(_that.id, _that.name, _that.phoneNumber, _that.email,
+            _that.membership, _that.workOrders);
       case _:
         return orElse();
     }
@@ -237,13 +277,16 @@ extension CustomerModelPatterns on CustomerModel {
             @JsonKey(name: "id") String id,
             @JsonKey(name: "name") String name,
             @JsonKey(name: "phoneNumber") String phoneNumber,
-            @JsonKey(name: "email") String email)
+            @JsonKey(name: "email") String email,
+            @JsonKey(name: "membership") MembershipModel? membership,
+            @JsonKey(name: "workOrders") List<WorkOrderModel>? workOrders)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _CustomerModel():
-        return $default(_that.id, _that.name, _that.phoneNumber, _that.email);
+        return $default(_that.id, _that.name, _that.phoneNumber, _that.email,
+            _that.membership, _that.workOrders);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -267,13 +310,16 @@ extension CustomerModelPatterns on CustomerModel {
             @JsonKey(name: "id") String id,
             @JsonKey(name: "name") String name,
             @JsonKey(name: "phoneNumber") String phoneNumber,
-            @JsonKey(name: "email") String email)?
+            @JsonKey(name: "email") String email,
+            @JsonKey(name: "membership") MembershipModel? membership,
+            @JsonKey(name: "workOrders") List<WorkOrderModel>? workOrders)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _CustomerModel() when $default != null:
-        return $default(_that.id, _that.name, _that.phoneNumber, _that.email);
+        return $default(_that.id, _that.name, _that.phoneNumber, _that.email,
+            _that.membership, _that.workOrders);
       case _:
         return null;
     }
@@ -287,8 +333,11 @@ class _CustomerModel extends CustomerModel {
       {@JsonKey(name: "id") required this.id,
       @JsonKey(name: "name") required this.name,
       @JsonKey(name: "phoneNumber") required this.phoneNumber,
-      @JsonKey(name: "email") required this.email})
-      : super._();
+      @JsonKey(name: "email") required this.email,
+      @JsonKey(name: "membership") this.membership,
+      @JsonKey(name: "workOrders") final List<WorkOrderModel>? workOrders})
+      : _workOrders = workOrders,
+        super._();
   factory _CustomerModel.fromJson(Map<String, dynamic> json) =>
       _$CustomerModelFromJson(json);
 
@@ -304,6 +353,19 @@ class _CustomerModel extends CustomerModel {
   @override
   @JsonKey(name: "email")
   final String email;
+  @override
+  @JsonKey(name: "membership")
+  final MembershipModel? membership;
+  final List<WorkOrderModel>? _workOrders;
+  @override
+  @JsonKey(name: "workOrders")
+  List<WorkOrderModel>? get workOrders {
+    final value = _workOrders;
+    if (value == null) return null;
+    if (_workOrders is EqualUnmodifiableListView) return _workOrders;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   /// Create a copy of CustomerModel
   /// with the given fields replaced by the non-null parameter values.
@@ -329,16 +391,21 @@ class _CustomerModel extends CustomerModel {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
-            (identical(other.email, email) || other.email == email));
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.membership, membership) ||
+                other.membership == membership) &&
+            const DeepCollectionEquality()
+                .equals(other._workOrders, _workOrders));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, phoneNumber, email);
+  int get hashCode => Object.hash(runtimeType, id, name, phoneNumber, email,
+      membership, const DeepCollectionEquality().hash(_workOrders));
 
   @override
   String toString() {
-    return 'CustomerModel(id: $id, name: $name, phoneNumber: $phoneNumber, email: $email)';
+    return 'CustomerModel(id: $id, name: $name, phoneNumber: $phoneNumber, email: $email, membership: $membership, workOrders: $workOrders)';
   }
 }
 
@@ -354,7 +421,12 @@ abstract mixin class _$CustomerModelCopyWith<$Res>
       {@JsonKey(name: "id") String id,
       @JsonKey(name: "name") String name,
       @JsonKey(name: "phoneNumber") String phoneNumber,
-      @JsonKey(name: "email") String email});
+      @JsonKey(name: "email") String email,
+      @JsonKey(name: "membership") MembershipModel? membership,
+      @JsonKey(name: "workOrders") List<WorkOrderModel>? workOrders});
+
+  @override
+  $MembershipModelCopyWith<$Res>? get membership;
 }
 
 /// @nodoc
@@ -374,6 +446,8 @@ class __$CustomerModelCopyWithImpl<$Res>
     Object? name = null,
     Object? phoneNumber = null,
     Object? email = null,
+    Object? membership = freezed,
+    Object? workOrders = freezed,
   }) {
     return _then(_CustomerModel(
       id: null == id
@@ -392,7 +466,29 @@ class __$CustomerModelCopyWithImpl<$Res>
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      membership: freezed == membership
+          ? _self.membership
+          : membership // ignore: cast_nullable_to_non_nullable
+              as MembershipModel?,
+      workOrders: freezed == workOrders
+          ? _self._workOrders
+          : workOrders // ignore: cast_nullable_to_non_nullable
+              as List<WorkOrderModel>?,
     ));
+  }
+
+  /// Create a copy of CustomerModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $MembershipModelCopyWith<$Res>? get membership {
+    if (_self.membership == null) {
+      return null;
+    }
+
+    return $MembershipModelCopyWith<$Res>(_self.membership!, (value) {
+      return _then(_self.copyWith(membership: value));
+    });
   }
 }
 
