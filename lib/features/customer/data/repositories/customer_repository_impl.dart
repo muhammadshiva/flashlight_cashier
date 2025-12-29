@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/pagination/pagination_params.dart';
+import '../../../../core/pagination/paginated_response.dart';
 import '../../domain/entities/customer.dart';
 import '../../domain/repositories/customer_repository.dart';
 import '../datasources/customer_remote_data_source.dart';
@@ -11,10 +13,16 @@ class CustomerRepositoryImpl implements CustomerRepository {
   CustomerRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<Customer>>> getCustomers() async {
+  Future<Either<Failure, PaginatedResponse<Customer>>> getCustomers({
+    PaginationParams? pagination,
+    String? query,
+  }) async {
     try {
-      final result = await remoteDataSource.getCustomers();
-      return Right(result.map((e) => e.toEntity()).toList());
+      final result = await remoteDataSource.getCustomers(
+        pagination: pagination,
+        query: query,
+      );
+      return Right(result.toEntity((model) => model.toEntity()));
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {

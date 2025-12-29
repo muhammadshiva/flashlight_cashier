@@ -1,9 +1,14 @@
 import 'package:dio/dio.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/pagination/pagination_params.dart';
+import '../../../../core/pagination/paginated_response_model.dart';
 import '../models/customer_model.dart';
 
 abstract class CustomerRemoteDataSource {
-  Future<List<CustomerModel>> getCustomers();
+  Future<PaginatedResponseModel<CustomerModel>> getCustomers({
+    PaginationParams? pagination,
+    String? query,
+  });
   Future<CustomerModel> getCustomer(String id);
   Future<CustomerModel> createCustomer(CustomerModel customer);
   Future<CustomerModel> updateCustomer(CustomerModel customer);
@@ -15,6 +20,7 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
 
   // Dummy data store
   static List<CustomerModel> _dummyCustomers = [
+    // ... existing dummy data ... (I will preserve this if I don't replace the whole list, but for now I'll just assume I can access the list or should re-declare it if I replace the whole class. Wait, replace_file_content replaces chunks. I should replace relevant parts.)
     const CustomerModel(
       id: "CUST-001",
       name: "John Doe",
@@ -110,10 +116,48 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   CustomerRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<List<CustomerModel>> getCustomers() async {
+  Future<PaginatedResponseModel<CustomerModel>> getCustomers({
+    PaginationParams? pagination,
+    String? query,
+  }) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 500));
-    return List.from(_dummyCustomers);
+
+    // Default pagination values
+    final page = pagination?.page ?? 1;
+    final limit = pagination?.limit ?? 10;
+    final offset = pagination?.offset ?? 0;
+
+    // Filter by query if present
+    var filteredList = _dummyCustomers;
+    if (query != null && query.isNotEmpty) {
+      final lowercaseQuery = query.toLowerCase();
+      filteredList = _dummyCustomers.where((customer) {
+        return customer.name.toLowerCase().contains(lowercaseQuery) ||
+            customer.phoneNumber.contains(lowercaseQuery) ||
+            customer.email.toLowerCase().contains(lowercaseQuery);
+      }).toList();
+    }
+
+    // Calculate pagination
+    final total = filteredList.length;
+    final totalPages = (total / limit).ceil();
+    final startIndex = ((page - 1) * limit) + offset;
+    final endIndex = (startIndex + limit).clamp(0, total);
+
+    // Get paginated data
+    final paginatedData = filteredList.sublist(
+      startIndex.clamp(0, total),
+      endIndex,
+    );
+
+    return PaginatedResponseModel<CustomerModel>(
+      data: paginatedData,
+      total: total,
+      page: page,
+      limit: limit,
+      totalPages: totalPages,
+    );
   }
 
   @override
