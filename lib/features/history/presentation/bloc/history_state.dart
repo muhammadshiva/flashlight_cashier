@@ -16,8 +16,9 @@ class HistoryInitial extends HistoryState {}
 class HistoryLoading extends HistoryState {}
 
 class HistoryLoaded extends HistoryState {
-  final List<WorkOrder> historyOrders;
-  final List<WorkOrder> filteredOrders;
+  final List<WorkOrder> historyOrders; // Master list
+  final List<WorkOrder> filteredOrders; // After filter (all pages)
+  final List<WorkOrder> displayedOrders; // Current page only
   final Map<String, Customer> customers;
   final Map<String, Vehicle> vehicles;
   final Map<String, int> statusCounts;
@@ -25,10 +26,14 @@ class HistoryLoaded extends HistoryState {
   final String searchQuery;
   final DateTime? startDate;
   final DateTime? endDate;
+  final int currentPage;
+  final int totalItems;
+  final int itemsPerPage;
 
   const HistoryLoaded({
     required this.historyOrders,
     this.filteredOrders = const [],
+    this.displayedOrders = const [],
     this.customers = const {},
     this.vehicles = const {},
     this.statusCounts = const {},
@@ -36,17 +41,24 @@ class HistoryLoaded extends HistoryState {
     this.searchQuery = '',
     this.startDate,
     this.endDate,
+    this.currentPage = 1,
+    this.totalItems = 0,
+    this.itemsPerPage = 10,
   });
 
   @override
   List<Object> get props => [
         historyOrders,
         filteredOrders,
+        displayedOrders,
         customers,
         vehicles,
         statusCounts,
         selectedStatus,
         searchQuery,
+        currentPage,
+        totalItems,
+        itemsPerPage,
         if (startDate != null) startDate!,
         if (endDate != null) endDate!,
       ];
@@ -54,6 +66,7 @@ class HistoryLoaded extends HistoryState {
   HistoryLoaded copyWith({
     List<WorkOrder>? historyOrders,
     List<WorkOrder>? filteredOrders,
+    List<WorkOrder>? displayedOrders,
     Map<String, Customer>? customers,
     Map<String, Vehicle>? vehicles,
     Map<String, int>? statusCounts,
@@ -61,10 +74,14 @@ class HistoryLoaded extends HistoryState {
     String? searchQuery,
     DateTime? startDate,
     DateTime? endDate,
+    int? currentPage,
+    int? totalItems,
+    int? itemsPerPage,
   }) {
     return HistoryLoaded(
       historyOrders: historyOrders ?? this.historyOrders,
       filteredOrders: filteredOrders ?? this.filteredOrders,
+      displayedOrders: displayedOrders ?? this.displayedOrders,
       customers: customers ?? this.customers,
       vehicles: vehicles ?? this.vehicles,
       statusCounts: statusCounts ?? this.statusCounts,
@@ -72,6 +89,9 @@ class HistoryLoaded extends HistoryState {
       searchQuery: searchQuery ?? this.searchQuery,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      currentPage: currentPage ?? this.currentPage,
+      totalItems: totalItems ?? this.totalItems,
+      itemsPerPage: itemsPerPage ?? this.itemsPerPage,
     );
   }
 }

@@ -76,14 +76,33 @@ class _HistoryPageState extends State<HistoryPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const _HeaderSection(),
+                  _HeaderWithSearchAndFilter(state: state),
                   const SizedBox(height: 32),
-                  _StatsAndFilterSection(state: state),
+                  _StatsSection(state: state),
                   const SizedBox(height: 24),
-                  _HistoryTable(
-                    orders: state.filteredOrders,
-                    customers: state.customers,
-                    vehicles: state.vehicles,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.02),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        _HistoryTable(
+                          orders: state.displayedOrders,
+                          customers: state.customers,
+                          vehicles: state.vehicles,
+                        ),
+                        const _PaginationSection(),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -96,8 +115,10 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 }
 
-class _HeaderSection extends StatelessWidget {
-  const _HeaderSection();
+class _HeaderWithSearchAndFilter extends StatelessWidget {
+  final HistoryLoaded state;
+
+  const _HeaderWithSearchAndFilter({required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -107,22 +128,13 @@ class _HeaderSection extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 500),
-                  child: Text(
-                    'Riwayat Transaksi',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E293B), // Slate-900
-                    ),
-                    overflow: TextOverflow
-                        .ellipsis, // Add ellipsis if text is too long
-                  ),
-                ),
-              ],
+            Text(
+              'Riwayat Transaksi',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B),
+              ),
             ),
             const SizedBox(height: 4),
             Row(
@@ -131,7 +143,7 @@ class _HeaderSection extends StatelessWidget {
                   'Dashboard',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF64748B), // Slate-500
+                    color: Color(0xFF64748B),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -149,124 +161,132 @@ class _HeaderSection extends StatelessWidget {
             ),
           ],
         ),
-      ],
-    );
-  }
-}
-
-class _StatsAndFilterSection extends StatelessWidget {
-  final HistoryLoaded state;
-
-  const _StatsAndFilterSection({required this.state});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Stats Cards
         Row(
           children: [
-            _buildStatCard(
-                'Total Transaksi',
-                state.historyOrders.length.toString(),
-                Icons.receipt_long,
-                AppColors.dashboardBlue,
-                AppColors.dashboardBlueLight),
-            const SizedBox(width: 16),
-            _buildStatCard(
-                'Selesai',
-                (state.statusCounts['completed'] ?? 0).toString(),
-                Icons.check_circle,
-                AppColors.success600,
-                AppColors.success50),
-            const SizedBox(width: 16),
-            _buildStatCard(
-                'Lunas',
-                (state.statusCounts['paid'] ?? 0).toString(),
-                Icons.monetization_on,
-                AppColors.dashboardGreen,
-                AppColors.dashboardGreenLight),
-          ],
-        ),
-        const SizedBox(height: 24),
-        // Search and Filter Bar
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFE2E8F0)), // Slate-200
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.02),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+            Container(
+              width: 300,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
               ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
+              child: Row(
                 children: [
+                  Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
+                  SizedBox(width: 12),
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF8FAFC), // Slate-50
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                    child: TextField(
+                      onChanged: (value) {
+                        context
+                            .read<HistoryBloc>()
+                            .add(FilterHistory(searchQuery: value));
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Cari WO, Pelanggan, Plat...',
+                        border: InputBorder.none,
+                        isDense: true,
+                        hintStyle:
+                            TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
                       ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.search,
-                              color: Color(0xFF94A3B8), size: 20),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: TextField(
-                              onChanged: (value) {
-                                context
-                                    .read<HistoryBloc>()
-                                    .add(FilterHistory(searchQuery: value));
-                              },
-                              decoration: const InputDecoration(
-                                hintText: 'Cari WO, Pelanggan, atau Plat Nomor',
-                                border: InputBorder.none,
-                                isDense: true,
-                                hintStyle: TextStyle(
-                                    color: Color(0xFF94A3B8), fontSize: 14),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      _showFilterDialog(context, state);
-                    },
-                    icon: const Icon(Icons.filter_list, size: 18),
-                    label: Text(state.selectedStatus == 'Semua'
-                        ? 'Filter'
-                        : state.selectedStatus),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF64748B), // Slate-500
-                      side: BorderSide(
-                          color: state.selectedStatus == 'Semua'
-                              ? const Color(0xFFE2E8F0)
-                              : AppColors.orangePrimary),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            const SizedBox(width: 16),
+            OutlinedButton.icon(
+              onPressed: () {
+                _showFilterDialog(context, state);
+              },
+              icon: const Icon(Icons.filter_list, size: 18),
+              label: Text(state.selectedStatus == 'Semua'
+                  ? 'Filter'
+                  : state.selectedStatus),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF64748B),
+                side: BorderSide(
+                    color: state.selectedStatus == 'Semua'
+                        ? const Color(0xFFE2E8F0)
+                        : AppColors.orangePrimary),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
+          ],
         ),
+      ],
+    );
+  }
+
+  void _showFilterDialog(BuildContext context, HistoryLoaded state) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Filter Status'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildFilterOption(context, dialogContext, 'Semua', state),
+            _buildFilterOption(context, dialogContext, 'completed', state,
+                label: 'Selesai'),
+            _buildFilterOption(context, dialogContext, 'paid', state,
+                label: 'Lunas'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterOption(BuildContext context, BuildContext dialogContext,
+      String status, HistoryLoaded state,
+      {String? label}) {
+    final isSelected = state.selectedStatus == status;
+    return ListTile(
+      title: Text(label ?? status),
+      selected: isSelected,
+      selectedColor: AppColors.orangePrimary,
+      trailing: isSelected ? const Icon(Icons.check) : null,
+      onTap: () {
+        context.read<HistoryBloc>().add(FilterHistory(status: status));
+        Navigator.pop(dialogContext);
+      },
+    );
+  }
+}
+
+class _StatsSection extends StatelessWidget {
+  final HistoryLoaded state;
+
+  const _StatsSection({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _buildStatCard(
+            'Total Transaksi',
+            state.historyOrders.length.toString(),
+            Icons.receipt_long,
+            AppColors.dashboardBlue,
+            AppColors.dashboardBlueLight),
+        const SizedBox(width: 16),
+        _buildStatCard(
+            'Selesai',
+            (state.statusCounts['completed'] ?? 0).toString(),
+            Icons.check_circle,
+            AppColors.success600,
+            AppColors.success50),
+        const SizedBox(width: 16),
+        _buildStatCard(
+            'Lunas',
+            (state.statusCounts['paid'] ?? 0).toString(),
+            Icons.monetization_on,
+            AppColors.dashboardGreen,
+            AppColors.dashboardGreenLight),
       ],
     );
   }
@@ -305,7 +325,7 @@ class _StatsAndFilterSection extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    color: Color(0xFF64748B), // Slate-500
+                    color: Color(0xFF64748B),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -314,8 +334,8 @@ class _StatsAndFilterSection extends StatelessWidget {
                 Text(
                   value,
                   style: const TextStyle(
-                    color: Color(0xFF1E293B), // Slate-900
-                    fontSize: 24, // Matches Product List
+                    color: Color(0xFF1E293B),
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -324,42 +344,6 @@ class _StatsAndFilterSection extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void _showFilterDialog(BuildContext context, HistoryLoaded state) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Filter Status'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildFilterOption(context, dialogContext, 'Semua', state),
-            _buildFilterOption(context, dialogContext, 'completed', state,
-                label: 'Selesai'),
-            _buildFilterOption(context, dialogContext, 'paid', state,
-                label: 'Lunas'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterOption(BuildContext context, BuildContext dialogContext,
-      String status, HistoryLoaded state,
-      {String? label}) {
-    final isSelected = state.selectedStatus == status;
-    return ListTile(
-      title: Text(label ?? status),
-      selected: isSelected,
-      selectedColor: AppColors.orangePrimary,
-      trailing: isSelected ? const Icon(Icons.check) : null,
-      onTap: () {
-        context.read<HistoryBloc>().add(FilterHistory(status: status));
-        Navigator.pop(dialogContext);
-      },
     );
   }
 }
@@ -404,157 +388,265 @@ class _HistoryTable extends StatelessWidget {
       );
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+    return Table(
+      columnWidths: const {
+        0: FlexColumnWidth(1.2), // WORK ORDER
+        1: FlexColumnWidth(2), // CUSTOMER
+        2: FlexColumnWidth(1.2), // TOTAL
+        3: FlexColumnWidth(1), // STATUS
+        4: FixedColumnWidth(100), // ACTION
+      },
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: [
+        // Header Row
+        const TableRow(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Color(0xFFE2E8F0)),
+            ),
           ),
-        ],
-      ),
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(1.2), // WORK ORDER
-          1: FlexColumnWidth(2), // CUSTOMER
-          2: FlexColumnWidth(1.2), // TOTAL
-          3: FlexColumnWidth(1), // STATUS
-          4: FixedColumnWidth(100), // ACTION
-        },
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          // Header Row
-          const TableRow(
-            decoration: BoxDecoration(
+          children: [
+            _HeaderCell('WORK ORDER'),
+            _HeaderCell('PELANGGAN'),
+            _HeaderCell('TOTAL'),
+            _HeaderCell('STATUS'),
+            _HeaderCell('ACTION', align: Alignment.centerRight),
+          ],
+        ),
+        // Data Rows
+        ...orders.map((order) {
+          final customer = customers[order.customerId];
+          final vehicle = vehicles[order.vehicleDataId];
+          return TableRow(
+            decoration: const BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Color(0xFFE2E8F0)),
+                bottom: BorderSide(color: Color(0xFFF1F5F9)),
               ),
             ),
             children: [
-              _HeaderCell('WORK ORDER'),
-              _HeaderCell('PELANGGAN'),
-              _HeaderCell('TOTAL'),
-              _HeaderCell('STATUS'),
-              _HeaderCell('ACTION', align: Alignment.centerRight),
-            ],
-          ),
-          // Data Rows
-          ...orders.map((order) {
-            final customer = customers[order.customerId];
-            final vehicle = vehicles[order.vehicleDataId];
-            return TableRow(
-              decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Color(0xFFF1F5F9)),
+              _DataCell(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '#${order.workOrderCode}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1E293B),
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      order.completedAt != null
+                          ? DateFormat('dd MMM yyyy, HH:mm')
+                              .format(order.completedAt!)
+                          : '-',
+                      style: const TextStyle(
+                        color: Color(0xFF94A3B8),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              children: [
-                _DataCell(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '#${order.workOrderCode}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1E293B), // Slate-900
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        order.completedAt != null
-                            ? DateFormat('dd MMM yyyy, HH:mm')
-                                .format(order.completedAt!)
-                            : '-',
-                        style: const TextStyle(
-                          color: Color(0xFF94A3B8), // Slate-400
+              _DataCell(
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor:
+                          AppColors.orangePrimary.withOpacity(0.1),
+                      child: Text(
+                        (customer?.name ?? 'U').substring(0, 1).toUpperCase(),
+                        style: TextStyle(
+                          color: AppColors.orangePrimary,
+                          fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                _DataCell(
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 16,
-                        backgroundColor:
-                            AppColors.orangePrimary.withOpacity(0.1),
-                        child: Text(
-                          (customer?.name ?? 'U').substring(0, 1).toUpperCase(),
-                          style: TextStyle(
-                            color: AppColors.orangePrimary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            customer?.name ?? 'Unknown',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF1E293B),
+                              fontSize: 14,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          if (vehicle != null) ...[
+                            const SizedBox(height: 2),
                             Text(
-                              customer?.name ?? 'Unknown',
+                              '${vehicle.licensePlate} • ${vehicle.vehicleBrand}',
                               style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF1E293B),
-                                fontSize: 14,
+                                color: Color(0xFF64748B),
+                                fontSize: 12,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            if (vehicle != null) ...[
-                              const SizedBox(height: 2),
-                              Text(
-                                '${vehicle.licensePlate} • ${vehicle.vehicleBrand}',
-                                style: const TextStyle(
-                                  color: Color(0xFF64748B),
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ]
-                          ],
-                        ),
+                          ]
+                        ],
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+              ),
+              _DataCell(
+                child: Text(
+                  CurrencyFormatter.format(order.totalPrice),
+                  style: const TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1E293B),
                   ),
                 ),
-                _DataCell(
-                  child: Text(
-                    CurrencyFormatter.format(order.totalPrice),
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
+              ),
+              _DataCell(
+                child: _StatusBadge(status: order.status),
+              ),
+              _DataCell(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: _ActionButton(
+                    icon: Icons.visibility_outlined,
+                    onTap: () {
+                      context.go('/work-orders/${order.id}');
+                    },
+                    tooltip: 'Lihat Detail',
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
+      ],
+    );
+  }
+}
+
+class _PaginationSection extends StatelessWidget {
+  const _PaginationSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HistoryBloc, HistoryState>(
+      builder: (context, state) {
+        if (state is! HistoryLoaded) return const SizedBox.shrink();
+
+        final currentPage = state.currentPage;
+        final itemsPerPage = state.itemsPerPage;
+        final totalItems = state.totalItems;
+        final totalPages = (totalItems / itemsPerPage).ceil();
+
+        final startItem = (currentPage - 1) * itemsPerPage + 1;
+        final endItem = (startItem + state.displayedOrders.length - 1);
+
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Text('View',
+                      style: TextStyle(color: Color(0xFF64748B))),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: Row(
+                      children: [
+                        Text('$itemsPerPage',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        const Icon(Icons.keyboard_arrow_down, size: 16),
+                      ],
                     ),
                   ),
-                ),
-                _DataCell(
-                  child: _StatusBadge(status: order.status),
-                ),
-                _DataCell(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: _ActionButton(
-                      icon: Icons.visibility_outlined,
-                      onTap: () {
-                        context.go('/work-orders/${order.id}');
-                      },
-                      tooltip: 'Lihat Detail',
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }),
-        ],
+                  const SizedBox(width: 8),
+                  const Text('entry per page',
+                      style: TextStyle(color: Color(0xFF64748B))),
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Showing $startItem-$endItem of $totalItems entries',
+                      style: const TextStyle(color: Color(0xFF64748B))),
+                  const SizedBox(width: 24),
+                  IconButton(
+                      onPressed: currentPage > 1
+                          ? () => context
+                              .read<HistoryBloc>()
+                              .add(ChangePageEvent(currentPage - 1))
+                          : null,
+                      icon: Icon(Icons.chevron_left,
+                          color: currentPage > 1
+                              ? const Color(0xFF64748B)
+                              : const Color(0xFFCBD5E1))),
+                  ...List.generate(totalPages, (index) {
+                    final page = index + 1;
+                    if (totalPages > 7 &&
+                        (page > 2 &&
+                            page < totalPages - 1 &&
+                            (page < currentPage - 1 ||
+                                page > currentPage + 1))) {
+                      return page == currentPage - 2 || page == currentPage + 2
+                          ? const Text('...',
+                              style: TextStyle(color: Color(0xFF64748B)))
+                          : const SizedBox.shrink();
+                    }
+                    return _buildPageNumber(context, page,
+                        isActive: page == currentPage);
+                  }),
+                  IconButton(
+                      onPressed: currentPage < totalPages
+                          ? () => context
+                              .read<HistoryBloc>()
+                              .add(ChangePageEvent(currentPage + 1))
+                          : null,
+                      icon: Icon(Icons.chevron_right,
+                          color: currentPage < totalPages
+                              ? const Color(0xFF64748B)
+                              : const Color(0xFFCBD5E1))),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPageNumber(BuildContext context, int number,
+      {required bool isActive}) {
+    return InkWell(
+      onTap: () => context.read<HistoryBloc>().add(ChangePageEvent(number)),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        width: 32,
+        height: 32,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isActive ? AppColors.orangePrimary : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          number.toString(),
+          style: TextStyle(
+            color: isActive ? Colors.white : const Color(0xFF64748B),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }
@@ -577,7 +669,7 @@ class _HeaderCell extends StatelessWidget {
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF64748B), // Slate-500
+            color: Color(0xFF64748B),
             letterSpacing: 0.5,
           ),
         ),
@@ -614,16 +706,16 @@ class _StatusBadge extends StatelessWidget {
     final lowerStatus = status.toLowerCase();
 
     if (lowerStatus == 'paid') {
-      bgColor = const Color(0xFFDCFCE7); // Green-100
-      textColor = const Color(0xFF15803D); // Green-700
+      bgColor = const Color(0xFFDCFCE7);
+      textColor = const Color(0xFF15803D);
       label = 'Lunas';
     } else if (lowerStatus == 'completed') {
-      bgColor = const Color(0xFFDBEAFE); // Blue-100
-      textColor = const Color(0xFF1D4ED8); // Blue-700
+      bgColor = const Color(0xFFDBEAFE);
+      textColor = const Color(0xFF1D4ED8);
       label = 'Selesai';
     } else {
-      bgColor = const Color(0xFFF1F5F9); // Slate-100
-      textColor = const Color(0xFF64748B); // Slate-500
+      bgColor = const Color(0xFFF1F5F9);
+      textColor = const Color(0xFF64748B);
       label = status;
     }
 
@@ -661,11 +753,11 @@ class _ActionButton extends StatelessWidget {
     return IconButton(
       onPressed: onTap,
       icon: Icon(icon, size: 20),
-      color: const Color(0xFF64748B), // Slate-500
+      color: const Color(0xFF64748B),
       tooltip: tooltip,
       style: IconButton.styleFrom(
         padding: const EdgeInsets.all(8),
-        hoverColor: const Color(0xFFF1F5F9), // Slate-100
+        hoverColor: const Color(0xFFF1F5F9),
       ),
     );
   }

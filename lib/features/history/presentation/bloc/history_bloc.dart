@@ -23,6 +23,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     on<LoadHistory>(_onLoadHistory);
     on<RefreshHistory>(_onRefreshHistory);
     on<FilterHistory>(_onFilterHistory);
+    on<ChangePageEvent>(_onChangePage);
   }
 
   Future<void> _onLoadHistory(
@@ -84,12 +85,21 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
         statusCounts[status] = (statusCounts[status] ?? 0) + 1;
       }
 
+      // Pagination logic
+      const itemsPerPage = 10;
+      final totalItems = historyOrders.length;
+      final paginatedOrders = historyOrders.take(itemsPerPage).toList();
+
       emit(HistoryLoaded(
         historyOrders: historyOrders,
         filteredOrders: historyOrders,
+        displayedOrders: paginatedOrders,
         customers: customerMap,
         vehicles: vehicleMap,
         statusCounts: statusCounts,
+        currentPage: 1,
+        totalItems: totalItems,
+        itemsPerPage: itemsPerPage,
       ));
     } catch (e) {
       emit(HistoryError('Failed to load history: ${e.toString()}'));
@@ -152,12 +162,43 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
       }).toList();
     }
 
+    // Pagination logic after filtering
+    const itemsPerPage = 10;
+    final totalItems = filtered.length;
+    final paginatedOrders = filtered.take(itemsPerPage).toList();
+
     emit(currentState.copyWith(
       filteredOrders: filtered,
+      displayedOrders: paginatedOrders,
       selectedStatus: selectedStatus,
       searchQuery: searchQuery,
       startDate: startDate,
       endDate: endDate,
+      currentPage: 1, // Reset to page 1 after filter
+      totalItems: totalItems,
+    ));
+  }
+
+  Future<void> _onChangePage(
+      ChangePageEvent event, Emitter<HistoryState> emit) async {
+    if (state is! HistoryLoaded) return;
+
+    final currentState = state as HistoryLoaded;
+    final filteredOrders = currentState.filteredOrders;
+    final itemsPerPage = currentState.itemsPerPage;
+
+    final startIndex = (event.page - 1) * itemsPerPage;
+    if (startIndex >= filteredOrders.length) return;
+
+    final endIndex = (startIndex + itemsPerPage) > filteredOrders.length
+        ? filteredOrders.length
+        : startIndex + itemsPerPage;
+
+    final paginatedOrders = filteredOrders.sublist(startIndex, endIndex);
+
+    emit(currentState.copyWith(
+      displayedOrders: paginatedOrders,
+      currentPage: event.page,
     ));
   }
 }

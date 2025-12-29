@@ -32,3 +32,12 @@ class FilterHistory extends HistoryEvent {
         if (endDate != null) endDate!,
       ];
 }
+
+class ChangePageEvent extends HistoryEvent {
+  final int page;
+
+  const ChangePageEvent(this.page);
+
+  @override
+  List<Object> get props => [page];
+}
