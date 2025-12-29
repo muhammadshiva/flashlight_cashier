@@ -140,6 +140,7 @@ Future<void> init() async {
     () => VehicleBloc(
       getVehicles: sl(),
       createVehicle: sl(),
+      updateVehicle: sl(),
       deleteVehicle: sl(),
     ),
   );
@@ -147,6 +148,7 @@ Future<void> init() async {
   // Use cases
   sl.registerLazySingleton(() => GetVehicles(sl()));
   sl.registerLazySingleton(() => CreateVehicle(sl()));
+  sl.registerLazySingleton(() => UpdateVehicle(sl()));
   sl.registerLazySingleton(() => DeleteVehicle(sl()));
 
   // Repository

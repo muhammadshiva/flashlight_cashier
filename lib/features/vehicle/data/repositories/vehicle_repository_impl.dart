@@ -39,6 +39,24 @@ class VehicleRepositoryImpl implements VehicleRepository {
   }
 
   @override
+  Future<Either<Failure, Vehicle>> updateVehicle(Vehicle vehicle) async {
+    try {
+      final model = VehicleModel(
+        id: vehicle.id,
+        licensePlate: vehicle.licensePlate,
+        vehicleBrand: vehicle.vehicleBrand,
+        vehicleColor: vehicle.vehicleColor,
+        vehicleCategory: vehicle.vehicleCategory,
+        vehicleSpecs: vehicle.vehicleSpecs,
+      );
+      final result = await remoteDataSource.updateVehicle(model);
+      return Right(result.toEntity());
+    } on Failure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> deleteVehicle(String id) async {
     try {
       await remoteDataSource.deleteVehicle(id);

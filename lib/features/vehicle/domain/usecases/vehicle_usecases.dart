@@ -22,6 +22,15 @@ class CreateVehicle implements UseCase<Vehicle, Vehicle> {
   }
 }
 
+class UpdateVehicle implements UseCase<Vehicle, Vehicle> {
+  final VehicleRepository repository;
+  UpdateVehicle(this.repository);
+  @override
+  Future<Either<Failure, Vehicle>> call(Vehicle params) async {
+    return await repository.updateVehicle(params);
+  }
+}
+
 class DeleteVehicle implements UseCase<void, String> {
   final VehicleRepository repository;
   DeleteVehicle(this.repository);

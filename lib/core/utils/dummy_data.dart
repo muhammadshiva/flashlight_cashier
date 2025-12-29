@@ -598,6 +598,75 @@ class DummyData {
         updatedAt: now.subtract(const Duration(minutes: 2)),
         completedAt: null,
       ),
+
+      // Additional History Data (Completed and Paid Orders)
+      ..._generateHistoryOrders(now),
     ];
+  }
+
+  // Generate additional history orders for pagination
+  static List<WorkOrder> _generateHistoryOrders(DateTime now) {
+    final List<WorkOrder> orders = [];
+    final statuses = ['completed', 'paid'];
+    final paymentMethods = ['cash', 'qris', 'debit'];
+
+    for (int i = 9; i <= 58; i++) {
+      final daysAgo = (i - 8);
+      final status = statuses[i % 2];
+      final isPaid = status == 'paid';
+
+      final customerIndex = i % customers.length;
+      final vehicleIndex = i % vehicles.length;
+      final serviceIndex = i % services.length;
+      final productIndex = i % products.length;
+
+      final servicePrice = services[serviceIndex].price;
+      final productPrice = products[productIndex].price;
+      final productQty = (i % 3) + 1;
+      final total = servicePrice + (productPrice * productQty);
+
+      orders.add(
+        WorkOrder(
+          id: 'wo-${i.toString().padLeft(3, '0')}',
+          workOrderCode: 'WO-${now.subtract(Duration(days: daysAgo)).year}${now.subtract(Duration(days: daysAgo)).month.toString().padLeft(2, '0')}${now.subtract(Duration(days: daysAgo)).day.toString().padLeft(2, '0')}-${i.toString().padLeft(3, '0')}',
+          customerId: customers[customerIndex].id,
+          vehicleDataId: vehicles[vehicleIndex].id,
+          queueNumber: i.toString(),
+          estimatedTime: '${20 + (i % 60)} menit',
+          status: status,
+          paymentStatus: isPaid ? 'paid' : 'pending',
+          paymentMethod: isPaid ? paymentMethods[i % paymentMethods.length] : null,
+          paidAmount: isPaid ? total : 0,
+          totalPrice: total,
+          services: [
+            WorkOrderService(
+              id: 'wos-${i * 10}',
+              workOrderId: 'wo-${i.toString().padLeft(3, '0')}',
+              serviceId: services[serviceIndex].id,
+              quantity: 1,
+              priceAtOrder: servicePrice,
+              subtotal: servicePrice,
+              service: services[serviceIndex],
+            ),
+          ],
+          products: [
+            WorkOrderProduct(
+              id: 'wop-${i * 10}',
+              workOrderId: 'wo-${i.toString().padLeft(3, '0')}',
+              productId: products[productIndex].id,
+              quantity: productQty,
+              priceAtOrder: productPrice,
+              subtotal: productPrice * productQty,
+              product: products[productIndex],
+            ),
+          ],
+          createdAt: now.subtract(Duration(days: daysAgo, hours: i % 24)),
+          updatedAt: now.subtract(Duration(days: daysAgo, hours: i % 24)),
+          completedAt: now.subtract(Duration(days: daysAgo, hours: (i % 24) - 1)),
+        ),
+      );
+    }
+
+    return orders;
   }
 }
