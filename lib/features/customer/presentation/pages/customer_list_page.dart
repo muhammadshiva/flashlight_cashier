@@ -169,32 +169,52 @@ class _CustomerTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(2), // Name
-          1: FlexColumnWidth(2), // Phone
-          2: FlexColumnWidth(2), // Email
-          3: FixedColumnWidth(100), // Actions
-        },
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          const TableRow(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Color(0xFFE2E8F0)),
+    return Column(
+      children: [
+        // Sticky Header
+        Table(
+          columnWidths: const {
+            0: FlexColumnWidth(2),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(2),
+            3: FixedColumnWidth(100),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: const [
+            TableRow(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(color: Color(0xFFE2E8F0)),
+                ),
               ),
+              children: [
+                _HeaderCell('NAME'),
+                _HeaderCell('PHONE'),
+                _HeaderCell('EMAIL'),
+                _HeaderCell('ACTION', align: Alignment.centerRight),
+              ],
             ),
-            children: [
-              _HeaderCell('NAME'),
-              _HeaderCell('PHONE'),
-              _HeaderCell('EMAIL'),
-              _HeaderCell('ACTION', align: Alignment.centerRight),
-            ],
+          ],
+        ),
+        // Scrollable Content
+        Expanded(
+          child: SingleChildScrollView(
+            child: Table(
+              columnWidths: const {
+                0: FlexColumnWidth(2),
+                1: FlexColumnWidth(2),
+                2: FlexColumnWidth(2),
+                3: FixedColumnWidth(100),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                ...customers.map((customer) => _buildCustomerRow(context, customer)),
+              ],
+            ),
           ),
-          ...customers.map((customer) => _buildCustomerRow(context, customer)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

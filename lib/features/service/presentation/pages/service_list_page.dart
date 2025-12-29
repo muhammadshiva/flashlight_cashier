@@ -248,29 +248,48 @@ class _ServiceTable extends StatelessWidget {
           ),
         ],
       ),
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(2.5), // LAYANAN
-          1: FlexColumnWidth(1), // TIPE
-          2: FlexColumnWidth(1.2), // HARGA
-          3: FlexColumnWidth(1), // STATUS
-          4: FixedColumnWidth(140), // ACTION
-        },
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      child: Column(
         children: [
-          const TableRow(
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
-            ),
-            children: [
-              _HeaderCell('LAYANAN'),
-              _HeaderCell('TIPE'),
-              _HeaderCell('HARGA'),
-              _HeaderCell('STATUS'),
-              _HeaderCell('ACTION', align: Alignment.centerRight),
+          // Sticky Header
+          Table(
+            columnWidths: const {
+              0: FlexColumnWidth(2.5),
+              1: FlexColumnWidth(1),
+              2: FlexColumnWidth(1.2),
+              3: FlexColumnWidth(1),
+              4: FixedColumnWidth(140),
+            },
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: const [
+              TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+                ),
+                children: [
+                  _HeaderCell('LAYANAN'),
+                  _HeaderCell('TIPE'),
+                  _HeaderCell('HARGA'),
+                  _HeaderCell('STATUS'),
+                  _HeaderCell('ACTION', align: Alignment.centerRight),
+                ],
+              ),
             ],
           ),
-          ...services.map((service) {
+          // Scrollable Content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Table(
+                columnWidths: const {
+                  0: FlexColumnWidth(2.5),
+                  1: FlexColumnWidth(1),
+                  2: FlexColumnWidth(1.2),
+                  3: FlexColumnWidth(1),
+                  4: FixedColumnWidth(140),
+                },
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                children: [
+                  ...services.map((service) {
             return TableRow(
               decoration: const BoxDecoration(
                 border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
@@ -403,6 +422,10 @@ class _ServiceTable extends StatelessWidget {
               ],
             );
           }),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

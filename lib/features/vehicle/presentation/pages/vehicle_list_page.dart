@@ -167,36 +167,58 @@ class _VehicleTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(2), // License Plate
-          1: FlexColumnWidth(2), // Brand
-          2: FlexColumnWidth(1.5), // Color
-          3: FlexColumnWidth(1.5), // Category
-          4: FlexColumnWidth(2), // Specs
-          5: FixedColumnWidth(100), // Actions
-        },
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          const TableRow(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Color(0xFFE2E8F0)),
+    return Column(
+      children: [
+        // Sticky Header
+        Table(
+          columnWidths: const {
+            0: FlexColumnWidth(2),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(1.5),
+            3: FlexColumnWidth(1.5),
+            4: FlexColumnWidth(2),
+            5: FixedColumnWidth(100),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: const [
+            TableRow(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(color: Color(0xFFE2E8F0)),
+                ),
               ),
+              children: [
+                _HeaderCell('LICENSE PLATE'),
+                _HeaderCell('BRAND'),
+                _HeaderCell('COLOR'),
+                _HeaderCell('CATEGORY'),
+                _HeaderCell('SPECS'),
+                _HeaderCell('ACTION', align: Alignment.centerRight),
+              ],
             ),
-            children: [
-              _HeaderCell('LICENSE PLATE'),
-              _HeaderCell('BRAND'),
-              _HeaderCell('COLOR'),
-              _HeaderCell('CATEGORY'),
-              _HeaderCell('SPECS'),
-              _HeaderCell('ACTION', align: Alignment.centerRight),
-            ],
+          ],
+        ),
+        // Scrollable Content
+        Expanded(
+          child: SingleChildScrollView(
+            child: Table(
+              columnWidths: const {
+                0: FlexColumnWidth(2),
+                1: FlexColumnWidth(2),
+                2: FlexColumnWidth(1.5),
+                3: FlexColumnWidth(1.5),
+                4: FlexColumnWidth(2),
+                5: FixedColumnWidth(100),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                ...vehicles.map((vehicle) => _buildVehicleRow(context, vehicle)),
+              ],
+            ),
           ),
-          ...vehicles.map((vehicle) => _buildVehicleRow(context, vehicle)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

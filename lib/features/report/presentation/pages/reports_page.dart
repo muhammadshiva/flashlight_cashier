@@ -269,52 +269,72 @@ class _ServiceRevenueTable extends StatelessWidget {
           ),
         ],
       ),
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(2), // LAYANAN
-          1: FlexColumnWidth(1.5), // PENDAPATAN
-        },
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      child: Column(
         children: [
-          const TableRow(
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
-            ),
-            children: [
-              _HeaderCell('LAYANAN'),
-              _HeaderCell('PENDAPATAN', align: Alignment.centerRight),
+          // Sticky Header
+          Table(
+            columnWidths: const {
+              0: FlexColumnWidth(2),
+              1: FlexColumnWidth(1.5),
+            },
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: const [
+              TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+                ),
+                children: [
+                  _HeaderCell('LAYANAN'),
+                  _HeaderCell('PENDAPATAN', align: Alignment.centerRight),
+                ],
+              ),
             ],
           ),
-          ...serviceRevenue.entries.map((entry) {
-            return TableRow(
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+          // Scrollable Content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Table(
+                columnWidths: const {
+                  0: FlexColumnWidth(2),
+                  1: FlexColumnWidth(1.5),
+                },
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                children: [
+                  ...serviceRevenue.entries.map((entry) {
+                    return TableRow(
+                      decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+                      ),
+                      children: [
+                        _DataCell(
+                          child: Text(
+                            entry.key,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF1E293B),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        _DataCell(
+                          align: Alignment.centerRight,
+                          child: Text(
+                            CurrencyFormatter.format(entry.value),
+                            style: const TextStyle(
+                              fontFamily: 'RobotoMono',
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.dashboardGreen,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ],
               ),
-              children: [
-                _DataCell(
-                  child: Text(
-                    entry.key,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                _DataCell(
-                  align: Alignment.centerRight,
-                  child: Text(
-                    CurrencyFormatter.format(entry.value),
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.dashboardGreen,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }),
+            ),
+          ),
         ],
       ),
     );
@@ -345,53 +365,73 @@ class _DailyRevenueTable extends StatelessWidget {
           ),
         ],
       ),
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(2), // TANGGAL
-          1: FlexColumnWidth(1.5), // PENDAPATAN
-        },
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      child: Column(
         children: [
-          const TableRow(
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
-            ),
-            children: [
-              _HeaderCell('TANGGAL'),
-              _HeaderCell('PENDAPATAN', align: Alignment.centerRight),
+          // Sticky Header
+          Table(
+            columnWidths: const {
+              0: FlexColumnWidth(2),
+              1: FlexColumnWidth(1.5),
+            },
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: const [
+              TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+                ),
+                children: [
+                  _HeaderCell('TANGGAL'),
+                  _HeaderCell('PENDAPATAN', align: Alignment.centerRight),
+                ],
+              ),
             ],
           ),
-          ...sortedDates.map((date) {
-            final revenue = dailyRevenue[date]!;
-            return TableRow(
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+          // Scrollable Content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Table(
+                columnWidths: const {
+                  0: FlexColumnWidth(2),
+                  1: FlexColumnWidth(1.5),
+                },
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                children: [
+                  ...sortedDates.map((date) {
+                    final revenue = dailyRevenue[date]!;
+                    return TableRow(
+                      decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+                      ),
+                      children: [
+                        _DataCell(
+                          child: Text(
+                            DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(date),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF1E293B),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        _DataCell(
+                          align: Alignment.centerRight,
+                          child: Text(
+                            CurrencyFormatter.format(revenue),
+                            style: const TextStyle(
+                              fontFamily: 'RobotoMono',
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.dashboardBlue,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ],
               ),
-              children: [
-                _DataCell(
-                  child: Text(
-                    DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(date),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                _DataCell(
-                  align: Alignment.centerRight,
-                  child: Text(
-                    CurrencyFormatter.format(revenue),
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.dashboardBlue,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }),
+            ),
+          ),
         ],
       ),
     );

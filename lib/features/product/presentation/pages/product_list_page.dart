@@ -167,36 +167,58 @@ class _ProductTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(3), // Product Name
-          1: FlexColumnWidth(1), // SKU
-          2: FlexColumnWidth(1), // Price
-          3: FlexColumnWidth(1), // Stock
-          4: FlexColumnWidth(1), // Status
-          5: FixedColumnWidth(100), // Actions
-        },
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          const TableRow(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Color(0xFFE2E8F0)),
+    return Column(
+      children: [
+        // Sticky Header
+        Table(
+          columnWidths: const {
+            0: FlexColumnWidth(3),
+            1: FlexColumnWidth(1),
+            2: FlexColumnWidth(1),
+            3: FlexColumnWidth(1),
+            4: FlexColumnWidth(1),
+            5: FixedColumnWidth(100),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: const [
+            TableRow(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(color: Color(0xFFE2E8F0)),
+                ),
               ),
+              children: [
+                _HeaderCell('PRODUCT NAME'),
+                _HeaderCell('SKU'),
+                _HeaderCell('PRICE'),
+                _HeaderCell('STOCK'),
+                _HeaderCell('STATUS'),
+                _HeaderCell('ACTION', align: Alignment.centerRight),
+              ],
             ),
-            children: [
-              _HeaderCell('PRODUCT NAME'),
-              _HeaderCell('SKU'),
-              _HeaderCell('PRICE'),
-              _HeaderCell('STOCK'),
-              _HeaderCell('STATUS'),
-              _HeaderCell('ACTION', align: Alignment.centerRight),
-            ],
+          ],
+        ),
+        // Scrollable Content
+        Expanded(
+          child: SingleChildScrollView(
+            child: Table(
+              columnWidths: const {
+                0: FlexColumnWidth(3),
+                1: FlexColumnWidth(1),
+                2: FlexColumnWidth(1),
+                3: FlexColumnWidth(1),
+                4: FlexColumnWidth(1),
+                5: FixedColumnWidth(100),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                ...products.map((product) => _buildProductRow(context, product)),
+              ],
+            ),
           ),
-          ...products.map((product) => _buildProductRow(context, product)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

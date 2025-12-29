@@ -71,7 +71,7 @@ class _HistoryPageState extends State<HistoryPage> {
         } else if (state is HistoryLoaded) {
           return Scaffold(
             backgroundColor: Color(0xFFF8FAFC),
-            body: SingleChildScrollView(
+            body: Padding(
               padding: const EdgeInsets.all(32.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,28 +80,33 @@ class _HistoryPageState extends State<HistoryPage> {
                   const SizedBox(height: 32),
                   _StatsSection(state: state),
                   const SizedBox(height: 24),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.02),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        _HistoryTable(
-                          orders: state.displayedOrders,
-                          customers: state.customers,
-                          vehicles: state.vehicles,
-                        ),
-                        const _PaginationSection(),
-                      ],
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.02),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          Expanded(
+                            child: _HistoryTable(
+                              orders: state.displayedOrders,
+                              customers: state.customers,
+                              vehicles: state.vehicles,
+                            ),
+                          ),
+                          const _PaginationSection(),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -388,143 +393,165 @@ class _HistoryTable extends StatelessWidget {
       );
     }
 
-    return Table(
-      columnWidths: const {
-        0: FlexColumnWidth(1.2), // WORK ORDER
-        1: FlexColumnWidth(2), // CUSTOMER
-        2: FlexColumnWidth(1.2), // TOTAL
-        3: FlexColumnWidth(1), // STATUS
-        4: FixedColumnWidth(100), // ACTION
-      },
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+    return Column(
       children: [
-        // Header Row
-        const TableRow(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Color(0xFFE2E8F0)),
-            ),
-          ),
-          children: [
-            _HeaderCell('WORK ORDER'),
-            _HeaderCell('PELANGGAN'),
-            _HeaderCell('TOTAL'),
-            _HeaderCell('STATUS'),
-            _HeaderCell('ACTION', align: Alignment.centerRight),
-          ],
-        ),
-        // Data Rows
-        ...orders.map((order) {
-          final customer = customers[order.customerId];
-          final vehicle = vehicles[order.vehicleDataId];
-          return TableRow(
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Color(0xFFF1F5F9)),
-              ),
-            ),
-            children: [
-              _DataCell(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '#${order.workOrderCode}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1E293B),
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      order.completedAt != null
-                          ? DateFormat('dd MMM yyyy, HH:mm')
-                              .format(order.completedAt!)
-                          : '-',
-                      style: const TextStyle(
-                        color: Color(0xFF94A3B8),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+        // Sticky Header
+        Table(
+          columnWidths: const {
+            0: FlexColumnWidth(1.2),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(1.2),
+            3: FlexColumnWidth(1),
+            4: FixedColumnWidth(100),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: const [
+            TableRow(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
-              _DataCell(
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 16,
-                      backgroundColor:
-                          AppColors.orangePrimary.withOpacity(0.1),
-                      child: Text(
-                        (customer?.name ?? 'U').substring(0, 1).toUpperCase(),
-                        style: TextStyle(
-                          color: AppColors.orangePrimary,
-                          fontWeight: FontWeight.bold,
+              children: [
+                _HeaderCell('WORK ORDER'),
+                _HeaderCell('PELANGGAN'),
+                _HeaderCell('TOTAL'),
+                _HeaderCell('STATUS'),
+                _HeaderCell('ACTION', align: Alignment.centerRight),
+              ],
+            ),
+          ],
+        ),
+        // Scrollable Content
+        Expanded(
+          child: SingleChildScrollView(
+            child: Table(
+              columnWidths: const {
+                0: FlexColumnWidth(1.2),
+                1: FlexColumnWidth(2),
+                2: FlexColumnWidth(1.2),
+                3: FlexColumnWidth(1),
+                4: FixedColumnWidth(100),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                // Data Rows
+                ...orders.map((order) {
+            final customer = customers[order.customerId];
+            final vehicle = vehicles[order.vehicleDataId];
+            return TableRow(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: Color(0xFFF1F5F9)),
+                ),
+              ),
+              children: [
+                _DataCell(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '#${order.workOrderCode}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1E293B),
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        order.completedAt != null
+                            ? DateFormat('dd MMM yyyy, HH:mm')
+                                .format(order.completedAt!)
+                            : '-',
+                        style: const TextStyle(
+                          color: Color(0xFF94A3B8),
                           fontSize: 12,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            customer?.name ?? 'Unknown',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF1E293B),
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                    ],
+                  ),
+                ),
+                _DataCell(
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundColor:
+                            AppColors.orangePrimary.withOpacity(0.1),
+                        child: Text(
+                          (customer?.name ?? 'U').substring(0, 1).toUpperCase(),
+                          style: TextStyle(
+                            color: AppColors.orangePrimary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
                           ),
-                          if (vehicle != null) ...[
-                            const SizedBox(height: 2),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Text(
-                              '${vehicle.licensePlate} • ${vehicle.vehicleBrand}',
+                              customer?.name ?? 'Unknown',
                               style: const TextStyle(
-                                color: Color(0xFF64748B),
-                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF1E293B),
+                                fontSize: 14,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
-                          ]
-                        ],
+                            if (vehicle != null) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                '${vehicle.licensePlate} • ${vehicle.vehicleBrand}',
+                                style: const TextStyle(
+                                  color: Color(0xFF64748B),
+                                  fontSize: 12,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ]
+                          ],
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+                _DataCell(
+                  child: Text(
+                    CurrencyFormatter.format(order.totalPrice),
+                    style: const TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
                     ),
-                  ],
-                ),
-              ),
-              _DataCell(
-                child: Text(
-                  CurrencyFormatter.format(order.totalPrice),
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF1E293B),
                   ),
                 ),
-              ),
-              _DataCell(
-                child: _StatusBadge(status: order.status),
-              ),
-              _DataCell(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: _ActionButton(
-                    icon: Icons.visibility_outlined,
-                    onTap: () {
-                      context.go('/work-orders/${order.id}');
-                    },
-                    tooltip: 'Lihat Detail',
+                _DataCell(
+                  child: _StatusBadge(status: order.status),
+                ),
+                _DataCell(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: _ActionButton(
+                      icon: Icons.visibility_outlined,
+                      onTap: () {
+                        context.go('/work-orders/${order.id}');
+                      },
+                      tooltip: 'Lihat Detail',
+                    ),
                   ),
                 ),
-              ),
-            ],
-          );
-        }),
+              ],
+            );
+          }),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
