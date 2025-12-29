@@ -199,7 +199,7 @@ class _CatalogView extends StatelessWidget {
                             const Icon(Icons.cleaning_services, size: 32),
                             const SizedBox(height: 4),
                             Text(service.name, textAlign: TextAlign.center),
-                            Text('\$${service.price}',
+                            Text('Rp ${service.price}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold)),
                           ],
@@ -231,7 +231,7 @@ class _CatalogView extends StatelessWidget {
                             const Icon(Icons.shopping_bag, size: 32),
                             const SizedBox(height: 4),
                             Text(product.name, textAlign: TextAlign.center),
-                            Text('\$${product.price}',
+                            Text('Rp ${product.price}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold)),
                           ],
@@ -278,11 +278,11 @@ class _CartViewState extends State<_CartView> {
               final item = widget.state.cartItems[index];
               return ListTile(
                 title: Text(item.name),
-                subtitle: Text('${item.quantity} x \$${item.price}'),
+                subtitle: Text('${item.quantity} x Rp ${item.price}'),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('\$${item.subtotal}',
+                    Text('Rp ${item.subtotal}',
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.grey),
@@ -327,7 +327,7 @@ class _CartViewState extends State<_CartView> {
                   const Text('Total:',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('\$${widget.state.totalAmount}',
+                  Text('Rp ${widget.state.totalAmount}',
                       style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

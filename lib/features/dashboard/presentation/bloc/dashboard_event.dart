@@ -18,7 +18,8 @@ class FilterWorkOrders extends DashboardEvent {
   const FilterWorkOrders({this.status, this.searchQuery});
 
   @override
-  List<Object> get props => [if (status != null) status!, if (searchQuery != null) searchQuery!];
+  List<Object> get props =>
+      [if (status != null) status!, if (searchQuery != null) searchQuery!];
 }
 
 class UpdateWorkOrderStatusEvent extends DashboardEvent {
@@ -32,4 +33,34 @@ class UpdateWorkOrderStatusEvent extends DashboardEvent {
 
   @override
   List<Object> get props => [workOrderId, newStatus];
+}
+
+class AddWorkOrderItemEvent extends DashboardEvent {
+  final String workOrderId;
+  final Map<String, dynamic> item; // Simulating item object for now
+  final String type; // 'Service' or 'Product'
+
+  const AddWorkOrderItemEvent({
+    required this.workOrderId,
+    required this.item,
+    required this.type,
+  });
+
+  @override
+  List<Object> get props => [workOrderId, item, type];
+}
+
+class RemoveWorkOrderItemEvent extends DashboardEvent {
+  final String workOrderId;
+  final String itemId;
+  final String type; // 'Service' or 'Product'
+
+  const RemoveWorkOrderItemEvent({
+    required this.workOrderId,
+    required this.itemId,
+    required this.type,
+  });
+
+  @override
+  List<Object> get props => [workOrderId, itemId, type];
 }

@@ -172,7 +172,7 @@ class WorkOrderListPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Status: ${order.status}'),
-                          Text('Total: \$${order.totalPrice}'),
+                          Text('Total: Rp ${order.totalPrice}'),
                           Text('Date: ${order.createdAt?.toLocal()}'),
                         ],
                       ),

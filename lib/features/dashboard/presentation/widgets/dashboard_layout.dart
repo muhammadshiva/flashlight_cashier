@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dashboard_sidebar.dart';
-import 'dashboard_header.dart';
+import 'dashboard_top_navigation.dart';
 
 class DashboardLayout extends StatelessWidget {
   final Widget child;
@@ -14,16 +13,9 @@ class DashboardLayout extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const DashboardHeader(),
+            const DashboardTopNavigation(),
             Expanded(
-              child: Row(
-                children: [
-                  const DashboardSidebar(),
-                  Expanded(
-                    child: child,
-                  ),
-                ],
-              ),
+              child: child,
             ),
           ],
         ),

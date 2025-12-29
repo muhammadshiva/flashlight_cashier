@@ -281,7 +281,7 @@ class _ProductTable extends StatelessWidget {
             text: product.id.length >= 8
                 ? product.id.substring(0, 8).toUpperCase()
                 : product.id.toUpperCase()), // Fake SKU
-        _DataCell(text: '\$${product.price}'),
+        _DataCell(text: 'Rp ${product.price}'),
         _DataCell(text: product.stock.toString()),
         TableCell(
           child: Container(
