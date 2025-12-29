@@ -12,9 +12,9 @@ class ServiceRepositoryImpl implements ServiceRepository {
   ServiceRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<ServiceEntity>>> getServices({bool isPrototype = false}) async {
+  Future<Either<Failure, List<ServiceEntity>>> getServices({bool isPrototype = false, String? type}) async {
     try {
-      final result = await remoteDataSource.getServices(isPrototype: isPrototype);
+      final result = await remoteDataSource.getServices(isPrototype: isPrototype, type: type);
       return Right(result.map((e) => e.toEntity()).toList());
     } on Failure catch (e) {
       return Left(e);

@@ -23,6 +23,18 @@ class CustomerRepositoryImpl implements CustomerRepository {
   }
 
   @override
+  Future<Either<Failure, Customer>> getCustomer(String id) async {
+    try {
+      final result = await remoteDataSource.getCustomer(id);
+      return Right(result.toEntity());
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, Customer>> createCustomer(Customer customer) async {
     try {
       final customerModel = CustomerModel(

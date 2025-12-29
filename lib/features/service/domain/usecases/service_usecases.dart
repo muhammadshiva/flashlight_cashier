@@ -8,11 +8,12 @@ import '../repositories/service_repository.dart';
 
 class GetServicesParams extends Equatable {
   final bool isPrototype;
+  final String? type;
 
-  const GetServicesParams({this.isPrototype = false});
+  const GetServicesParams({this.isPrototype = false, this.type});
 
   @override
-  List<Object> get props => [isPrototype];
+  List<Object?> get props => [isPrototype, type];
 }
 
 class GetServices implements UseCase<List<ServiceEntity>, GetServicesParams> {
@@ -20,7 +21,7 @@ class GetServices implements UseCase<List<ServiceEntity>, GetServicesParams> {
   GetServices(this.repository);
   @override
   Future<Either<Failure, List<ServiceEntity>>> call(GetServicesParams params) async {
-    return await repository.getServices(isPrototype: params.isPrototype);
+    return await repository.getServices(isPrototype: params.isPrototype, type: params.type);
   }
 }
 

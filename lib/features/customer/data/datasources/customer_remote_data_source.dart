@@ -4,6 +4,7 @@ import '../models/customer_model.dart';
 
 abstract class CustomerRemoteDataSource {
   Future<List<CustomerModel>> getCustomers();
+  Future<CustomerModel> getCustomer(String id);
   Future<CustomerModel> createCustomer(CustomerModel customer);
   Future<CustomerModel> updateCustomer(CustomerModel customer);
   Future<void> deleteCustomer(String id);
@@ -113,6 +114,17 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 500));
     return List.from(_dummyCustomers);
+  }
+
+  @override
+  Future<CustomerModel> getCustomer(String id) async {
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 500));
+    final customer = _dummyCustomers.firstWhere(
+      (c) => c.id == id,
+      orElse: () => throw ServerFailure("Customer not found"),
+    );
+    return customer;
   }
 
   @override

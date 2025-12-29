@@ -86,39 +86,14 @@ class WorkOrderListBloc extends Bloc<WorkOrderListEvent, WorkOrderListState> {
         // Let's emit Loading to block interaction for safe update
         emit(WorkOrderListLoading());
 
-        // Create updated object
-        // NOTE: WorkOrder entity assumes immutable? Yes.
-        // We probably need a copyWith method on Entity usually, but I didn't create it.
-        // Let's manually create copy for now or rely on backend to handle status update with just ID?
-        // The usecase takes a WorkOrder params.
-        // I will implement a quick copyWith-like manual construction here or ideally add copyWith to Entity.
-        // Let's assume I add copyWith to Entity or just recreate it here.
-
-        final updatedOrder = WorkOrder(
-          id: event.workOrder.id,
-          workOrderCode: event.workOrder.workOrderCode,
-          customerId: event.workOrder.customerId,
-          vehicleDataId: event.workOrder.vehicleDataId,
-          queueNumber: event.workOrder.queueNumber,
-          estimatedTime: event.workOrder.estimatedTime,
-          status: event.newStatus, // NEW STATUS
-          paymentStatus: event.newStatus == 'completed'
-              ? 'paid'
-              : event.workOrder
-                  .paymentStatus, // Auto-mark paid? Or separate event?
-          paymentMethod: event.workOrder.paymentMethod,
-          paidAmount: event.workOrder.paidAmount,
-          totalPrice: event.workOrder.totalPrice,
-          services: event.workOrder.services,
-          products: event.workOrder.products,
-          createdAt: event.workOrder.createdAt,
-          updatedAt: DateTime.now(),
-          completedAt: event.newStatus == 'completed'
-              ? DateTime.now()
-              : event.workOrder.completedAt,
+        // Use the dedicated status update endpoint - no need to send full object
+        final result = await updateWorkOrderStatus(
+          UpdateWorkOrderStatusParams(
+            id: event.workOrder.id,
+            status: event.newStatus,
+          ),
         );
 
-        final result = await updateWorkOrderStatus(updatedOrder);
         result.fold(
           (failure) => emit(WorkOrderListError(failure.message)),
           (success) {

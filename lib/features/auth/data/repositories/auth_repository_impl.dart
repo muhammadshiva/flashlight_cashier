@@ -20,10 +20,41 @@ class AuthRepositoryImpl implements AuthRepository {
       String username, String password) async {
     try {
       final remoteAuth = await remoteDataSource.login(username, password);
-      // Cache token
+      // Cache tokens
       await sharedPreferences.setString(
           'auth_token', remoteAuth.data.accessToken);
+      await sharedPreferences.setString(
+          'refresh_token', remoteAuth.data.refreshToken);
       return Right(remoteAuth.toEntity());
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken) async {
+    try {
+      final remoteAuth = await remoteDataSource.refreshToken(refreshToken);
+      // Update cached tokens
+      await sharedPreferences.setString(
+          'auth_token', remoteAuth.data.accessToken);
+      await sharedPreferences.setString(
+          'refresh_token', remoteAuth.data.refreshToken);
+      return Right(remoteAuth.toEntity());
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> getProfile() async {
+    try {
+      final userModel = await remoteDataSource.getProfile();
+      return Right(userModel.toEntity());
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {

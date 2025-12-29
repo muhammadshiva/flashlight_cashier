@@ -4,7 +4,7 @@ import '../../../../core/error/failures.dart';
 import '../models/service_model.dart';
 
 abstract class ServiceRemoteDataSource {
-  Future<List<ServiceModel>> getServices({bool isPrototype = false});
+  Future<List<ServiceModel>> getServices({bool isPrototype = false, String? type});
   Future<ServiceModel> createService(ServiceModel service);
   Future<void> deleteService(String id);
 }
@@ -15,13 +15,17 @@ class ServiceRemoteDataSourceImpl implements ServiceRemoteDataSource {
   ServiceRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<List<ServiceModel>> getServices({bool isPrototype = false}) async {
+  Future<List<ServiceModel>> getServices({bool isPrototype = false, String? type}) async {
     try {
       if (isPrototype) {
         return ServiceResponseModel.getPrototypeDataServices;
       }
 
-      final response = await dio.get('/services');
+      final queryParams = type != null ? {'type': type} : null;
+      final response = await dio.get(
+        '/services',
+        queryParameters: queryParams,
+      );
       return (response.data as List).map((e) => ServiceModel.fromJson(e)).toList();
     } on DioException catch (e) {
       throw ServerFailure(e.message ?? 'Unknown Error');

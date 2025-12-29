@@ -4,4 +4,6 @@ import '../entities/auth_entity.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> login(String username, String password);
+  Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken);
+  Future<Either<Failure, UserEntity>> getProfile();
 }

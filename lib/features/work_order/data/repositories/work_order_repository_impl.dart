@@ -127,6 +127,16 @@ class WorkOrderRepositoryImpl implements WorkOrderRepository {
   }
 
   @override
+  Future<Either<Failure, WorkOrder>> updateWorkOrderStatus(String id, String status) async {
+    try {
+      final result = await remoteDataSource.updateWorkOrderStatus(id, status);
+      return Right(result.toEntity());
+    } on Failure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
   Future<Either<Failure, WorkOrder>> getWorkOrderById(String id) async {
     try {
       final result = await remoteDataSource.getWorkOrderById(id);

@@ -5,6 +5,8 @@ import 'features/auth/data/datasources/auth_remote_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/domain/usecases/login_usecase.dart';
+import 'features/auth/domain/usecases/refresh_token_usecase.dart';
+import 'features/auth/domain/usecases/get_profile_usecase.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/customer/data/datasources/customer_remote_data_source.dart';
 import 'features/customer/data/repositories/customer_repository_impl.dart';
@@ -12,6 +14,7 @@ import 'features/customer/domain/repositories/customer_repository.dart';
 import 'features/customer/domain/usecases/create_customer.dart';
 import 'features/customer/domain/usecases/delete_customer.dart';
 import 'features/customer/domain/usecases/get_customers.dart';
+import 'features/customer/domain/usecases/get_customer.dart';
 import 'features/customer/domain/usecases/update_customer.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
 import 'features/membership/data/datasources/membership_remote_data_source.dart';
@@ -71,6 +74,8 @@ Future<void> init() async {
 
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
+  sl.registerLazySingleton(() => RefreshTokenUseCase(sl()));
+  sl.registerLazySingleton(() => GetProfileUseCase(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -95,6 +100,7 @@ Future<void> init() async {
 
   // Use cases
   sl.registerLazySingleton(() => GetCustomers(sl()));
+  sl.registerLazySingleton(() => GetCustomer(sl()));
   sl.registerLazySingleton(() => CreateCustomer(sl()));
   sl.registerLazySingleton(() => UpdateCustomer(sl()));
   sl.registerLazySingleton(() => DeleteCustomer(sl()));
@@ -123,6 +129,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetMemberships(sl()));
   sl.registerLazySingleton(() => CreateMembership(sl()));
   sl.registerLazySingleton(() => DeleteMembership(sl()));
+  sl.registerLazySingleton(() => CheckMembershipStatus(sl()));
+  sl.registerLazySingleton(() => UpdateMembership(sl()));
 
   // Repository
   sl.registerLazySingleton<MembershipRepository>(

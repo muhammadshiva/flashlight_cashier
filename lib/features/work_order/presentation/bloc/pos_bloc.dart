@@ -19,7 +19,8 @@ part 'pos_event.dart';
 part 'pos_state.dart';
 
 class PosBloc extends Bloc<PosEvent, PosState> {
-  final GetCustomers getCustomers; // Ensure this class is defined in customer_usecases.dart
+  final GetCustomers
+      getCustomers; // Ensure this class is defined in customer_usecases.dart
   final GetVehicles getVehicles;
   final GetServices getServices;
   final GetProducts getProducts;
@@ -47,8 +48,8 @@ class PosBloc extends Bloc<PosEvent, PosState> {
 
     // Fetch all necessary data parallelly
     final results = await Future.wait<dynamic>([
-      getServices(GetServicesParams(isPrototype: true)),
-      getProducts(NoParams()),
+      getServices(const GetServicesParams(isPrototype: true)),
+      getProducts(const GetProductsParams()),
       getCustomers(NoParams()),
       // Vehicles will be fetched when customer is selected, or we fetch all?
       // For now let's assume we fetch vehicles later or filter them.
@@ -93,7 +94,8 @@ class PosBloc extends Bloc<PosEvent, PosState> {
     // For now, let's just assume we can filter locally.
   }
 
-  Future<void> _onSelectCustomer(SelectCustomer event, Emitter<PosState> emit) async {
+  Future<void> _onSelectCustomer(
+      SelectCustomer event, Emitter<PosState> emit) async {
     // When customer selected, we need to load/filter their vehicles.
     // Since we fetched ALL vehicles in LoadCatalog (which is expensive potentially, but okay for MVP),
     // we need to re-fetch/filter them.
@@ -165,7 +167,8 @@ class PosBloc extends Bloc<PosEvent, PosState> {
     if (state.selectedCustomer == null ||
         state.selectedVehicle == null ||
         state.cartItems.isEmpty) {
-      emit(state.copyWith(status: PosStatus.error, errorMessage: "Missing information"));
+      emit(state.copyWith(
+          status: PosStatus.error, errorMessage: "Missing information"));
       return;
     }
 
@@ -173,13 +176,15 @@ class PosBloc extends Bloc<PosEvent, PosState> {
 
     final workOrder = WorkOrder(
       id: '',
-      workOrderCode: 'WO-${DateTime.now().millisecondsSinceEpoch}', // Temporary gen
+      workOrderCode:
+          'WO-${DateTime.now().millisecondsSinceEpoch}', // Temporary gen
       customerId: state.selectedCustomer!.id,
       vehicleDataId: state.selectedVehicle!.id,
       queueNumber: 'A-001', // Temp
       estimatedTime: '1 hour', // Temp
       status: 'created',
-      paymentStatus: 'paid', // Assume immediate payment for POS for now, or 'pending'
+      paymentStatus:
+          'paid', // Assume immediate payment for POS for now, or 'pending'
       paymentMethod: event.paymentMethod,
       paidAmount: state.totalAmount, // Assume full payment
       totalPrice: state.totalAmount,
@@ -209,13 +214,16 @@ class PosBloc extends Bloc<PosEvent, PosState> {
 
     final result = await createWorkOrder(workOrder);
     result.fold(
-      (l) => emit(state.copyWith(status: PosStatus.error, errorMessage: l.message)),
-      (r) => emit(state.copyWith(status: PosStatus.success, errorMessage: "Order Created!")),
+      (l) => emit(
+          state.copyWith(status: PosStatus.error, errorMessage: l.message)),
+      (r) => emit(state.copyWith(
+          status: PosStatus.success, errorMessage: "Order Created!")),
     );
   }
 
   void _onResetPos(ResetPos event, Emitter<PosState> emit) {
-    emit(const PosState(status: PosStatus.loaded)); // Keep loaded data but reset selection?
+    emit(const PosState(
+        status: PosStatus.loaded)); // Keep loaded data but reset selection?
     // Ideally we re-fetch or keep loaded data.
     add(LoadCatalog());
   }

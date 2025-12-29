@@ -3,7 +3,7 @@ import '../../../../core/error/failures.dart';
 import '../models/product_model.dart';
 
 abstract class ProductRemoteDataSource {
-  Future<List<ProductModel>> getProducts();
+  Future<List<ProductModel>> getProducts({String? type});
   Future<ProductModel> createProduct(ProductModel product);
   Future<ProductModel> updateProduct(ProductModel product);
   Future<void> deleteProduct(String id);
@@ -15,9 +15,13 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   ProductRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<List<ProductModel>> getProducts() async {
+  Future<List<ProductModel>> getProducts({String? type}) async {
     try {
-      final response = await dio.get('/products');
+      final queryParams = type != null ? {'type': type} : null;
+      final response = await dio.get(
+        '/products',
+        queryParameters: queryParams,
+      );
       return (response.data as List)
           .map((e) => ProductModel.fromJson(e))
           .toList();

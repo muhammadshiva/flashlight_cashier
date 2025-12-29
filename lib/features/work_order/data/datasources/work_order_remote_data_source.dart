@@ -9,6 +9,7 @@ abstract class WorkOrderRemoteDataSource {
   Future<WorkOrderModel> createWorkOrder(WorkOrderModel workOrder);
   Future<List<WorkOrderModel>> getWorkOrders({required bool isPrototype});
   Future<WorkOrderModel> updateWorkOrder(WorkOrderModel workOrder);
+  Future<WorkOrderModel> updateWorkOrderStatus(String id, String status);
   Future<WorkOrderModel> getWorkOrderById(String id);
 }
 
@@ -52,6 +53,25 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
     try {
       final response = await dio.put('/work-orders/${workOrder.id}', data: workOrder.toJson());
       return WorkOrderModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw ServerFailure(e.message ?? 'Unknown Error');
+    }
+  }
+
+  @override
+  Future<WorkOrderModel> updateWorkOrderStatus(String id, String status) async {
+    try {
+      final response = await dio.put(
+        '/api/work-orders/$id/status',
+        data: {'status': status},
+      );
+
+      // Handle response - might be wrapped or direct
+      final result = response.data;
+      if (result is Map<String, dynamic> && result.containsKey('data')) {
+        return WorkOrderModel.fromJson(result['data']);
+      }
+      return WorkOrderModel.fromJson(result);
     } on DioException catch (e) {
       throw ServerFailure(e.message ?? 'Unknown Error');
     }
