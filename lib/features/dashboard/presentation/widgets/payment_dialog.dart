@@ -24,6 +24,7 @@ class PaymentDialog extends StatefulWidget {
 class _PaymentDialogState extends State<PaymentDialog> {
   int _selectedMethodIndex = 0; // 0: Cash, 1: Card, 2: QR
   String _inputAmountStr = '';
+  final TextEditingController _refNoController = TextEditingController();
   bool _paymentSuccess = false;
   double _change = 0;
   int _autoCloseTimer = 5;
@@ -38,6 +39,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
   @override
   void dispose() {
     _timer?.cancel();
+    _refNoController.dispose();
     super.dispose();
   }
 
@@ -83,19 +85,27 @@ class _PaymentDialogState extends State<PaymentDialog> {
   }
 
   void _processPayment() {
-    final inputAmount = double.tryParse(_inputAmountStr) ?? 0;
-    if (inputAmount < _grandTotal) {
-      // Show error snackbar or alert
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Insufficient amount')),
-      );
-      return;
+    // For Cash
+    if (_selectedMethodIndex == 0) {
+      final inputAmount = double.tryParse(_inputAmountStr) ?? 0;
+      if (inputAmount < _grandTotal) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Insufficient amount')),
+        );
+        return;
+      }
+      setState(() {
+        _change = inputAmount - _grandTotal;
+        _paymentSuccess = true;
+      });
+    } else {
+      // For Card / QR (Assume full payment)
+      setState(() {
+        _inputAmountStr = _grandTotal.toInt().toString(); // Auto set to full
+        _change = 0;
+        _paymentSuccess = true;
+      });
     }
-
-    setState(() {
-      _change = inputAmount - _grandTotal;
-      _paymentSuccess = true;
-    });
 
     _startAutoCloseTimer();
   }
@@ -195,6 +205,12 @@ class _PaymentDialogState extends State<PaymentDialog> {
                                     ? Icons.credit_card
                                     : Icons.qr_code)),
                         const SizedBox(height: 12),
+                        if (_selectedMethodIndex != 0 &&
+                            _refNoController.text.isNotEmpty) ...[
+                          _DetailRow(
+                              label: 'Ref No.', value: _refNoController.text),
+                          const SizedBox(height: 12),
+                        ],
                         _DetailRow(
                             label: 'Customer Pays',
                             value: (double.tryParse(_inputAmountStr) ?? 0)
@@ -291,6 +307,8 @@ class _PaymentDialogState extends State<PaymentDialog> {
   }
 
   Widget _buildPaymentView() {
+    final bool isCash = _selectedMethodIndex == 0;
+
     return Column(
       children: [
         // Header
@@ -480,7 +498,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                                 ),
                               ],
                             ),
-                            if (_selectedMethodIndex == 0) ...[
+                            if (isCash) ...[
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment:
@@ -518,7 +536,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                 child: Container(
                   color: const Color(0xFFF8FAFC),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                      const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
                   child: Column(
                     children: [
                       // Tab Bar
@@ -560,111 +578,16 @@ class _PaymentDialogState extends State<PaymentDialog> {
                           ],
                         ),
                       ),
-                      const Spacer(flex: 1),
-                      const Text('Input Money',
-                          style: TextStyle(
-                              color: Color(0xFF64748B),
-                              fontWeight: FontWeight.w500)),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Enter cash amount received',
-                        style:
-                            TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+
+                      const SizedBox(
+                        height: 24,
                       ),
-                      const SizedBox(height: 12),
-                      // Display Input
-                      Text(
-                        _inputAmountStr.isEmpty
-                            ? 'Rp 0'
-                            : 'Rp ${int.tryParse(_inputAmountStr)?.toCurrencyFormat().replaceAll("Rp ", "") ?? _inputAmountStr}',
-                        style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E293B)),
-                      ),
-                      const SizedBox(height: 24),
-                      // Quick Amounts
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _QuickAmountChip(
-                              amount: 10000, onTap: () => _setAmount(10000)),
-                          const SizedBox(width: 8),
-                          _QuickAmountChip(
-                              amount: 20000, onTap: () => _setAmount(20000)),
-                          const SizedBox(width: 8),
-                          _QuickAmountChip(
-                              amount: 50000, onTap: () => _setAmount(50000)),
-                          const SizedBox(width: 8),
-                          _QuickAmountChip(
-                              amount: 100000, onTap: () => _setAmount(100000)),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      // Keypad
-                      Column(
-                        children: [
-                          Row(children: [
-                            _KeypadButton('1',
-                                onPressed: () => _onKeypadTap('1')),
-                            _KeypadButton('2',
-                                onPressed: () => _onKeypadTap('2')),
-                            _KeypadButton('3',
-                                onPressed: () => _onKeypadTap('3')),
-                          ]),
-                          Row(children: [
-                            _KeypadButton('4',
-                                onPressed: () => _onKeypadTap('4')),
-                            _KeypadButton('5',
-                                onPressed: () => _onKeypadTap('5')),
-                            _KeypadButton('6',
-                                onPressed: () => _onKeypadTap('6')),
-                          ]),
-                          Row(children: [
-                            _KeypadButton('7',
-                                onPressed: () => _onKeypadTap('7')),
-                            _KeypadButton('8',
-                                onPressed: () => _onKeypadTap('8')),
-                            _KeypadButton('9',
-                                onPressed: () => _onKeypadTap('9')),
-                          ]),
-                          Row(children: [
-                            const Spacer(), // Empty slot
-                            _KeypadButton('0',
-                                onPressed: () => _onKeypadTap('0')),
-                            // Backspace Button
-                            Expanded(
-                              child: SizedBox(
-                                height: 64,
-                                child: Center(
-                                  child: IconButton(
-                                    onPressed: () => _onKeypadTap('DEL'),
-                                    icon: const Icon(Icons.backspace_outlined,
-                                        color: Color(0xFF64748B), size: 24),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ],
-                      ),
-                      const Spacer(flex: 2),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _processPayment,
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.orangePrimary,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              elevation: 0),
-                          child: const Text('Pay Now',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                        ),
-                      ),
+
+                      // DYNAMIC CONTENT BASED ON PAYMENT METHOD
+                      if (isCash)
+                        _buildCashPaymentContent()
+                      else
+                        _buildExternalPaymentContent(), // Card or QR
                     ],
                   ),
                 ),
@@ -673,6 +596,213 @@ class _PaymentDialogState extends State<PaymentDialog> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildCashPaymentContent() {
+    return Expanded(
+      child: Column(
+        children: [
+          const Spacer(flex: 1),
+          const Text('Input Money',
+              style: TextStyle(
+                  color: Color(0xFF64748B), fontWeight: FontWeight.w500)),
+          const SizedBox(height: 4),
+          const Text(
+            'Enter cash amount received',
+            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+          ),
+          const SizedBox(height: 12),
+          // Display Input
+          Text(
+            _inputAmountStr.isEmpty
+                ? 'Rp 0'
+                : 'Rp ${int.tryParse(_inputAmountStr)?.toCurrencyFormat().replaceAll("Rp ", "") ?? _inputAmountStr}',
+            style: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B)),
+          ),
+          const SizedBox(height: 24),
+          // Quick Amounts
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _QuickAmountChip(amount: 10000, onTap: () => _setAmount(10000)),
+              const SizedBox(width: 8),
+              _QuickAmountChip(amount: 20000, onTap: () => _setAmount(20000)),
+              const SizedBox(width: 8),
+              _QuickAmountChip(amount: 50000, onTap: () => _setAmount(50000)),
+              const SizedBox(width: 8),
+              _QuickAmountChip(amount: 100000, onTap: () => _setAmount(100000)),
+            ],
+          ),
+          const SizedBox(height: 24),
+          // Keypad
+          Column(
+            children: [
+              Row(children: [
+                _KeypadButton('1', onPressed: () => _onKeypadTap('1')),
+                _KeypadButton('2', onPressed: () => _onKeypadTap('2')),
+                _KeypadButton('3', onPressed: () => _onKeypadTap('3')),
+              ]),
+              Row(children: [
+                _KeypadButton('4', onPressed: () => _onKeypadTap('4')),
+                _KeypadButton('5', onPressed: () => _onKeypadTap('5')),
+                _KeypadButton('6', onPressed: () => _onKeypadTap('6')),
+              ]),
+              Row(children: [
+                _KeypadButton('7', onPressed: () => _onKeypadTap('7')),
+                _KeypadButton('8', onPressed: () => _onKeypadTap('8')),
+                _KeypadButton('9', onPressed: () => _onKeypadTap('9')),
+              ]),
+              Row(children: [
+                const Spacer(), // Empty slot
+                _KeypadButton('0', onPressed: () => _onKeypadTap('0')),
+                // Backspace Button
+                Expanded(
+                  child: SizedBox(
+                    height: 64,
+                    child: Center(
+                      child: IconButton(
+                        onPressed: () => _onKeypadTap('DEL'),
+                        icon: const Icon(Icons.backspace_outlined,
+                            color: Color(0xFF64748B), size: 24),
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
+            ],
+          ),
+          const Spacer(flex: 2),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _processPayment,
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.orangePrimary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  elevation: 0),
+              child: const Text('Pay Now',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExternalPaymentContent() {
+    final bool isCard = _selectedMethodIndex == 1;
+    final String instruction = isCard
+        ? 'Process payment on EDC Machine'
+        : 'Scan QR Code on EDC / Customer App';
+    final IconData icon = isCard ? Icons.credit_card : Icons.qr_code_scanner;
+
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Spacer(),
+          // Icon and Instruction
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 48, color: const Color(0xFF64748B)),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            instruction,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Color(0xFF64748B),
+                fontSize: 16,
+                fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Total Amount to Pay',
+            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+          ),
+          const SizedBox(height: 12),
+          // Large Amount Display
+          Text(
+            _grandTotal.toCurrencyFormat(),
+            style: const TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B)),
+          ),
+
+          const SizedBox(height: 48),
+
+          // Reference Number Input
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Reference Number (Optional)',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1E293B)),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _refNoController,
+                decoration: InputDecoration(
+                  hintText: 'Enter approval code / ref no.',
+                  hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        const BorderSide(color: AppColors.orangePrimary),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                ),
+              ),
+            ],
+          ),
+
+          const Spacer(flex: 2),
+
+          // Confirm Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _processPayment,
+              style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      AppColors.greenLight100, // Use green for confirmation
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  elevation: 0),
+              child: const Text('Confirm Payment',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
