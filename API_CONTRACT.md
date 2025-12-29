@@ -1,12 +1,44 @@
 # API Contract - Flashlight Kiosk
 
-**Version**: 1.0
+**Version**: 1.1
 **Date**: December 2025
 **Base URL**: `http://localhost:8080` (Development)
 
 ---
 
-## 1. Global Response Format
+## 1. Pagination
+
+All list endpoints support pagination using query parameters:
+
+**Query Parameters:**
+- `page` (integer, optional): Page number (default: 1)
+- `limit` (integer, optional): Items per page (default: 10)
+- `offset` (integer, optional): Offset for skipping items (default: 0)
+
+**Example Request:**
+```
+GET /api/customers?page=2&limit=20
+```
+
+**Paginated Response Format:**
+```json
+{
+  "success": true,
+  "message": "Data retrieved successfully",
+  "data": {
+    "data": [...],           // Array of items for current page
+    "total": integer,        // Total number of items
+    "page": integer,         // Current page number
+    "limit": integer,        // Items per page
+    "totalPages": integer    // Total number of pages
+  },
+  "error_code": 0
+}
+```
+
+---
+
+## 2. Global Response Format
 
 All API responses (success and error) follow this standard JSON envelope:
 
@@ -110,6 +142,10 @@ All API responses (success and error) follow this standard JSON envelope:
 
 ### List Customers
 **Endpoint**: `GET /api/customers`
+**Query Params**: 
+- `page` (optional, default: 1)
+- `limit` (optional, default: 10)
+- `query` (optional) - Search by name, phone number, or email
 
 **Response Data (`data`)**:
 ```json
@@ -432,3 +468,138 @@ All API responses (success and error) follow this standard JSON envelope:
 ```
 
 **Response Data (`data`)**: Updated `WorkOrder Object`
+
+---
+
+## 9. User Management
+
+### List Users
+**Endpoint**: `GET /api/users`
+
+**Response Data (`data`)**:
+```json
+{
+  "users": [
+    {
+      "id": "string (UUID)",
+      "username": "string",
+      "fullName": "string",
+      "email": "string",
+      "role": "string",
+      "status": "string"
+    }
+  ],
+  "total": integer
+}
+```
+
+### Create User
+**Endpoint**: `POST /api/users`
+
+**Request Body**:
+```json
+{
+  "username": "string",
+  "fullName": "string",
+  "email": "string",
+  "password": "string",
+  "role": "string"
+}
+```
+
+**Response Data (`data`)**: `User Object`
+
+### Get User Detail
+**Endpoint**: `GET /api/users/:id`
+
+**Response Data (`data`)**: `User Object`
+
+### Update User
+**Endpoint**: `PUT /api/users/:id`
+
+**Request Body** (Partial updates allowed):
+```json
+{
+  "username": "string",
+  "fullName": "string",
+  "email": "string",
+  "role": "string",
+  "status": "string"
+}
+```
+
+**Response Data (`data`)**: `User Object`
+
+### Delete User
+**Endpoint**: `DELETE /api/users/:id`
+
+**Response Data (`data`)**: `null`
+
+### Reset User Password
+**Endpoint**: `PUT /api/users/:id/reset-password`
+
+**Request Body**:
+```json
+{
+  "newPassword": "string"
+}
+```
+
+**Response Data (`data`)**: `User Object`
+
+---
+
+## 10. Dashboard & Reports
+
+### Get Dashboard Statistics
+**Endpoint**: `GET /api/dashboard/stats`
+
+**Response Data (`data`)**:
+```json
+{
+  "totalOrders": integer,
+  "totalRevenue": integer,
+  "pendingOrders": integer,
+  "inProgressOrders": integer,
+  "completedOrders": integer,
+  "cancelledOrders": integer,
+  "statusCounts": {
+    "created": integer,
+    "inProgress": integer,
+    "completed": integer,
+    "cancelled": integer
+  }
+}
+```
+
+### Generate Report
+**Endpoint**: `POST /api/reports/generate`
+
+**Request Body**:
+```json
+{
+  "reportType": "daily | weekly | monthly | custom",
+  "startDate": "string (ISO8601)",
+  "endDate": "string (ISO8601)",
+  "filters": {
+    "status": "string (optional)",
+    "customerId": "string (optional)"
+  }
+}
+```
+
+**Response Data (`data`)**:
+```json
+{
+  "reportId": "string (UUID)",
+  "reportType": "string",
+  "generatedAt": "string (ISO8601)",
+  "data": {
+    "totalRevenue": integer,
+    "totalOrders": integer,
+    "ordersByStatus": { ... },
+    "topCustomers": [ ... ],
+    "popularServices": [ ... ]
+  }
+}
+```
