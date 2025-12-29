@@ -1,5 +1,6 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 
 class ServiceSelectionDialog extends StatelessWidget {
   const ServiceSelectionDialog({super.key});
@@ -166,7 +167,7 @@ class _ServiceList extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'Rp ${item['price']}',
+                  (item['price'] as int).toCurrencyFormat(),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

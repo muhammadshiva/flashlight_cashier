@@ -4,6 +4,7 @@ import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 
 class CashierOrderDetail extends StatelessWidget {
   final WorkOrder? selectedOrder;
@@ -343,7 +344,7 @@ class _OrderItemRow extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '$quantity x Rp ${price}',
+                  '$quantity x ${price.toCurrencyFormat()}',
                   style: const TextStyle(
                     fontSize: 13,
                     color: Color(0xFF64748B),
@@ -356,7 +357,7 @@ class _OrderItemRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Rp ${price * quantity}',
+                (price * quantity).toCurrencyFormat(),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -419,7 +420,7 @@ class _PaymentSection extends StatelessWidget {
                 ),
               ),
               Text(
-                'Rp ${order.totalPrice}',
+                order.totalPrice.toCurrencyFormat(),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

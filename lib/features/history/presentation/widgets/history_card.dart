@@ -2,6 +2,7 @@ import 'package:flashlight_pos/config/constans/text_styles_const.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
@@ -66,12 +67,18 @@ class HistoryCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: workOrder.status.toLowerCase() == 'paid'
                     ? const LinearGradient(
-                        colors: [AppColors.dashboardGreen, AppColors.dashboardTeal],
+                        colors: [
+                          AppColors.dashboardGreen,
+                          AppColors.dashboardTeal
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       )
                     : const LinearGradient(
-                        colors: [AppColors.success600, AppColors.dashboardGreen],
+                        colors: [
+                          AppColors.success600,
+                          AppColors.dashboardGreen
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -139,7 +146,8 @@ class HistoryCard extends StatelessWidget {
                                     customer?.name ??
                                         'Cust: ${_shortenId(workOrder.customerId)}',
                                     style: TextStyleConst.poppinsSemiBold16
-                                        .copyWith(color: AppColors.blackText900),
+                                        .copyWith(
+                                            color: AppColors.blackText900),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -200,9 +208,7 @@ class HistoryCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            NumberFormat.currency(
-                                    locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0)
-                                .format(workOrder.totalPrice),
+                            workOrder.totalPrice.toCurrencyFormat(),
                             style: TextStyleConst.poppinsBold20
                                 .copyWith(color: AppColors.blackText900),
                           ),
@@ -261,7 +267,8 @@ class HistoryCard extends StatelessWidget {
                             color: AppColors.dashboardBlueLight,
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                              color: AppColors.dashboardBlue.withValues(alpha: 0.3),
+                              color: AppColors.dashboardBlue
+                                  .withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
@@ -303,7 +310,8 @@ class HistoryCard extends StatelessWidget {
                             color: AppColors.dashboardOrangeLight,
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                              color: AppColors.dashboardOrange.withValues(alpha: 0.3),
+                              color: AppColors.dashboardOrange
+                                  .withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),

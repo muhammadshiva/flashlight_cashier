@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/work_order.dart';
 import '../bloc/detail/work_order_detail_bloc.dart';
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import '../bloc/detail/work_order_detail_event.dart';
 import '../bloc/detail/work_order_detail_state.dart';
 
@@ -374,8 +375,6 @@ class WorkOrderDetailPage extends StatelessWidget {
   }
 
   String _formatCurrency(int amount) {
-    final format =
-        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
-    return format.format(amount);
+    return amount.toCurrencyFormat();
   }
 }

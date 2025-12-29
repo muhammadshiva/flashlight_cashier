@@ -2,6 +2,7 @@ import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
 import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flutter/material.dart';
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 
 class CashierOrderList extends StatelessWidget {
   final List<WorkOrder> orders;
@@ -158,7 +159,7 @@ class _OrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Rp ${order.totalPrice}',
+                  order.totalPrice.toCurrencyFormat(),
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,

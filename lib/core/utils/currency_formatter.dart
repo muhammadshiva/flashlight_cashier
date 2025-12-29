@@ -10,3 +10,9 @@ class CurrencyFormatter {
     return formatter.format(value);
   }
 }
+
+extension CurrencyExtension on num {
+  String toCurrencyFormat() {
+    return CurrencyFormatter.format(this);
+  }
+}

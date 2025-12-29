@@ -4,6 +4,7 @@ import '../../../work_order/domain/entities/work_order.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
 import '../../../../config/themes/app_colors.dart';
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 
 class WorkOrderCard extends StatelessWidget {
   final WorkOrder workOrder;
@@ -384,9 +385,7 @@ class WorkOrderCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      NumberFormat.currency(
-                              locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0)
-                          .format(workOrder.totalPrice),
+                      workOrder.totalPrice.toCurrencyFormat(),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
