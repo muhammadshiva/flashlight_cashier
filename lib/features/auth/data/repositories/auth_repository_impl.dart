@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/utils/repository_helper.dart';
 import '../../domain/entities/auth_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
@@ -18,47 +20,35 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, AuthEntity>> login(
       String username, String password) async {
-    try {
+    return RepositoryHelper.safeApiCall(() async {
       final remoteAuth = await remoteDataSource.login(username, password);
       // Cache tokens
       await sharedPreferences.setString(
-          'auth_token', remoteAuth.data.accessToken);
+          AppConstants.authTokenKey, remoteAuth.data.accessToken);
       await sharedPreferences.setString(
-          'refresh_token', remoteAuth.data.refreshToken);
-      return Right(remoteAuth.toEntity());
-    } on Failure catch (e) {
-      return Left(e);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
+          AppConstants.refreshTokenKey, remoteAuth.data.refreshToken);
+      return remoteAuth.toEntity();
+    });
   }
 
   @override
   Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken) async {
-    try {
+    return RepositoryHelper.safeApiCall(() async {
       final remoteAuth = await remoteDataSource.refreshToken(refreshToken);
       // Update cached tokens
       await sharedPreferences.setString(
-          'auth_token', remoteAuth.data.accessToken);
+          AppConstants.authTokenKey, remoteAuth.data.accessToken);
       await sharedPreferences.setString(
-          'refresh_token', remoteAuth.data.refreshToken);
-      return Right(remoteAuth.toEntity());
-    } on Failure catch (e) {
-      return Left(e);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
+          AppConstants.refreshTokenKey, remoteAuth.data.refreshToken);
+      return remoteAuth.toEntity();
+    });
   }
 
   @override
   Future<Either<Failure, UserEntity>> getProfile() async {
-    try {
+    return RepositoryHelper.safeApiCall(() async {
       final userModel = await remoteDataSource.getProfile();
-      return Right(userModel.toEntity());
-    } on Failure catch (e) {
-      return Left(e);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
+      return userModel.toEntity();
+    });
   }
 }
