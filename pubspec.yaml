@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.8
 
   # Architecture & State Management
@@ -27,6 +29,19 @@ dependencies:
   shared_preferences: ^2.2.3
   intl: ^0.20.2
 
+  # State Persistence
+  hydrated_bloc: ^9.1.5
+
+  # Local Storage & Caching
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Secure Storage
+  flutter_secure_storage: ^9.2.2
+
+  # Path Provider (for Hive)
+  path_provider: ^2.1.4
+
   # UI (Optional but good for modern UI)
   google_fonts: ^6.2.1
   freezed_annotation: ^3.1.0
@@ -41,6 +56,8 @@ dev_dependencies:
   build_runner: ^2.10.4
   json_serializable: ^6.11.2
   freezed: ^3.2.3
+  # Note: hive_generator removed due to version conflict with freezed.
+  # We use manually written Hive adapters instead (see lib/core/cache/adapters/)
 
 flutter:
   uses-material-design: true
