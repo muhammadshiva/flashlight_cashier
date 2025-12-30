@@ -1,18 +1,38 @@
-import 'package:flashlight_pos/config/constans/app_const.dart';
-import 'package:flashlight_pos/config/themes/app_colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
+import 'config/constans/app_const.dart';
 import 'config/pages/app_pages.dart';
+import 'config/themes/app_colors.dart';
+import 'configs/injector/injector_config.dart';
+import 'core/cache/hive_config.dart';
+import 'core/utils/app_bloc_observer.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'injection_container.dart' as di;
+import 'features/theme/presentation/bloc/theme_bloc.dart';
+import 'features/theme/presentation/bloc/theme_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.init();
+
+  // Initialize Hive for local caching
+  await HiveConfig.init();
+
+  // Initialize HydratedBloc storage for state persistence
+  final storageDirectory = await getApplicationDocumentsDirectory();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: storageDirectory,
+  );
+
+  // Initialize dependency injection
+  await configureDependencies();
+
+  // Setup BLoC observer for logging all state changes
+  Bloc.observer = sl<AppBlocObserver>();
+
   runApp(const MyApp());
 }
 
@@ -23,31 +43,47 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => di.sl<AuthBloc>()),
+        BlocProvider(create: (_) => sl<AuthBloc>()),
+        BlocProvider(create: (_) => ThemeBloc()),
       ],
-      child: ScreenUtilInit(
-        designSize: AppConst.size,
-        minTextAdapt: true,
-        splitScreenMode: true,
-        useInheritedMediaQuery: true,
-        builder: (context, child) {
-          return MaterialApp.router(
-            title: 'Flashlight POS',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: AppColors.backgroundGrey6),
-              useMaterial3: true,
-            ),
-            routerConfig: AppPages.router,
-            locale: const Locale('id', 'ID'),
-            supportedLocales: const [
-              Locale('id', 'ID'),
-            ],
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              DefaultCupertinoLocalizations.delegate,
-            ],
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return ScreenUtilInit(
+            designSize: AppConst.size,
+            minTextAdapt: true,
+            splitScreenMode: true,
+            useInheritedMediaQuery: true,
+            builder: (context, child) {
+              return MaterialApp.router(
+                title: 'Flashlight POS',
+                debugShowCheckedModeBanner: false,
+                themeMode: themeState.themeMode,
+                theme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: AppColors.backgroundGrey6,
+                    brightness: Brightness.light,
+                  ),
+                  useMaterial3: true,
+                ),
+                darkTheme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: AppColors.backgroundGrey6,
+                    brightness: Brightness.dark,
+                  ),
+                  useMaterial3: true,
+                ),
+                routerConfig: AppPages.router,
+                locale: const Locale('id', 'ID'),
+                supportedLocales: const [
+                  Locale('id', 'ID'),
+                ],
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+              );
+            },
           );
         },
       ),
