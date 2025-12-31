@@ -517,6 +517,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  hydrated_bloc:
+    dependency: "direct main"
+    description:
+      name: hydrated_bloc
+      sha256: af35b357739fe41728df10bec03aad422cdc725a1e702e03af9d2a41ea05160c
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.1.5"
   image:
     dependency: transitive
     description:
@@ -1058,6 +1066,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  win32:
+    dependency: transitive
+    description:
+      name: win32
+      sha256: d7cb55e04cd34096cd3a79b3330245f54cb96a370a1c27adb3c84b917de8b08e
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.15.0"
   win_ble:
     dependency: transitive
     description:
