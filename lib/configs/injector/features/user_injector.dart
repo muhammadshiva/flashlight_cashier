@@ -21,6 +21,7 @@ class UserInjector {
         createUser: _sl(),
         updateUser: _sl(),
         deleteUser: _sl(),
+        resetPassword: _sl(),
       ),
     );
 
@@ -41,6 +42,10 @@ class UserInjector {
 
     _sl.registerLazySingleton<DeleteUser>(
       () => DeleteUser(_sl()),
+    );
+
+    _sl.registerLazySingleton<ResetPassword>(
+      () => ResetPassword(_sl()),
     );
 
     // ============================================

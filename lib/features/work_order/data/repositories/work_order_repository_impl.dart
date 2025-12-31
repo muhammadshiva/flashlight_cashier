@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';
@@ -10,6 +8,7 @@ import '../models/work_order_model.dart';
 import '../models/work_order_product_model.dart';
 import '../models/work_order_service_model.dart';
 
+/// Implementation of [WorkOrderRepository] that handles work order operations.
 class WorkOrderRepositoryImpl implements WorkOrderRepository {
   final WorkOrderRemoteDataSource remoteDataSource;
 
@@ -39,7 +38,6 @@ class WorkOrderRepositoryImpl implements WorkOrderRepository {
                   quantity: s.quantity,
                   priceAtOrder: s.priceAtOrder,
                   subtotal: s.subtotal,
-                  /* serviceModel: null, // Don't need to send full object on creation usually */
                 ))
             .toList(),
         productModels: workOrder.products
@@ -65,13 +63,11 @@ class WorkOrderRepositoryImpl implements WorkOrderRepository {
   }
 
   @override
-  Future<Either<Failure, List<WorkOrder>>> getWorkOrders({bool isPrototype = false}) async {
+  Future<Either<Failure, List<WorkOrder>>> getWorkOrders() async {
     try {
-      final result = await remoteDataSource.getWorkOrders(isPrototype: isPrototype);
-      // log("Check result: $result", name: "WorkOrderRepositoryImpl");
+      final result = await remoteDataSource.getWorkOrders();
       return Right(result.map((e) => e.toEntity()).toList());
-    } on Failure catch (e, stackTrace) {
-      log("Check error : $e ======  stackTrace: $stackTrace", name: "WorkOrderRepositoryImpl");
+    } on Failure catch (e) {
       return Left(e);
     }
   }

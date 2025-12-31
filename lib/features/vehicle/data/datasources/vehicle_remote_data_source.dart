@@ -2,13 +2,22 @@ import 'package:dio/dio.dart';
 import '../../../../core/error/failures.dart';
 import '../models/vehicle_model.dart';
 
+/// Abstract interface for vehicle remote data operations.
 abstract class VehicleRemoteDataSource {
+  /// Gets all vehicles from the API.
   Future<List<VehicleModel>> getVehicles();
+
+  /// Creates a new vehicle via the API.
   Future<VehicleModel> createVehicle(VehicleModel vehicle);
+
+  /// Updates an existing vehicle via the API.
   Future<VehicleModel> updateVehicle(VehicleModel vehicle);
+
+  /// Deletes a vehicle by [id] via the API.
   Future<void> deleteVehicle(String id);
 }
 
+/// Implementation of [VehicleRemoteDataSource] using Dio.
 class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
   final Dio dio;
 
@@ -18,91 +27,119 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
   Future<List<VehicleModel>> getVehicles() async {
     try {
       final response = await dio.get('/vehicles');
-      return (response.data as List)
-          .map((e) => VehicleModel.fromJson(e))
-          .toList();
-    } catch (e) {
-      // Return generated dummy data on failure (simulating 50 items)
-      return List.generate(50, (index) {
-        final id = (index + 1).toString();
-        // Cycle through brands to vary data
-        final brands = [
-          'Toyota',
-          'Honda',
-          'Suzuki',
-          'Daihatsu',
-          'Mitsubishi',
-          'Nissan',
-          'Mazda',
-          'Isuzu',
-          'BMW',
-          'Mercedes'
-        ];
-        final brand = brands[index % brands.length];
 
-        // Cycle through colors
-        final colors = [
-          'Hitam',
-          'Putih',
-          'Silver',
-          'Merah',
-          'Biru',
-          'Abu-abu',
-          'Hijau',
-          'Kuning'
-        ];
-        final color = colors[index % colors.length];
+      // Handle API envelope: { success, message, data: { vehicles: [...], total }, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          final data = result['data'];
+          final vehiclesList = data['vehicles'] as List;
+          return vehiclesList
+              .map((e) => VehicleModel.fromJson(e as Map<String, dynamic>))
+              .toList();
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to fetch vehicles');
+      }
 
-        // Cycle through categories
-        final categories = [
-          'Sedan',
-          'SUV',
-          'MPV',
-          'Hatchback',
-          'Pickup',
-          'Van'
-        ];
-        final category = categories[index % categories.length];
+      // If response is directly a list (fallback for different API formats)
+      if (result is List) {
+        return result
+            .map((e) => VehicleModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
 
-        return VehicleModel(
-          id: 'VH-${id.padLeft(4, '0')}', // e.g. VH-0001
-          licensePlate: 'B ${(1000 + index * 11)} ${String.fromCharCode(65 + (index % 26))}${String.fromCharCode(65 + ((index + 1) % 26))}${String.fromCharCode(65 + ((index + 2) % 26))}', // e.g. B 1234 ABC
-          vehicleBrand: brand,
-          vehicleColor: color,
-          vehicleCategory: category,
-          vehicleSpecs: '$brand $category ${2010 + (index % 15)}', // e.g. Toyota Sedan 2015
-        );
-      });
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
   }
 
   @override
   Future<VehicleModel> createVehicle(VehicleModel vehicle) async {
     try {
-      final response = await dio.post('/vehicles', data: vehicle.toJson());
-      return VehicleModel.fromJson(response.data);
+      final response = await dio.post(
+        '/vehicles',
+        data: {
+          'customerId': vehicle.customerId,
+          'model': vehicle.vehicleBrand,
+          'licensePlate': vehicle.licensePlate,
+          'category': vehicle.vehicleCategory,
+        },
+      );
+
+      // Handle API envelope: { success, message, data: {...}, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return VehicleModel.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        // If no data key but has id, assume result itself is the vehicle
+        if (result.containsKey('id')) {
+          return VehicleModel.fromJson(result);
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to create vehicle');
+      }
+
+      throw const ServerFailure('Invalid response format');
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Unknown Error');
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
   }
 
   @override
   Future<VehicleModel> updateVehicle(VehicleModel vehicle) async {
     try {
-      final response =
-          await dio.put('/vehicles/${vehicle.id}', data: vehicle.toJson());
-      return VehicleModel.fromJson(response.data);
+      final response = await dio.put(
+        '/vehicles/${vehicle.id}',
+        data: {
+          'model': vehicle.vehicleBrand,
+          'licensePlate': vehicle.licensePlate,
+          'category': vehicle.vehicleCategory,
+        },
+      );
+
+      // Handle API envelope: { success, message, data: {...}, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return VehicleModel.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        // If no data key but has id, assume result itself is the vehicle
+        if (result.containsKey('id')) {
+          return VehicleModel.fromJson(result);
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to update vehicle');
+      }
+
+      throw const ServerFailure('Invalid response format');
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Unknown Error');
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
   }
 
   @override
   Future<void> deleteVehicle(String id) async {
     try {
-      await dio.delete('/vehicles/$id');
+      final response = await dio.delete('/vehicles/$id');
+
+      // Handle API envelope: { success, message, data: null, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] != true) {
+          throw ServerFailure(result['message'] ?? 'Failed to delete vehicle');
+        }
+      }
+      // If response is empty or success, return normally
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Unknown Error');
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
   }
 }

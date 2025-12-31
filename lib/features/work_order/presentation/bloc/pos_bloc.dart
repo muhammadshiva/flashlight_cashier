@@ -48,7 +48,7 @@ class PosBloc extends Bloc<PosEvent, PosState> {
 
     // Fetch all necessary data parallelly
     final results = await Future.wait<dynamic>([
-      getServices(const GetServicesParams(isPrototype: true)),
+      getServices(const GetServicesParams()),
       getProducts(const GetProductsParams()),
       getCustomers(const GetCustomersParams()),
       // Vehicles will be fetched when customer is selected, or we fetch all?
@@ -68,8 +68,8 @@ class PosBloc extends Bloc<PosEvent, PosState> {
     // List<Vehicle> vehicles = []; // All vehicles
 
     // Helper to unwrap
-    servicesResult.fold((l) => /* log error */ null, (r) => services = r);
-    productsResult.fold((l) => /* log error */ null, (r) => products = r);
+    servicesResult.fold((l) => /* log error */ null, (r) => services = r.data);
+    productsResult.fold((l) => /* log error */ null, (r) => products = r.data);
     customersResult.fold((l) => /* log error */ null, (r) => customers = r.data);
     // vehiclesResult.fold(
     //     (l) => print('Error vehicles: ${l.message}'), (r) => vehicles = r);

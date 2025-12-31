@@ -18,11 +18,14 @@ abstract class VehicleModel with _$VehicleModel {
 
   const factory VehicleModel({
     @JsonKey(name: "id") required String id,
+    @JsonKey(name: "customerId") String? customerId,
     @JsonKey(name: "licensePlate") required String licensePlate,
-    @JsonKey(name: "vehicleBrand") required String vehicleBrand,
-    @JsonKey(name: "vehicleColor") required String vehicleColor,
-    @JsonKey(name: "vehicleCategory") required String vehicleCategory,
-    @JsonKey(name: "vehicleSpecs") required String vehicleSpecs,
+    @JsonKey(name: "model") String? model,
+    @JsonKey(name: "vehicleBrand") String? vehicleBrand,
+    @JsonKey(name: "vehicleColor") String? vehicleColor,
+    @JsonKey(name: "category") String? category,
+    @JsonKey(name: "vehicleCategory") String? vehicleCategory,
+    @JsonKey(name: "vehicleSpecs") String? vehicleSpecs,
   }) = _VehicleModel;
 
   factory VehicleModel.fromJson(Map<String, dynamic> json) =>
@@ -30,10 +33,11 @@ abstract class VehicleModel with _$VehicleModel {
 
   Vehicle toEntity() => Vehicle(
         id: id,
+        customerId: customerId,
         licensePlate: licensePlate,
-        vehicleBrand: vehicleBrand,
-        vehicleColor: vehicleColor,
-        vehicleCategory: vehicleCategory,
-        vehicleSpecs: vehicleSpecs,
+        vehicleBrand: vehicleBrand ?? model ?? '',
+        vehicleColor: vehicleColor ?? '',
+        vehicleCategory: vehicleCategory ?? category ?? '',
+        vehicleSpecs: vehicleSpecs ?? '',
       );
 }

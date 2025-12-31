@@ -45,3 +45,18 @@ class DeleteUser implements UseCase<void, String> {
     return await repository.deleteUser(params);
   }
 }
+
+class ResetPassword implements UseCase<void, ResetPasswordParams> {
+  final UserRepository repository;
+  ResetPassword(this.repository);
+  @override
+  Future<Either<Failure, void>> call(ResetPasswordParams params) async {
+    return await repository.resetPassword(params.id, params.newPassword);
+  }
+}
+
+class ResetPasswordParams {
+  final String id;
+  final String newPassword;
+  ResetPasswordParams({required this.id, required this.newPassword});
+}

@@ -16,7 +16,6 @@ export 'network/network_info.dart';
 export 'usecase/usecase.dart';
 
 // Utils
-export 'utils/app_bloc_observer.dart';
 export 'utils/currency_formatter.dart';
 export 'utils/failure_mapper.dart';
 export 'utils/repository_helper.dart';

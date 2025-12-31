@@ -3,11 +3,20 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/work_order.dart';
 
+/// Abstract repository interface for work order operations.
 abstract class WorkOrderRepository {
+  /// Creates a new work order.
   Future<Either<Failure, WorkOrder>> createWorkOrder(WorkOrder workOrder);
-  Future<Either<Failure, List<WorkOrder>>> getWorkOrders({bool isPrototype = false});
-  Future<Either<Failure, WorkOrder>> updateWorkOrder(
-      WorkOrder workOrder); // Simplified update for now
+
+  /// Gets all work orders.
+  Future<Either<Failure, List<WorkOrder>>> getWorkOrders();
+
+  /// Updates an existing work order.
+  Future<Either<Failure, WorkOrder>> updateWorkOrder(WorkOrder workOrder);
+
+  /// Updates work order status.
   Future<Either<Failure, WorkOrder>> updateWorkOrderStatus(String id, String status);
+
+  /// Gets a work order by id.
   Future<Either<Failure, WorkOrder>> getWorkOrderById(String id);
 }

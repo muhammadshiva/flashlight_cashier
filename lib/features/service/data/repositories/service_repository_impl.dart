@@ -8,6 +8,7 @@ import '../../domain/repositories/service_repository.dart';
 import '../datasources/service_remote_data_source.dart';
 import '../models/service_model.dart';
 
+/// Implementation of [ServiceRepository] that handles service operations.
 class ServiceRepositoryImpl implements ServiceRepository {
   final ServiceRemoteDataSource remoteDataSource;
 
@@ -15,13 +16,11 @@ class ServiceRepositoryImpl implements ServiceRepository {
 
   @override
   Future<Either<Failure, PaginatedResponse<ServiceEntity>>> getServices({
-    bool isPrototype = false,
     String? type,
     PaginationParams? pagination,
   }) async {
     try {
       final result = await remoteDataSource.getServices(
-        isPrototype: isPrototype,
         type: type,
         pagination: pagination,
       );

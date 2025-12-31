@@ -4,16 +4,26 @@ import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/pagination/paginated_response_model.dart';
 import '../models/product_model.dart';
 
+/// Abstract interface for product remote data operations.
 abstract class ProductRemoteDataSource {
+  /// Gets paginated list of products from the API.
+  /// Supports optional [type] filter and [pagination] params.
   Future<PaginatedResponseModel<ProductModel>> getProducts({
     String? type,
     PaginationParams? pagination,
   });
+
+  /// Creates a new product via the API.
   Future<ProductModel> createProduct(ProductModel product);
+
+  /// Updates an existing product via the API.
   Future<ProductModel> updateProduct(ProductModel product);
+
+  /// Deletes a product by [id] via the API.
   Future<void> deleteProduct(String id);
 }
 
+/// Implementation of [ProductRemoteDataSource] using Dio.
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   final Dio dio;
 
@@ -34,68 +44,38 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         queryParameters: queryParams,
       );
 
+      // Handle API envelope: { success, message, data: { products: [...], total }, error_code }
       final result = response.data;
-      if (result is Map<String, dynamic> && result.containsKey('data')) {
-        return PaginatedResponseModel<ProductModel>.fromJson(
-          result,
-          (json) => ProductModel.fromJson(json as Map<String, dynamic>),
-        );
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          final data = result['data'];
+          final productsList = data['products'] as List;
+          final total = data['total'] as int? ?? productsList.length;
+
+          // Calculate pagination info
+          final page = pagination?.page ?? 1;
+          final limit = pagination?.limit ?? 10;
+          final totalPages = (total / limit).ceil();
+
+          final products = productsList
+              .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+          return PaginatedResponseModel<ProductModel>(
+            data: products,
+            total: total,
+            page: page,
+            limit: limit,
+            totalPages: totalPages > 0 ? totalPages : 1,
+          );
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to fetch products');
       }
 
-      throw ServerFailure('Invalid response format');
-    } catch (e) {
-      // Return generated dummy data on failure (simulating 50 items)
-      final allProducts = List.generate(50, (index) {
-        final id = (index + 1).toString();
-        final types = [
-          'Brakes',
-          'Oil',
-          'Filter',
-          'Ignition',
-          'Battery',
-          'Wipers',
-          'Coolant',
-          'Tires',
-          'Lights',
-          'Interior'
-        ];
-        final productType = types[index % types.length];
-        final isAvailable = index % 5 != 0;
-
-        return ProductModel(
-          id: 'PROD-${id.padLeft(4, '0')}',
-          name: 'Premium $productType Item #$id',
-          description:
-              'High-quality $productType replacement part for various vehicle models.',
-          price: (10 + (index * 5)) % 200 + 15,
-          imageUrl: '',
-          type: productType,
-          stock: isAvailable ? (index * 7) % 100 + 5 : 0,
-          isAvailable: isAvailable,
-        );
-      });
-
-      // Apply pagination
-      final page = pagination?.page ?? 1;
-      final limit = pagination?.limit ?? 10;
-      final offset = pagination?.offset ?? 0;
-
-      final total = allProducts.length;
-      final totalPages = (total / limit).ceil();
-      final startIndex = ((page - 1) * limit) + offset;
-      final endIndex = (startIndex + limit).clamp(0, total);
-
-      final paginatedData = allProducts.sublist(
-        startIndex.clamp(0, total),
-        endIndex,
-      );
-
-      return PaginatedResponseModel<ProductModel>(
-        data: paginatedData,
-        total: total,
-        page: page,
-        limit: limit,
-        totalPages: totalPages,
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
       );
     }
   }
@@ -103,30 +83,92 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<ProductModel> createProduct(ProductModel product) async {
     try {
-      final response = await dio.post('/products', data: product.toJson());
-      return ProductModel.fromJson(response.data);
+      final response = await dio.post(
+        '/products',
+        data: {
+          'name': product.name,
+          'description': product.description,
+          'price': product.price,
+          'imageURL': product.imageUrl,
+          'type': product.type,
+          'stock': product.stock,
+        },
+      );
+
+      // Handle API envelope: { success, message, data: {...}, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return ProductModel.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        // If no data key but has id, assume result itself is the product
+        if (result.containsKey('id')) {
+          return ProductModel.fromJson(result);
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to create product');
+      }
+
+      throw const ServerFailure('Invalid response format');
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Unknown Error');
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
   }
 
   @override
   Future<ProductModel> updateProduct(ProductModel product) async {
     try {
-      final response =
-          await dio.put('/products/${product.id}', data: product.toJson());
-      return ProductModel.fromJson(response.data);
+      final response = await dio.put(
+        '/products/${product.id}',
+        data: {
+          'name': product.name,
+          'description': product.description,
+          'price': product.price,
+          'imageURL': product.imageUrl,
+          'type': product.type,
+          'stock': product.stock,
+        },
+      );
+
+      // Handle API envelope: { success, message, data: {...}, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return ProductModel.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        // If no data key but has id, assume result itself is the product
+        if (result.containsKey('id')) {
+          return ProductModel.fromJson(result);
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to update product');
+      }
+
+      throw const ServerFailure('Invalid response format');
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Unknown Error');
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
   }
 
   @override
   Future<void> deleteProduct(String id) async {
     try {
-      await dio.delete('/products/$id');
+      final response = await dio.delete('/products/$id');
+
+      // Handle API envelope: { success, message, data: null, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] != true) {
+          throw ServerFailure(result['message'] ?? 'Failed to delete product');
+        }
+      }
+      // If response is empty or success, return normally
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Unknown Error');
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
   }
 }

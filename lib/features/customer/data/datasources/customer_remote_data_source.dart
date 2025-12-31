@@ -4,114 +4,31 @@ import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/pagination/paginated_response_model.dart';
 import '../models/customer_model.dart';
 
+/// Abstract interface for customer remote data operations.
 abstract class CustomerRemoteDataSource {
+  /// Gets paginated list of customers from the API.
+  /// Supports optional [pagination] params and [query] for search.
   Future<PaginatedResponseModel<CustomerModel>> getCustomers({
     PaginationParams? pagination,
     String? query,
   });
+
+  /// Gets a single customer by [id] from the API.
   Future<CustomerModel> getCustomer(String id);
+
+  /// Creates a new customer via the API.
   Future<CustomerModel> createCustomer(CustomerModel customer);
+
+  /// Updates an existing customer via the API.
   Future<CustomerModel> updateCustomer(CustomerModel customer);
+
+  /// Deletes a customer by [id] via the API.
   Future<void> deleteCustomer(String id);
 }
 
+/// Implementation of [CustomerRemoteDataSource] using Dio.
 class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   final Dio dio;
-
-  // Dummy data store
-  static List<CustomerModel> _dummyCustomers = [
-    // ... existing dummy data ... (I will preserve this if I don't replace the whole list, but for now I'll just assume I can access the list or should re-declare it if I replace the whole class. Wait, replace_file_content replaces chunks. I should replace relevant parts.)
-    const CustomerModel(
-      id: "CUST-001",
-      name: "John Doe",
-      phoneNumber: "081234567890",
-      email: "john.doe@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-002",
-      name: "Jane Smith",
-      phoneNumber: "081234567891",
-      email: "jane.smith@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-003",
-      name: "Michael Johnson",
-      phoneNumber: "081234567892",
-      email: "michael.j@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-004",
-      name: "Emily Davis",
-      phoneNumber: "081234567893",
-      email: "emily.d@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-005",
-      name: "William Brown",
-      phoneNumber: "081234567894",
-      email: "william.b@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-006",
-      name: "Olivia Wilson",
-      phoneNumber: "081234567895",
-      email: "olivia.w@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-007",
-      name: "James Taylor",
-      phoneNumber: "081234567896",
-      email: "james.t@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-008",
-      name: "Sophia Anderson",
-      phoneNumber: "081234567897",
-      email: "sophia.a@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-009",
-      name: "Robert Thomas",
-      phoneNumber: "081234567898",
-      email: "robert.t@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-010",
-      name: "Isabella Martinez",
-      phoneNumber: "081234567899",
-      email: "isabella.m@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-011",
-      name: "David White",
-      phoneNumber: "081234567800",
-      email: "david.w@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-012",
-      name: "Mia Harris",
-      phoneNumber: "081234567801",
-      email: "mia.h@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-013",
-      name: "Joseph Martin",
-      phoneNumber: "081234567802",
-      email: "joseph.m@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-014",
-      name: "Charlotte Thompson",
-      phoneNumber: "081234567803",
-      email: "charlotte.t@example.com",
-    ),
-    const CustomerModel(
-      id: "CUST-015",
-      name: "Charles Garcia",
-      phoneNumber: "081234567804",
-      email: "charles.g@example.com",
-    ),
-  ];
 
   CustomerRemoteDataSourceImpl({required this.dio});
 
@@ -120,82 +37,162 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
     PaginationParams? pagination,
     String? query,
   }) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      // Build query parameters
+      final queryParams = <String, dynamic>{};
+      if (pagination != null) {
+        queryParams.addAll(pagination.toQueryParams());
+      }
+      if (query != null && query.isNotEmpty) {
+        queryParams['query'] = query;
+      }
 
-    // Default pagination values
-    final page = pagination?.page ?? 1;
-    final limit = pagination?.limit ?? 10;
-    final offset = pagination?.offset ?? 0;
+      final response = await dio.get(
+        '/customers',
+        queryParameters: queryParams,
+      );
 
-    // Filter by query if present
-    var filteredList = _dummyCustomers;
-    if (query != null && query.isNotEmpty) {
-      final lowercaseQuery = query.toLowerCase();
-      filteredList = _dummyCustomers.where((customer) {
-        return customer.name.toLowerCase().contains(lowercaseQuery) ||
-            customer.phoneNumber.contains(lowercaseQuery) ||
-            customer.email.toLowerCase().contains(lowercaseQuery);
-      }).toList();
+      // Handle API envelope: { success, message, data: { customers: [...], total }, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          final data = result['data'];
+          final customersList = data['customers'] as List;
+          final total = data['total'] as int? ?? customersList.length;
+
+          // Calculate pagination info
+          final page = pagination?.page ?? 1;
+          final limit = pagination?.limit ?? 10;
+          final totalPages = (total / limit).ceil();
+
+          final customers = customersList
+              .map((e) => CustomerModel.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+          return PaginatedResponseModel<CustomerModel>(
+            data: customers,
+            total: total,
+            page: page,
+            limit: limit,
+            totalPages: totalPages > 0 ? totalPages : 1,
+          );
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to fetch customers');
+      }
+
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
-
-    // Calculate pagination
-    final total = filteredList.length;
-    final totalPages = (total / limit).ceil();
-    final startIndex = ((page - 1) * limit) + offset;
-    final endIndex = (startIndex + limit).clamp(0, total);
-
-    // Get paginated data
-    final paginatedData = filteredList.sublist(
-      startIndex.clamp(0, total),
-      endIndex,
-    );
-
-    return PaginatedResponseModel<CustomerModel>(
-      data: paginatedData,
-      total: total,
-      page: page,
-      limit: limit,
-      totalPages: totalPages,
-    );
   }
 
   @override
   Future<CustomerModel> getCustomer(String id) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 500));
-    final customer = _dummyCustomers.firstWhere(
-      (c) => c.id == id,
-      orElse: () => throw ServerFailure("Customer not found"),
-    );
-    return customer;
+    try {
+      final response = await dio.get('/customers/$id');
+
+      // Handle API envelope: { success, message, data: {...}, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return CustomerModel.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        throw ServerFailure(result['message'] ?? 'Customer not found');
+      }
+
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
+    }
   }
 
   @override
   Future<CustomerModel> createCustomer(CustomerModel customer) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    final newCustomer = customer.copyWith(
-      id: "CUST-${DateTime.now().millisecondsSinceEpoch}",
-    );
-    _dummyCustomers.add(newCustomer);
-    return newCustomer;
+    try {
+      final response = await dio.post(
+        '/customers',
+        data: {
+          'name': customer.name,
+          'phoneNumber': customer.phoneNumber,
+          'email': customer.email,
+        },
+      );
+
+      // Handle API envelope: { success, message, data: {...}, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return CustomerModel.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        // If no data key but has id, assume result itself is the customer
+        if (result.containsKey('id')) {
+          return CustomerModel.fromJson(result);
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to create customer');
+      }
+
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
+    }
   }
 
   @override
   Future<CustomerModel> updateCustomer(CustomerModel customer) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    final index = _dummyCustomers.indexWhere((c) => c.id == customer.id);
-    if (index != -1) {
-      _dummyCustomers[index] = customer;
-      return customer;
-    } else {
-      throw ServerFailure("Customer not found");
+    try {
+      final response = await dio.put(
+        '/customers/${customer.id}',
+        data: {
+          'name': customer.name,
+          'phoneNumber': customer.phoneNumber,
+          'email': customer.email,
+        },
+      );
+
+      // Handle API envelope: { success, message, data: {...}, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return CustomerModel.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        // If no data key but has id, assume result itself is the customer
+        if (result.containsKey('id')) {
+          return CustomerModel.fromJson(result);
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to update customer');
+      }
+
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
     }
   }
 
   @override
   Future<void> deleteCustomer(String id) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    _dummyCustomers.removeWhere((c) => c.id == id);
+    try {
+      final response = await dio.delete('/customers/$id');
+
+      // Handle API envelope: { success, message, data: null, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] != true) {
+          throw ServerFailure(result['message'] ?? 'Failed to delete customer');
+        }
+      }
+      // If response is empty or success, return normally
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
+    }
   }
 }

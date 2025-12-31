@@ -19,7 +19,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }) : super(ServiceInitial()) {
     on<LoadServices>((event, emit) async {
       emit(ServiceLoading());
-      final result = await getServices(const GetServicesParams(isPrototype: true));
+      final result = await getServices(const GetServicesParams());
       result.fold(
         (failure) => emit(ServiceError(failure.message)),
         (paginatedServices) => emit(ServiceLoaded(paginatedServices.data)),

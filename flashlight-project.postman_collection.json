@@ -1,0 +1,1718 @@
+{
+    "info": {
+        "_postman_id": "a9a3b2c1-d4e5-4f6a-8b7c-9d0e1f2a3b4c",
+        "name": "Flashlight Project",
+        "description": "API Documentation for Flashlight Project",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.accessToken) {",
+                                    "    pm.environment.set(\"token\", jsonData.data.accessToken);",
+                                    "    pm.environment.set(\"refresh_token\", jsonData.data.refreshToken);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"password\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"accessToken\": \"access_token_example\",\n        \"refreshToken\": \"refresh_token_example\",\n        \"expiresIn\": 3600\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Refresh Token",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.accessToken) {",
+                                    "    pm.environment.set(\"token\", jsonData.data.accessToken);",
+                                    "    pm.environment.set(\"refresh_token\", jsonData.data.refreshToken);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"refreshToken\": \"{{refresh_token}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/refresh-token",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "refresh-token"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"accessToken\": \"new_access_token\",\n        \"refreshToken\": \"new_refresh_token\",\n        \"expiresIn\": 3600\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/auth/profile",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "profile"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"user_id\",\n        \"username\": \"admin\",\n        \"role\": \"admin\",\n        \"name\": \"Admin User\"\n    }\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Membership",
+            "item": [
+                {
+                    "name": "Check Membership",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phoneNumber\": \"08123456789\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/membership/check",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "membership",
+                                "check"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Is Member",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Registered Member\",\n    \"data\": {\n        \"type\": \"member\",\n        \"message\": \"Registered Member\",\n        \"membershipLevel\": \"Member Addict\",\n        \"isLoading\": false\n    }\n}"
+                        },
+                        {
+                            "name": "Non Member",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Not a member\",\n    \"data\": {\n        \"type\": \"nonMember\",\n        \"message\": \"Not a member\",\n        \"membershipLevel\": null,\n        \"isLoading\": false\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "List Memberships",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/memberships",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "memberships"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"membership_id\",\n            \"customerId\": \"customer_id\",\n            \"membershipType\": \"gold\",\n            \"membershipLevel\": \"1\",\n            \"isActive\": true\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Membership",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.id) {",
+                                    "    pm.environment.set(\"membership_id\", jsonData.data.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"membershipType\": \"gold\",\n    \"membershipLevel\": \"1\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/membership",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "membership"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"membership_id\",\n        \"customerId\": \"customer_id\",\n        \"membershipType\": \"gold\",\n        \"membershipLevel\": \"1\",\n        \"isActive\": true\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Membership",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"membershipType\": \"platinum\",\n    \"membershipLevel\": \"2\",\n    \"isActive\": true\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/membership/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "membership",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{membership_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"membership_id\",\n        \"customerId\": \"customer_id\",\n        \"membershipType\": \"platinum\",\n        \"membershipLevel\": \"2\",\n        \"isActive\": true\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Membership",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/membership/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "membership",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{membership_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Membership deleted successfully\",\n    \"data\": null\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Customers",
+            "item": [
+                {
+                    "name": "List Customers",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/customers",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "customers"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"customer_1\",\n            \"name\": \"John Doe\",\n            \"phoneNumber\": \"08123456789\",\n            \"email\": \"john.doe@example.com\"\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Customer",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.id) {",
+                                    "    pm.environment.set(\"customer_id\", jsonData.data.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"John Doe\",\n    \"phoneNumber\": \"08123456789\",\n    \"email\": \"john.doe@example.com\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/customers",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "customers"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"customer_id\",\n        \"name\": \"John Doe\",\n        \"phoneNumber\": \"08123456789\",\n        \"email\": \"john.doe@example.com\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Customer",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/customers/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "customers",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{customer_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"customer_id\",\n        \"name\": \"John Doe\",\n        \"phoneNumber\": \"08123456789\",\n        \"email\": \"john.doe@example.com\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Customer",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"John Doe Updated\",\n    \"phoneNumber\": \"08123456789\",\n    \"email\": \"john.doe.updated@example.com\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/customers/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "customers",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{customer_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"customer_id\",\n        \"name\": \"John Doe Updated\",\n        \"phoneNumber\": \"08123456789\",\n        \"email\": \"john.doe.updated@example.com\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Customer",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/customers/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "customers",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{customer_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Customer deleted successfully\",\n    \"data\": null\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Member Vehicles",
+            "item": [
+                {
+                    "name": "Get Member Vehicles",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/member/vehicles",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "member",
+                                "vehicles"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"vehicle_1\",\n            \"name\": \"Honda Civic\",\n            \"plateNumber\": \"B 1234 CD\",\n            \"specs\": \"Black, 2022\",\n            \"icon\": \"car\"\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Member Vehicle",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.id) {",
+                                    "    pm.environment.set(\"member_vehicle_id\", jsonData.data.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"membershipId\": \"{{membership_id}}\",\n    \"name\": \"Honda Civic\",\n    \"plateNumber\": \"B 1234 CD\",\n    \"specs\": \"Black, 2022\",\n    \"icon\": \"car\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/member/vehicles",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "member",
+                                "vehicles"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"member_vehicle_id\",\n        \"membershipId\": \"membership_id\",\n        \"name\": \"Honda Civic\",\n        \"plateNumber\": \"B 1234 CD\",\n        \"specs\": \"Black, 2022\",\n        \"icon\": \"car\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Member Vehicle",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Honda Civic Updated\",\n    \"plateNumber\": \"B 1234 CD\",\n    \"specs\": \"Red, 2023\",\n    \"icon\": \"car-sport\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/member/vehicles/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "member",
+                                "vehicles",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{member_vehicle_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"member_vehicle_id\",\n        \"membershipId\": \"membership_id\",\n        \"name\": \"Honda Civic Updated\",\n        \"plateNumber\": \"B 1234 CD\",\n        \"specs\": \"Red, 2023\",\n        \"icon\": \"car-sport\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Member Vehicle",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/member/vehicles/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "member",
+                                "vehicles",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{member_vehicle_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Member vehicle deleted successfully\",\n    \"data\": null\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Services",
+            "item": [
+                {
+                    "name": "Get Services",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/services",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"service_1\",\n            \"name\": \"service.wash\",\n            \"description\": \"service.wash.desc\",\n            \"price\": 35000,\n            \"imageAsset\": \"/images/clean-motorbike.png\",\n            \"isDefault\": true,\n            \"isFavorite\": false,\n            \"type\": \"wash\"\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Service",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.id) {",
+                                    "    pm.environment.set(\"service_id\", jsonData.data.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Premium Wash\",\n    \"description\": \"Full body wash + wax\",\n    \"price\": 50000,\n    \"imageUrl\": \"http://example.com/wash.jpg\",\n    \"isDefault\": false,\n    \"isFavorite\": true,\n    \"type\": \"wash\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"service_id\",\n        \"name\": \"Premium Wash\",\n        \"description\": \"Full body wash + wax\",\n        \"price\": 50000,\n        \"imageUrl\": \"http://example.com/wash.jpg\",\n        \"isDefault\": false,\n        \"isFavorite\": true,\n        \"type\": \"wash\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Service",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Premium Wash Updated\",\n    \"price\": 60000\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{service_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"service_id\",\n        \"name\": \"Premium Wash Updated\",\n        \"price\": 60000\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Service",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/services/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{service_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Service deleted successfully\",\n    \"data\": null\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Products",
+            "item": [
+                {
+                    "name": "Get Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/products",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "products"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"product_1\",\n            \"name\": \"product.water.mineral\",\n            \"description\": \"product.water.mineral.desc\",\n            \"price\": 8000,\n            \"imageAsset\": \"/images/product.png\",\n            \"quantity\": 0,\n            \"type\": \"water\"\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Product",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.id) {",
+                                    "    pm.environment.set(\"product_id\", jsonData.data.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Mineral Water\",\n    \"description\": \"600ml Bottle\",\n    \"price\": 5000,\n    \"imageUrl\": \"http://example.com/water.jpg\",\n    \"type\": \"beverage\",\n    \"stock\": 100\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/products",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "products"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"product_id\",\n        \"name\": \"Mineral Water\",\n        \"description\": \"600ml Bottle\",\n        \"price\": 5000,\n        \"imageUrl\": \"http://example.com/water.jpg\",\n        \"type\": \"beverage\",\n        \"stock\": 100\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Product",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Mineral Water Updated\",\n    \"stock\": 95\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/products/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "products",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{product_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"product_id\",\n        \"name\": \"Mineral Water Updated\",\n        \"stock\": 95\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Product",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/products/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "products",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{product_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Product deleted successfully\",\n    \"data\": null\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Work Orders",
+            "item": [
+                {
+                    "name": "Create Work Order",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.id) {",
+                                    "    pm.environment.set(\"work_order_id\", jsonData.data.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"vehicleData\": {\n        \"licensePlate\": \"B 1234 CD\",\n        \"vehicleBrand\": \"Honda\",\n        \"vehicleColor\": \"Black\",\n        \"vehicleCategory\": \"sedan\"\n    },\n    \"services\": [\n        {\n            \"serviceId\": \"{{service_id}}\",\n            \"quantity\": 1\n        }\n    ],\n    \"products\": [\n        {\n            \"productId\": \"{{product_id}}\",\n            \"quantity\": 2\n        }\n    ],\n    \"estimatedTime\": \"45 mins\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/work-orders",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "work-orders"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"workOrderCode\": \"WO-2025-1730534400000\",\n        \"queueNumber\": \"A-08\",\n        \"estimatedTime\": \"45 mins\",\n        \"createdAt\": \"2025-11-02T10:30:00Z\",\n        \"status\": \"created\",\n        \"customer\": {\n            \"name\": \"John Doe\",\n            \"phoneNumber\": \"08123456789\"\n        },\n        \"vehicle\": {\n            \"licensePlate\": \"B 1234 CD\",\n            \"vehicleBrand\": \"Honda\",\n            \"vehicleColor\": \"Black\",\n            \"vehicleCategory\": \"sedan\"\n        },\n        \"totalPrice\": 160000\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Work Order",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/work-orders/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "work-orders",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{work_order_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"workOrderCode\": \"WO-2025-1730534400000\",\n        \"queueNumber\": \"A-08\",\n        \"estimatedTime\": \"45 mins\",\n        \"createdAt\": \"2025-11-02T10:30:00Z\",\n        \"status\": \"created\",\n        \"customer\": {\n            \"name\": \"John Doe\",\n            \"phoneNumber\": \"08123456789\"\n        },\n        \"vehicle\": {\n            \"licensePlate\": \"B 1234 CD\",\n            \"vehicleBrand\": \"Honda\",\n            \"vehicleColor\": \"Black\",\n            \"vehicleCategory\": \"sedan\"\n        },\n        \"totalPrice\": 160000\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "List Work Orders",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/work-orders",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "work-orders"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"workOrderCode\": \"WO-2025-1730534400000\",\n            \"queueNumber\": \"A-08\",\n            \"totalPrice\": 160000\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Work Order Status",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"completed\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/work-orders/:id/status",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "work-orders",
+                                ":id",
+                                "status"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{work_order_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"workOrderCode\": \"WO-2025-1730534400000\",\n        \"status\": \"completed\"\n    }\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Users",
+            "item": [
+                {
+                    "name": "List Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"user_id\",\n            \"name\": \"New User\",\n            \"email\": \"new.user@example.com\",\n            \"role\": \"staff\"\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.id) {",
+                                    "    pm.environment.set(\"user_id\", jsonData.data.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"New User\",\n    \"email\": \"new.user@example.com\",\n    \"phoneNumber\": \"08999999999\",\n    \"username\": \"newuser\",\n    \"password\": \"password123\",\n    \"role\": \"staff\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"user_id\",\n        \"name\": \"New User\",\n        \"email\": \"new.user@example.com\",\n        \"phoneNumber\": \"08999999999\",\n        \"username\": \"newuser\",\n        \"role\": \"staff\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get User",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/users/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{user_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"user_id\",\n        \"name\": \"New User\",\n        \"email\": \"new.user@example.com\",\n        \"role\": \"staff\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"New User Updated\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{user_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"user_id\",\n        \"name\": \"New User Updated\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/users/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{user_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"User deleted successfully\",\n    \"data\": null\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Reset Password",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"newPassword\": \"newpassword123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users/:id/reset-password",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                ":id",
+                                "reset-password"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "{{user_id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Password reset successfully\",\n    \"data\": null\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Dashboard",
+            "item": [
+                {
+                    "name": "Get Dashboard Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/dashboard/stats",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "dashboard",
+                                "stats"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"totalWorkOrders\": 150,\n        \"totalRevenue\": 25000000,\n        \"totalCustomers\": 85,\n        \"activeMembers\": 42,\n        \"todayOrders\": 12,\n        \"pendingOrders\": 5\n    }\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Reports",
+            "item": [
+                {
+                    "name": "Generate Report",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"reportType\": \"daily\",\n    \"startDate\": \"2025-01-01\",\n    \"endDate\": \"2025-01-31\",\n    \"format\": \"pdf\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/reports/generate",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "reports",
+                                "generate"
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Report generated successfully\",\n    \"data\": {\n        \"reportId\": \"report_id\",\n        \"reportUrl\": \"https://example.com/reports/report_id.pdf\",\n        \"generatedAt\": \"2025-01-31T10:30:00Z\"\n    }\n}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ]
+}

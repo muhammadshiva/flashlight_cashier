@@ -2,12 +2,19 @@ import 'package:dio/dio.dart';
 import '../../../../core/error/failures.dart';
 import '../models/auth_model.dart';
 
+/// Abstract interface for authentication remote data operations.
 abstract class AuthRemoteDataSource {
+  /// Logs in a user with [username] and [password].
   Future<AuthModel> login(String username, String password);
+
+  /// Refreshes the authentication token using [refreshToken].
   Future<AuthModel> refreshToken(String refreshToken);
+
+  /// Gets the current user's profile.
   Future<User> getProfile();
 }
 
+/// Implementation of [AuthRemoteDataSource] using Dio.
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio dio;
 
@@ -17,20 +24,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthModel> login(String username, String password) async {
     try {
       final response = await dio.post(
-        '/auth/login',
+        '/login',
         data: {
           'username': username,
           'password': password,
         },
       );
 
+      // Response envelope: { success, message, data: { accessToken, refreshToken, user }, error_code }
       return AuthModel.fromJson(response.data);
     } on DioException catch (e) {
-      if (e.response != null) {
-        throw ServerFailure(e.response?.data['message'] ?? 'Login Failed');
-      } else {
-        throw const ServerFailure('Connection Error');
-      }
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Login Failed',
+      );
     }
   }
 
@@ -38,38 +44,40 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthModel> refreshToken(String refreshToken) async {
     try {
       final response = await dio.post(
-        '/api/refresh-token',
+        '/refresh-token',
         data: {
           'refreshToken': refreshToken,
         },
       );
 
+      // Response envelope: { success, message, data: { accessToken, refreshToken }, error_code }
       return AuthModel.fromJson(response.data);
     } on DioException catch (e) {
-      if (e.response != null) {
-        throw ServerFailure(
-            e.response?.data['message'] ?? 'Refresh Token Failed');
-      } else {
-        throw const ServerFailure('Connection Error');
-      }
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Refresh Token Failed',
+      );
     }
   }
 
   @override
   Future<User> getProfile() async {
     try {
-      final response = await dio.get('/api/profile');
+      final response = await dio.get('/profile');
 
-      // Response envelope: { success, message, data: { user }, error_code }
-      final userData = response.data['data'];
-      return User.fromJson(userData);
-    } on DioException catch (e) {
-      if (e.response != null) {
-        throw ServerFailure(
-            e.response?.data['message'] ?? 'Get Profile Failed');
-      } else {
-        throw const ServerFailure('Connection Error');
+      // Response envelope: { success, message, data: { id, username, ... }, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return User.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        throw ServerFailure(result['message'] ?? 'Get Profile Failed');
       }
+
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Get Profile Failed',
+      );
     }
   }
 }

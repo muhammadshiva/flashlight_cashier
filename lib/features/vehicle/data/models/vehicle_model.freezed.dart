@@ -16,16 +16,22 @@ T _$identity<T>(T value) => value;
 mixin _$VehicleModel {
   @JsonKey(name: "id")
   String get id;
+  @JsonKey(name: "customerId")
+  String? get customerId;
   @JsonKey(name: "licensePlate")
   String get licensePlate;
+  @JsonKey(name: "model")
+  String? get model;
   @JsonKey(name: "vehicleBrand")
-  String get vehicleBrand;
+  String? get vehicleBrand;
   @JsonKey(name: "vehicleColor")
-  String get vehicleColor;
+  String? get vehicleColor;
+  @JsonKey(name: "category")
+  String? get category;
   @JsonKey(name: "vehicleCategory")
-  String get vehicleCategory;
+  String? get vehicleCategory;
   @JsonKey(name: "vehicleSpecs")
-  String get vehicleSpecs;
+  String? get vehicleSpecs;
 
   /// Create a copy of VehicleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -44,12 +50,17 @@ mixin _$VehicleModel {
         (other.runtimeType == runtimeType &&
             other is VehicleModel &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.customerId, customerId) ||
+                other.customerId == customerId) &&
             (identical(other.licensePlate, licensePlate) ||
                 other.licensePlate == licensePlate) &&
+            (identical(other.model, model) || other.model == model) &&
             (identical(other.vehicleBrand, vehicleBrand) ||
                 other.vehicleBrand == vehicleBrand) &&
             (identical(other.vehicleColor, vehicleColor) ||
                 other.vehicleColor == vehicleColor) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
             (identical(other.vehicleCategory, vehicleCategory) ||
                 other.vehicleCategory == vehicleCategory) &&
             (identical(other.vehicleSpecs, vehicleSpecs) ||
@@ -58,12 +69,21 @@ mixin _$VehicleModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, licensePlate, vehicleBrand,
-      vehicleColor, vehicleCategory, vehicleSpecs);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      customerId,
+      licensePlate,
+      model,
+      vehicleBrand,
+      vehicleColor,
+      category,
+      vehicleCategory,
+      vehicleSpecs);
 
   @override
   String toString() {
-    return 'VehicleModel(id: $id, licensePlate: $licensePlate, vehicleBrand: $vehicleBrand, vehicleColor: $vehicleColor, vehicleCategory: $vehicleCategory, vehicleSpecs: $vehicleSpecs)';
+    return 'VehicleModel(id: $id, customerId: $customerId, licensePlate: $licensePlate, model: $model, vehicleBrand: $vehicleBrand, vehicleColor: $vehicleColor, category: $category, vehicleCategory: $vehicleCategory, vehicleSpecs: $vehicleSpecs)';
   }
 }
 
@@ -75,11 +95,14 @@ abstract mixin class $VehicleModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "id") String id,
+      @JsonKey(name: "customerId") String? customerId,
       @JsonKey(name: "licensePlate") String licensePlate,
-      @JsonKey(name: "vehicleBrand") String vehicleBrand,
-      @JsonKey(name: "vehicleColor") String vehicleColor,
-      @JsonKey(name: "vehicleCategory") String vehicleCategory,
-      @JsonKey(name: "vehicleSpecs") String vehicleSpecs});
+      @JsonKey(name: "model") String? model,
+      @JsonKey(name: "vehicleBrand") String? vehicleBrand,
+      @JsonKey(name: "vehicleColor") String? vehicleColor,
+      @JsonKey(name: "category") String? category,
+      @JsonKey(name: "vehicleCategory") String? vehicleCategory,
+      @JsonKey(name: "vehicleSpecs") String? vehicleSpecs});
 }
 
 /// @nodoc
@@ -95,37 +118,52 @@ class _$VehicleModelCopyWithImpl<$Res> implements $VehicleModelCopyWith<$Res> {
   @override
   $Res call({
     Object? id = null,
+    Object? customerId = freezed,
     Object? licensePlate = null,
-    Object? vehicleBrand = null,
-    Object? vehicleColor = null,
-    Object? vehicleCategory = null,
-    Object? vehicleSpecs = null,
+    Object? model = freezed,
+    Object? vehicleBrand = freezed,
+    Object? vehicleColor = freezed,
+    Object? category = freezed,
+    Object? vehicleCategory = freezed,
+    Object? vehicleSpecs = freezed,
   }) {
     return _then(_self.copyWith(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      customerId: freezed == customerId
+          ? _self.customerId
+          : customerId // ignore: cast_nullable_to_non_nullable
+              as String?,
       licensePlate: null == licensePlate
           ? _self.licensePlate
           : licensePlate // ignore: cast_nullable_to_non_nullable
               as String,
-      vehicleBrand: null == vehicleBrand
+      model: freezed == model
+          ? _self.model
+          : model // ignore: cast_nullable_to_non_nullable
+              as String?,
+      vehicleBrand: freezed == vehicleBrand
           ? _self.vehicleBrand
           : vehicleBrand // ignore: cast_nullable_to_non_nullable
-              as String,
-      vehicleColor: null == vehicleColor
+              as String?,
+      vehicleColor: freezed == vehicleColor
           ? _self.vehicleColor
           : vehicleColor // ignore: cast_nullable_to_non_nullable
-              as String,
-      vehicleCategory: null == vehicleCategory
+              as String?,
+      category: freezed == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String?,
+      vehicleCategory: freezed == vehicleCategory
           ? _self.vehicleCategory
           : vehicleCategory // ignore: cast_nullable_to_non_nullable
-              as String,
-      vehicleSpecs: null == vehicleSpecs
+              as String?,
+      vehicleSpecs: freezed == vehicleSpecs
           ? _self.vehicleSpecs
           : vehicleSpecs // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -225,19 +263,30 @@ extension VehicleModelPatterns on VehicleModel {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
             @JsonKey(name: "id") String id,
+            @JsonKey(name: "customerId") String? customerId,
             @JsonKey(name: "licensePlate") String licensePlate,
-            @JsonKey(name: "vehicleBrand") String vehicleBrand,
-            @JsonKey(name: "vehicleColor") String vehicleColor,
-            @JsonKey(name: "vehicleCategory") String vehicleCategory,
-            @JsonKey(name: "vehicleSpecs") String vehicleSpecs)?
+            @JsonKey(name: "model") String? model,
+            @JsonKey(name: "vehicleBrand") String? vehicleBrand,
+            @JsonKey(name: "vehicleColor") String? vehicleColor,
+            @JsonKey(name: "category") String? category,
+            @JsonKey(name: "vehicleCategory") String? vehicleCategory,
+            @JsonKey(name: "vehicleSpecs") String? vehicleSpecs)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _VehicleModel() when $default != null:
-        return $default(_that.id, _that.licensePlate, _that.vehicleBrand,
-            _that.vehicleColor, _that.vehicleCategory, _that.vehicleSpecs);
+        return $default(
+            _that.id,
+            _that.customerId,
+            _that.licensePlate,
+            _that.model,
+            _that.vehicleBrand,
+            _that.vehicleColor,
+            _that.category,
+            _that.vehicleCategory,
+            _that.vehicleSpecs);
       case _:
         return orElse();
     }
@@ -260,18 +309,29 @@ extension VehicleModelPatterns on VehicleModel {
   TResult when<TResult extends Object?>(
     TResult Function(
             @JsonKey(name: "id") String id,
+            @JsonKey(name: "customerId") String? customerId,
             @JsonKey(name: "licensePlate") String licensePlate,
-            @JsonKey(name: "vehicleBrand") String vehicleBrand,
-            @JsonKey(name: "vehicleColor") String vehicleColor,
-            @JsonKey(name: "vehicleCategory") String vehicleCategory,
-            @JsonKey(name: "vehicleSpecs") String vehicleSpecs)
+            @JsonKey(name: "model") String? model,
+            @JsonKey(name: "vehicleBrand") String? vehicleBrand,
+            @JsonKey(name: "vehicleColor") String? vehicleColor,
+            @JsonKey(name: "category") String? category,
+            @JsonKey(name: "vehicleCategory") String? vehicleCategory,
+            @JsonKey(name: "vehicleSpecs") String? vehicleSpecs)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _VehicleModel():
-        return $default(_that.id, _that.licensePlate, _that.vehicleBrand,
-            _that.vehicleColor, _that.vehicleCategory, _that.vehicleSpecs);
+        return $default(
+            _that.id,
+            _that.customerId,
+            _that.licensePlate,
+            _that.model,
+            _that.vehicleBrand,
+            _that.vehicleColor,
+            _that.category,
+            _that.vehicleCategory,
+            _that.vehicleSpecs);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -293,18 +353,29 @@ extension VehicleModelPatterns on VehicleModel {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
             @JsonKey(name: "id") String id,
+            @JsonKey(name: "customerId") String? customerId,
             @JsonKey(name: "licensePlate") String licensePlate,
-            @JsonKey(name: "vehicleBrand") String vehicleBrand,
-            @JsonKey(name: "vehicleColor") String vehicleColor,
-            @JsonKey(name: "vehicleCategory") String vehicleCategory,
-            @JsonKey(name: "vehicleSpecs") String vehicleSpecs)?
+            @JsonKey(name: "model") String? model,
+            @JsonKey(name: "vehicleBrand") String? vehicleBrand,
+            @JsonKey(name: "vehicleColor") String? vehicleColor,
+            @JsonKey(name: "category") String? category,
+            @JsonKey(name: "vehicleCategory") String? vehicleCategory,
+            @JsonKey(name: "vehicleSpecs") String? vehicleSpecs)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _VehicleModel() when $default != null:
-        return $default(_that.id, _that.licensePlate, _that.vehicleBrand,
-            _that.vehicleColor, _that.vehicleCategory, _that.vehicleSpecs);
+        return $default(
+            _that.id,
+            _that.customerId,
+            _that.licensePlate,
+            _that.model,
+            _that.vehicleBrand,
+            _that.vehicleColor,
+            _that.category,
+            _that.vehicleCategory,
+            _that.vehicleSpecs);
       case _:
         return null;
     }
@@ -316,11 +387,14 @@ extension VehicleModelPatterns on VehicleModel {
 class _VehicleModel extends VehicleModel {
   const _VehicleModel(
       {@JsonKey(name: "id") required this.id,
+      @JsonKey(name: "customerId") this.customerId,
       @JsonKey(name: "licensePlate") required this.licensePlate,
-      @JsonKey(name: "vehicleBrand") required this.vehicleBrand,
-      @JsonKey(name: "vehicleColor") required this.vehicleColor,
-      @JsonKey(name: "vehicleCategory") required this.vehicleCategory,
-      @JsonKey(name: "vehicleSpecs") required this.vehicleSpecs})
+      @JsonKey(name: "model") this.model,
+      @JsonKey(name: "vehicleBrand") this.vehicleBrand,
+      @JsonKey(name: "vehicleColor") this.vehicleColor,
+      @JsonKey(name: "category") this.category,
+      @JsonKey(name: "vehicleCategory") this.vehicleCategory,
+      @JsonKey(name: "vehicleSpecs") this.vehicleSpecs})
       : super._();
   factory _VehicleModel.fromJson(Map<String, dynamic> json) =>
       _$VehicleModelFromJson(json);
@@ -329,20 +403,29 @@ class _VehicleModel extends VehicleModel {
   @JsonKey(name: "id")
   final String id;
   @override
+  @JsonKey(name: "customerId")
+  final String? customerId;
+  @override
   @JsonKey(name: "licensePlate")
   final String licensePlate;
   @override
+  @JsonKey(name: "model")
+  final String? model;
+  @override
   @JsonKey(name: "vehicleBrand")
-  final String vehicleBrand;
+  final String? vehicleBrand;
   @override
   @JsonKey(name: "vehicleColor")
-  final String vehicleColor;
+  final String? vehicleColor;
+  @override
+  @JsonKey(name: "category")
+  final String? category;
   @override
   @JsonKey(name: "vehicleCategory")
-  final String vehicleCategory;
+  final String? vehicleCategory;
   @override
   @JsonKey(name: "vehicleSpecs")
-  final String vehicleSpecs;
+  final String? vehicleSpecs;
 
   /// Create a copy of VehicleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -365,12 +448,17 @@ class _VehicleModel extends VehicleModel {
         (other.runtimeType == runtimeType &&
             other is _VehicleModel &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.customerId, customerId) ||
+                other.customerId == customerId) &&
             (identical(other.licensePlate, licensePlate) ||
                 other.licensePlate == licensePlate) &&
+            (identical(other.model, model) || other.model == model) &&
             (identical(other.vehicleBrand, vehicleBrand) ||
                 other.vehicleBrand == vehicleBrand) &&
             (identical(other.vehicleColor, vehicleColor) ||
                 other.vehicleColor == vehicleColor) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
             (identical(other.vehicleCategory, vehicleCategory) ||
                 other.vehicleCategory == vehicleCategory) &&
             (identical(other.vehicleSpecs, vehicleSpecs) ||
@@ -379,12 +467,21 @@ class _VehicleModel extends VehicleModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, licensePlate, vehicleBrand,
-      vehicleColor, vehicleCategory, vehicleSpecs);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      customerId,
+      licensePlate,
+      model,
+      vehicleBrand,
+      vehicleColor,
+      category,
+      vehicleCategory,
+      vehicleSpecs);
 
   @override
   String toString() {
-    return 'VehicleModel(id: $id, licensePlate: $licensePlate, vehicleBrand: $vehicleBrand, vehicleColor: $vehicleColor, vehicleCategory: $vehicleCategory, vehicleSpecs: $vehicleSpecs)';
+    return 'VehicleModel(id: $id, customerId: $customerId, licensePlate: $licensePlate, model: $model, vehicleBrand: $vehicleBrand, vehicleColor: $vehicleColor, category: $category, vehicleCategory: $vehicleCategory, vehicleSpecs: $vehicleSpecs)';
   }
 }
 
@@ -398,11 +495,14 @@ abstract mixin class _$VehicleModelCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: "id") String id,
+      @JsonKey(name: "customerId") String? customerId,
       @JsonKey(name: "licensePlate") String licensePlate,
-      @JsonKey(name: "vehicleBrand") String vehicleBrand,
-      @JsonKey(name: "vehicleColor") String vehicleColor,
-      @JsonKey(name: "vehicleCategory") String vehicleCategory,
-      @JsonKey(name: "vehicleSpecs") String vehicleSpecs});
+      @JsonKey(name: "model") String? model,
+      @JsonKey(name: "vehicleBrand") String? vehicleBrand,
+      @JsonKey(name: "vehicleColor") String? vehicleColor,
+      @JsonKey(name: "category") String? category,
+      @JsonKey(name: "vehicleCategory") String? vehicleCategory,
+      @JsonKey(name: "vehicleSpecs") String? vehicleSpecs});
 }
 
 /// @nodoc
@@ -419,37 +519,52 @@ class __$VehicleModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   $Res call({
     Object? id = null,
+    Object? customerId = freezed,
     Object? licensePlate = null,
-    Object? vehicleBrand = null,
-    Object? vehicleColor = null,
-    Object? vehicleCategory = null,
-    Object? vehicleSpecs = null,
+    Object? model = freezed,
+    Object? vehicleBrand = freezed,
+    Object? vehicleColor = freezed,
+    Object? category = freezed,
+    Object? vehicleCategory = freezed,
+    Object? vehicleSpecs = freezed,
   }) {
     return _then(_VehicleModel(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      customerId: freezed == customerId
+          ? _self.customerId
+          : customerId // ignore: cast_nullable_to_non_nullable
+              as String?,
       licensePlate: null == licensePlate
           ? _self.licensePlate
           : licensePlate // ignore: cast_nullable_to_non_nullable
               as String,
-      vehicleBrand: null == vehicleBrand
+      model: freezed == model
+          ? _self.model
+          : model // ignore: cast_nullable_to_non_nullable
+              as String?,
+      vehicleBrand: freezed == vehicleBrand
           ? _self.vehicleBrand
           : vehicleBrand // ignore: cast_nullable_to_non_nullable
-              as String,
-      vehicleColor: null == vehicleColor
+              as String?,
+      vehicleColor: freezed == vehicleColor
           ? _self.vehicleColor
           : vehicleColor // ignore: cast_nullable_to_non_nullable
-              as String,
-      vehicleCategory: null == vehicleCategory
+              as String?,
+      category: freezed == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String?,
+      vehicleCategory: freezed == vehicleCategory
           ? _self.vehicleCategory
           : vehicleCategory // ignore: cast_nullable_to_non_nullable
-              as String,
-      vehicleSpecs: null == vehicleSpecs
+              as String?,
+      vehicleSpecs: freezed == vehicleSpecs
           ? _self.vehicleSpecs
           : vehicleSpecs // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }

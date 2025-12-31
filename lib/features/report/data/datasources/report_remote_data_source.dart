@@ -37,7 +37,7 @@ class ReportRemoteDataSourceImpl implements ReportRemoteDataSource {
       };
 
       final response = await dio.post(
-        '/api/reports/generate',
+        '/reports/generate',
         data: requestBody,
       );
 

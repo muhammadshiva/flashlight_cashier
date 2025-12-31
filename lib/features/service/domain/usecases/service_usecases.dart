@@ -8,28 +8,27 @@ import '../../../../core/pagination/paginated_response.dart';
 import '../entities/service_entity.dart';
 import '../repositories/service_repository.dart';
 
+/// Parameters for GetServices use case.
 class GetServicesParams extends Equatable {
-  final bool isPrototype;
   final String? type;
   final PaginationParams? pagination;
 
   const GetServicesParams({
-    this.isPrototype = false,
     this.type,
     this.pagination,
   });
 
   @override
-  List<Object?> get props => [isPrototype, type, pagination];
+  List<Object?> get props => [type, pagination];
 }
 
+/// Use case for getting paginated list of services.
 class GetServices implements UseCase<PaginatedResponse<ServiceEntity>, GetServicesParams> {
   final ServiceRepository repository;
   GetServices(this.repository);
   @override
   Future<Either<Failure, PaginatedResponse<ServiceEntity>>> call(GetServicesParams params) async {
     return await repository.getServices(
-      isPrototype: params.isPrototype,
       type: params.type,
       pagination: params.pagination,
     );

@@ -9,13 +9,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final CreateUser createUser;
   final UpdateUser updateUser;
   final DeleteUser deleteUser;
-  // final ResetPassword? resetPassword; // To implement if needed
+  final ResetPassword resetPassword;
 
   UserBloc({
     required this.getUsers,
     required this.createUser,
     required this.updateUser,
     required this.deleteUser,
+    required this.resetPassword,
   }) : super(UserInitial()) {
     on<LoadUsers>((event, emit) async {
       emit(UserLoading());
@@ -58,6 +59,20 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         (failure) => emit(UserError(failure.message)),
         (success) {
           emit(const UserOperationSuccess("User deleted successfully"));
+          add(LoadUsers());
+        },
+      );
+    });
+
+    on<ResetPasswordEvent>((event, emit) async {
+      emit(UserLoading());
+      final result = await resetPassword(
+        ResetPasswordParams(id: event.id, newPassword: event.newPassword),
+      );
+      result.fold(
+        (failure) => emit(UserError(failure.message)),
+        (success) {
+          emit(const UserOperationSuccess("Password reset successfully"));
           add(LoadUsers());
         },
       );

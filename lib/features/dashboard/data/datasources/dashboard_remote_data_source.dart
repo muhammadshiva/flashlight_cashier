@@ -14,7 +14,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   @override
   Future<DashboardStatsModel> getDashboardStats() async {
     try {
-      final response = await dio.get('/api/dashboard/stats');
+      final response = await dio.get('/dashboard/stats');
 
       // Response envelope: { success, message, data: {...}, error_code }
       final data = response.data['data'];
