@@ -1,14 +1,17 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/cache/secure_local_storage.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/network/network_info.dart';
-import '../../core/utils/app_bloc_observer.dart';
 import 'features/auth_injector.dart';
 import 'features/customer_injector.dart';
 import 'features/membership_injector.dart';
 import 'features/vehicle_injector.dart';
+import 'features/member_vehicle_injector.dart';
 import 'features/service_injector.dart';
 import 'features/product_injector.dart';
 import 'features/work_order_injector.dart';
@@ -44,11 +47,14 @@ Future<void> configureDependencies() async {
   );
 
   // Network
-  sl.registerLazySingleton<DioClient>(() => DioClient(sl()));
+  sl.registerLazySingleton<DioClient>(() => DioClient(sl(), sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 
   // Utilities
-  sl.registerLazySingleton<AppBlocObserver>(() => AppBlocObserver());
+  final talker = TalkerFlutter.init();
+  sl.registerLazySingleton<Talker>(() => talker);
+  sl.registerLazySingleton<BlocObserver>(
+      () => TalkerBlocObserver(talker: sl()));
 
   // ============================================
   // Feature Dependencies
@@ -57,6 +63,7 @@ Future<void> configureDependencies() async {
   CustomerInjector.init();
   MembershipInjector.init();
   VehicleInjector.init();
+  MemberVehicleInjector.init();
   ServiceInjector.init();
   ProductInjector.init();
   WorkOrderInjector.init();

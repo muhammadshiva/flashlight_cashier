@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../cache/secure_local_storage.dart';
 import '../constants/app_constants.dart';
@@ -10,9 +12,10 @@ import '../constants/app_constants.dart';
 class DioClient {
   final Dio _dio;
   final SecureLocalStorage _secureStorage;
+  final Talker _talker;
 
-  DioClient(this._secureStorage) : _dio = Dio() {
-    String baseUrl = 'https://369820dfc74d.ngrok-free.app/api';
+  DioClient(this._secureStorage, this._talker) : _dio = Dio() {
+    String baseUrl = 'http://matadevserver.tail96da83.ts.net/api';
 
     _dio.options
       ..baseUrl = baseUrl
@@ -20,6 +23,16 @@ class DioClient {
       ..receiveTimeout = const Duration(seconds: 15)
       ..responseType = ResponseType.json;
 
+    _dio.interceptors.add(
+      TalkerDioLogger(
+        talker: _talker,
+        settings: const TalkerDioLoggerSettings(
+          printRequestHeaders: true,
+          printResponseHeaders: true,
+          printResponseMessage: true,
+        ),
+      ),
+    );
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: _onRequest,

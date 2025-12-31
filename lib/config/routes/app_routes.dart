@@ -7,6 +7,7 @@ class AppRoutes {
   // Dashboard & Main
   static const String dashboard = '/dashboard';
   static const String pos = '/pos';
+  static const String debug = '/debug';
 
   // Work Orders & History
   static const String workOrders = '/work-orders';

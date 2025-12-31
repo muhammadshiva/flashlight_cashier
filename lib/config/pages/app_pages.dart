@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/customer/presentation/pages/customer_form_page.dart';
 import '../../features/customer/presentation/pages/customer_list_page.dart';
@@ -184,6 +185,10 @@ class AppPages {
       GoRoute(
         path: AppRoutes.pos,
         builder: (context, state) => const PosPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.debug,
+        builder: (context, state) => TalkerScreen(talker: di.sl<Talker>()),
       ),
     ],
   );

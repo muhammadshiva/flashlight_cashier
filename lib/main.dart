@@ -10,7 +10,8 @@ import 'config/pages/app_pages.dart';
 import 'config/themes/app_colors.dart';
 import 'configs/injector/injector_config.dart';
 import 'core/cache/hive_config.dart';
-import 'core/utils/app_bloc_observer.dart';
+import 'shared/widgets/draggable_button.dart';
+// import 'core/utils/app_bloc_observer.dart'; // Removed custom observer
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/theme/presentation/bloc/theme_bloc.dart';
 import 'features/theme/presentation/bloc/theme_state.dart';
@@ -31,7 +32,7 @@ void main() async {
   await configureDependencies();
 
   // Setup BLoC observer for logging all state changes
-  Bloc.observer = sl<AppBlocObserver>();
+  Bloc.observer = sl<BlocObserver>();
 
   runApp(const MyApp());
 }
@@ -82,11 +83,29 @@ class MyApp extends StatelessWidget {
                   GlobalWidgetsLocalizations.delegate,
                   GlobalCupertinoLocalizations.delegate,
                 ],
+                builder: (context, child) {
+                  return _AppWrapper(child: child);
+                },
               );
             },
           );
         },
       ),
     );
+  }
+}
+
+/// App wrapper that adds flavor banners and debug button
+class _AppWrapper extends StatelessWidget {
+  final Widget? child;
+
+  const _AppWrapper({this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      if (child != null) child!,
+      const DebugButton(),
+    ]);
   }
 }
