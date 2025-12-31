@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+import '../../config/pages/app_pages.dart';
 import '../../config/routes/app_routes.dart';
 import '../../core/utils/network_diagnostics.dart';
 
@@ -15,7 +16,7 @@ class _DebugButtonState extends State<DebugButton> {
 
   void _showDebugMenu(BuildContext context) {
     showDialog(
-      context: context,
+      context: AppPages.navigatorKey.currentContext ?? context,
       builder: (context) => AlertDialog(
         title: const Text('Debug Menu'),
         content: Column(
@@ -25,23 +26,33 @@ class _DebugButtonState extends State<DebugButton> {
               leading: const Icon(Icons.bug_report),
               title: const Text('Open Inspector'),
               onTap: () {
-                Navigator.pop(context);
-                context.push(AppRoutes.debug);
+                // Navigator.pop(context); // Not needed if we use the root navigator key context for the dialog, actually wait.
+                // If we use navigatorKey context, pop should work on that context.
+                if (AppPages.navigatorKey.currentContext != null) {
+                  Navigator.of(AppPages.navigatorKey.currentContext!).pop();
+                  AppPages.router.push(AppRoutes.debug);
+                }
               },
             ),
             ListTile(
               leading: const Icon(Icons.network_check),
               title: const Text('Network Diagnostics'),
               onTap: () {
-                Navigator.pop(context);
-                _runNetworkDiagnostics(context);
+                if (AppPages.navigatorKey.currentContext != null) {
+                  Navigator.of(AppPages.navigatorKey.currentContext!).pop();
+                  _runNetworkDiagnostics(AppPages.navigatorKey.currentContext!);
+                }
               },
             ),
           ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              if (AppPages.navigatorKey.currentContext != null) {
+                Navigator.of(AppPages.navigatorKey.currentContext!).pop();
+              }
+            },
             child: const Text('Close'),
           ),
         ],
@@ -252,7 +263,7 @@ class _DebugButtonState extends State<DebugButton> {
           shadowColor: Colors.black45,
           child: InkWell(
             onTap: () {
-              context.push(AppRoutes.debug);
+              AppPages.router.push(AppRoutes.debug);
             },
             onLongPress: () {
               _showDebugMenu(context);

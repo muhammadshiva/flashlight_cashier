@@ -35,7 +35,11 @@ import '../routes/app_routes.dart';
 class AppPages {
   AppPages._();
 
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   static final router = GoRouter(
+    navigatorKey: navigatorKey,
     initialLocation: AppRoutes.login,
     routes: [
       GoRoute(
