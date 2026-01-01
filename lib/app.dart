@@ -9,6 +9,7 @@ import 'config/pages/app_pages.dart';
 import 'config/themes/app_colors.dart';
 import 'configs/injector/injector_config.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/settings/presentation/bloc/settings_bloc.dart';
 import 'features/theme/presentation/bloc/theme_bloc.dart';
 import 'features/theme/presentation/bloc/theme_state.dart';
 import 'flavors.dart';
@@ -23,6 +24,9 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => sl<AuthBloc>()),
         BlocProvider(create: (_) => ThemeBloc()),
+        BlocProvider(
+          create: (_) => sl<SettingsBloc>()..add(const SettingsEvent.loadSettings()),
+        ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, themeState) {

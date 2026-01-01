@@ -18,6 +18,7 @@ import 'features/work_order_injector.dart';
 import 'features/dashboard_injector.dart';
 import 'features/user_injector.dart';
 import 'features/report_injector.dart';
+import 'features/settings_injector.dart';
 
 /// Global service locator instance.
 final sl = GetIt.instance;
@@ -70,6 +71,7 @@ Future<void> configureDependencies() async {
   DashboardInjector.init();
   UserInjector.init();
   ReportInjector.init();
+  SettingsInjector.init();
 }
 
 /// Resets all registrations - useful for testing.
