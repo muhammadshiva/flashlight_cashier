@@ -245,7 +245,7 @@
                                 }
                             ],
                             "cookie": [],
-                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"membership_id\",\n            \"customerId\": \"customer_id\",\n            \"membershipType\": \"gold\",\n            \"membershipLevel\": \"1\",\n            \"isActive\": true\n        }\n    ]\n}"
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Memberships retrieved successfully\",\n    \"data\": {\n        \"memberships\": [\n            {\n                \"id\": \"membership_id\",\n                \"customerId\": \"customer_id\",\n                \"membershipType\": \"gold\",\n                \"membershipLevel\": \"1\",\n                \"isActive\": true\n            }\n        ],\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
                         }
                     ]
                 },
@@ -424,7 +424,7 @@
                                 }
                             ],
                             "cookie": [],
-                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"customer_1\",\n            \"name\": \"John Doe\",\n            \"phoneNumber\": \"08123456789\",\n            \"email\": \"john.doe@example.com\"\n        }\n    ]\n}"
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Customers retrieved successfully\",\n    \"data\": {\n        \"customers\": [\n            {\n                \"id\": \"customer_1\",\n                \"name\": \"John Doe\",\n                \"phoneNumber\": \"08123456789\",\n                \"email\": \"john.doe@example.com\"\n            }\n        ],\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
                         }
                     ]
                 },
@@ -643,7 +643,7 @@
                                 }
                             ],
                             "cookie": [],
-                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"vehicle_1\",\n            \"name\": \"Honda Civic\",\n            \"plateNumber\": \"B 1234 CD\",\n            \"specs\": \"Black, 2022\",\n            \"icon\": \"car\"\n        }\n    ]\n}"
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Member Vehicles retrieved successfully\",\n    \"data\": {\n        \"memberVehicles\": [\n            {\n                \"id\": \"vehicle_1\",\n                \"name\": \"Honda Civic\",\n                \"plateNumber\": \"B 1234 CD\",\n                \"specs\": \"Black, 2022\",\n                \"icon\": \"car\"\n            }\n        ],\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
                         }
                     ]
                 },
@@ -825,7 +825,7 @@
                                 }
                             ],
                             "cookie": [],
-                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"service_1\",\n            \"name\": \"service.wash\",\n            \"description\": \"service.wash.desc\",\n            \"price\": 35000,\n            \"imageAsset\": \"/images/clean-motorbike.png\",\n            \"isDefault\": true,\n            \"isFavorite\": false,\n            \"type\": \"wash\"\n        }\n    ]\n}"
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Services retrieved successfully\",\n    \"data\": {\n        \"services\": [\n            {\n                \"id\": \"service_1\",\n                \"name\": \"service.wash\",\n                \"description\": \"service.wash.desc\",\n                \"price\": 35000,\n                \"imageAsset\": \"/images/clean-motorbike.png\",\n                \"isDefault\": true,\n                \"isFavorite\": false,\n                \"type\": \"wash\"\n            }\n        ],\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
                         }
                     ]
                 },
@@ -1004,7 +1004,7 @@
                                 }
                             ],
                             "cookie": [],
-                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"product_1\",\n            \"name\": \"product.water.mineral\",\n            \"description\": \"product.water.mineral.desc\",\n            \"price\": 8000,\n            \"imageAsset\": \"/images/product.png\",\n            \"quantity\": 0,\n            \"type\": \"water\"\n        }\n    ]\n}"
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Products retrieved successfully\",\n    \"data\": {\n        \"products\": [\n            {\n                \"id\": \"product_1\",\n                \"name\": \"product.water.mineral\",\n                \"description\": \"product.water.mineral.desc\",\n                \"price\": 8000,\n                \"imageAsset\": \"/images/product.png\",\n                \"quantity\": 0,\n                \"type\": \"water\"\n            }\n        ],\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
                         }
                     ]
                 },
@@ -1277,7 +1277,7 @@
                                 }
                             ],
                             "cookie": [],
-                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"workOrderCode\": \"WO-2025-1730534400000\",\n            \"queueNumber\": \"A-08\",\n            \"totalPrice\": 160000\n        }\n    ]\n}"
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Work orders retrieved successfully\",\n    \"data\": {\n        \"workOrders\": [\n            {\n                \"workOrderCode\": \"WO-2025-1730534400000\",\n                \"queueNumber\": \"A-08\",\n                \"totalPrice\": 160000\n            }\n        ],\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
                         }
                     ]
                 },
@@ -1363,7 +1363,7 @@
                                 }
                             ],
                             "cookie": [],
-                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"user_id\",\n            \"name\": \"New User\",\n            \"email\": \"new.user@example.com\",\n            \"role\": \"staff\"\n        }\n    ]\n}"
+                            "body": "{\n    \"error_code\": 0,\n    \"success\": true,\n    \"message\": \"Users retrieved successfully\",\n    \"data\": {\n        \"users\": [\n            {\n                \"id\": \"user_id\",\n                \"name\": \"New User\",\n                \"email\": \"new.user@example.com\",\n                \"role\": \"staff\"\n            }\n        ],\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
                         }
                     ]
                 },
