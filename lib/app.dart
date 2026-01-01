@@ -1,33 +1,96 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'config/constans/app_const.dart';
+import 'config/pages/app_pages.dart';
+import 'config/themes/app_colors.dart';
+import 'configs/injector/injector_config.dart';
+import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/theme/presentation/bloc/theme_bloc.dart';
+import 'features/theme/presentation/bloc/theme_state.dart';
 import 'flavors.dart';
-import 'pages/my_home_page.dart';
+import 'shared/widgets/draggable_button.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: F.title,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: _flavorBanner(child: MyHomePage(), show: kDebugMode),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<AuthBloc>()),
+        BlocProvider(create: (_) => ThemeBloc()),
+      ],
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return ScreenUtilInit(
+            designSize: AppConst.size,
+            minTextAdapt: true,
+            splitScreenMode: true,
+            useInheritedMediaQuery: true,
+            builder: (context, child) {
+              return MaterialApp.router(
+                title: F.title,
+                debugShowCheckedModeBanner: false,
+                themeMode: themeState.themeMode,
+                theme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: AppColors.backgroundGrey6,
+                    brightness: Brightness.light,
+                  ),
+                  useMaterial3: true,
+                ),
+                darkTheme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: AppColors.backgroundGrey6,
+                    brightness: Brightness.dark,
+                  ),
+                  useMaterial3: true,
+                ),
+                routerConfig: AppPages.router,
+                locale: const Locale('id', 'ID'),
+                supportedLocales: const [
+                  Locale('id', 'ID'),
+                ],
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                builder: (context, child) {
+                  return _AppWrapper(child: child);
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
+}
 
-  Widget _flavorBanner({required Widget child, bool show = true}) => show
-      ? Banner(
-          location: BannerLocation.topStart,
+/// App wrapper that adds flavor banners and debug button
+class _AppWrapper extends StatelessWidget {
+  final Widget? child;
+
+  const _AppWrapper({this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      if (kDebugMode) // Only show banner in debug mode if needed, utilizing F.name
+        Banner(
           message: F.name,
-          color: Colors.green.withAlpha(150),
-          textStyle: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 12.0,
-            letterSpacing: 1.0,
-          ),
-          textDirection: TextDirection.ltr,
-          child: child,
+          location: BannerLocation.topEnd,
+          color: Colors.red.withValues(alpha: 0.6), // Adjust color as needed
+          child: child ?? const SizedBox.shrink(),
         )
-      : Container(child: child);
+      else if (child != null)
+        child!,
+      const DebugButton(),
+    ]);
+  }
 }
