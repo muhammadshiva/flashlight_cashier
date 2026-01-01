@@ -66,6 +66,7 @@ dev_dependencies:
   build_runner: ^2.10.4
   json_serializable: ^6.11.2
   freezed: ^3.2.3
+  flutter_flavorizr: ^2.2.3
   # Note: hive_generator removed due to version conflict with freezed.
   # We use manually written Hive adapters instead (see lib/core/cache/adapters/)
 
@@ -142,3 +143,44 @@ flutter:
           weight: 700
         - asset: assets/fonts/poppins/Poppins-ExtraBold.ttf
           weight: 800
+
+flavorizr:
+  ide: "vscode"
+
+  app:
+    android:
+      flavorDimensions: "flavor-type"
+    ios:
+      buildSettings:
+        VERSIONING_SYSTEM: "apple-generic"
+
+  flavors:
+    dev:
+      app:
+        name: "Flashlight POS Dev"
+
+      android:
+        applicationId: "id.flashlight.dev"
+
+      ios:
+        bundleId: "id.flashlight.dev"
+
+    staging:
+      app:
+        name: "Flashlight POS Staging"
+
+      android:
+        applicationId: "id.flashlight.qa"
+
+      ios:
+        bundleId: "id.flashlight.qa"
+
+    production:
+      app:
+        name: "Flashlight POS"
+
+      android:
+        applicationId: "id.flashlight"
+
+      ios:
+        bundleId: "id.flashlight"

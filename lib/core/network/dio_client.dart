@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+import '../../flavors.dart';
 import '../cache/secure_local_storage.dart';
 import '../constants/app_constants.dart';
 
@@ -15,7 +16,7 @@ class DioClient {
   final Talker _talker;
 
   DioClient(this._secureStorage, this._talker) : _dio = Dio() {
-    String baseUrl = 'https://api.matariza.com/api';
+    String baseUrl = F.baseUrl;
 
     _dio.options
       ..baseUrl = baseUrl
