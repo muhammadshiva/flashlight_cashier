@@ -15,7 +15,7 @@ class DioClient {
   final Talker _talker;
 
   DioClient(this._secureStorage, this._talker) : _dio = Dio() {
-    String baseUrl = 'https://05743c09577d.ngrok-free.app/api';
+    String baseUrl = 'https://api.matariza.com/api';
 
     _dio.options
       ..baseUrl = baseUrl

@@ -18,25 +18,29 @@ abstract class DashboardStatsModel with _$DashboardStatsModel {
   const DashboardStatsModel._();
 
   const factory DashboardStatsModel({
-    @JsonKey(name: "totalOrders") required int totalOrders,
-    @JsonKey(name: "totalRevenue") required int totalRevenue,
-    @JsonKey(name: "pendingOrders") required int pendingOrders,
-    @JsonKey(name: "inProgressOrders") required int inProgressOrders,
-    @JsonKey(name: "completedOrders") required int completedOrders,
-    @JsonKey(name: "cancelledOrders") required int cancelledOrders,
-    @JsonKey(name: "statusCounts") required Map<String, int> statusCounts,
+    @JsonKey(name: "totalWorkOrders") int? totalWorkOrders,
+    @JsonKey(name: "totalOrders") int? totalOrders,
+    @JsonKey(name: "totalRevenue") @Default(0) int totalRevenue,
+    @JsonKey(name: "totalCustomers") int? totalCustomers,
+    @JsonKey(name: "activeMembers") int? activeMembers,
+    @JsonKey(name: "todayOrders") int? todayOrders,
+    @JsonKey(name: "pendingOrders") @Default(0) int pendingOrders,
+    @JsonKey(name: "inProgressOrders") @Default(0) int inProgressOrders,
+    @JsonKey(name: "completedOrders") @Default(0) int completedOrders,
+    @JsonKey(name: "cancelledOrders") @Default(0) int cancelledOrders,
+    @JsonKey(name: "statusCounts") Map<String, int>? statusCounts,
   }) = _DashboardStatsModel;
 
   factory DashboardStatsModel.fromJson(Map<String, dynamic> json) =>
       _$DashboardStatsModelFromJson(json);
 
   DashboardStats toEntity() => DashboardStats(
-        totalOrders: totalOrders,
+        totalOrders: totalWorkOrders ?? totalOrders ?? 0,
         totalRevenue: totalRevenue,
         pendingOrders: pendingOrders,
         inProgressOrders: inProgressOrders,
         completedOrders: completedOrders,
         cancelledOrders: cancelledOrders,
-        statusCounts: statusCounts,
+        statusCounts: statusCounts ?? {},
       );
 }

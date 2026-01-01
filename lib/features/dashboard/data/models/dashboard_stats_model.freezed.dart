@@ -14,10 +14,18 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$DashboardStatsModel {
+  @JsonKey(name: "totalWorkOrders")
+  int? get totalWorkOrders;
   @JsonKey(name: "totalOrders")
-  int get totalOrders;
+  int? get totalOrders;
   @JsonKey(name: "totalRevenue")
   int get totalRevenue;
+  @JsonKey(name: "totalCustomers")
+  int? get totalCustomers;
+  @JsonKey(name: "activeMembers")
+  int? get activeMembers;
+  @JsonKey(name: "todayOrders")
+  int? get todayOrders;
   @JsonKey(name: "pendingOrders")
   int get pendingOrders;
   @JsonKey(name: "inProgressOrders")
@@ -27,7 +35,7 @@ mixin _$DashboardStatsModel {
   @JsonKey(name: "cancelledOrders")
   int get cancelledOrders;
   @JsonKey(name: "statusCounts")
-  Map<String, int> get statusCounts;
+  Map<String, int>? get statusCounts;
 
   /// Create a copy of DashboardStatsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -45,10 +53,18 @@ mixin _$DashboardStatsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is DashboardStatsModel &&
+            (identical(other.totalWorkOrders, totalWorkOrders) ||
+                other.totalWorkOrders == totalWorkOrders) &&
             (identical(other.totalOrders, totalOrders) ||
                 other.totalOrders == totalOrders) &&
             (identical(other.totalRevenue, totalRevenue) ||
                 other.totalRevenue == totalRevenue) &&
+            (identical(other.totalCustomers, totalCustomers) ||
+                other.totalCustomers == totalCustomers) &&
+            (identical(other.activeMembers, activeMembers) ||
+                other.activeMembers == activeMembers) &&
+            (identical(other.todayOrders, todayOrders) ||
+                other.todayOrders == todayOrders) &&
             (identical(other.pendingOrders, pendingOrders) ||
                 other.pendingOrders == pendingOrders) &&
             (identical(other.inProgressOrders, inProgressOrders) ||
@@ -65,8 +81,12 @@ mixin _$DashboardStatsModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      totalWorkOrders,
       totalOrders,
       totalRevenue,
+      totalCustomers,
+      activeMembers,
+      todayOrders,
       pendingOrders,
       inProgressOrders,
       completedOrders,
@@ -75,7 +95,7 @@ mixin _$DashboardStatsModel {
 
   @override
   String toString() {
-    return 'DashboardStatsModel(totalOrders: $totalOrders, totalRevenue: $totalRevenue, pendingOrders: $pendingOrders, inProgressOrders: $inProgressOrders, completedOrders: $completedOrders, cancelledOrders: $cancelledOrders, statusCounts: $statusCounts)';
+    return 'DashboardStatsModel(totalWorkOrders: $totalWorkOrders, totalOrders: $totalOrders, totalRevenue: $totalRevenue, totalCustomers: $totalCustomers, activeMembers: $activeMembers, todayOrders: $todayOrders, pendingOrders: $pendingOrders, inProgressOrders: $inProgressOrders, completedOrders: $completedOrders, cancelledOrders: $cancelledOrders, statusCounts: $statusCounts)';
   }
 }
 
@@ -86,13 +106,17 @@ abstract mixin class $DashboardStatsModelCopyWith<$Res> {
       _$DashboardStatsModelCopyWithImpl;
   @useResult
   $Res call(
-      {@JsonKey(name: "totalOrders") int totalOrders,
+      {@JsonKey(name: "totalWorkOrders") int? totalWorkOrders,
+      @JsonKey(name: "totalOrders") int? totalOrders,
       @JsonKey(name: "totalRevenue") int totalRevenue,
+      @JsonKey(name: "totalCustomers") int? totalCustomers,
+      @JsonKey(name: "activeMembers") int? activeMembers,
+      @JsonKey(name: "todayOrders") int? todayOrders,
       @JsonKey(name: "pendingOrders") int pendingOrders,
       @JsonKey(name: "inProgressOrders") int inProgressOrders,
       @JsonKey(name: "completedOrders") int completedOrders,
       @JsonKey(name: "cancelledOrders") int cancelledOrders,
-      @JsonKey(name: "statusCounts") Map<String, int> statusCounts});
+      @JsonKey(name: "statusCounts") Map<String, int>? statusCounts});
 }
 
 /// @nodoc
@@ -108,23 +132,43 @@ class _$DashboardStatsModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? totalOrders = null,
+    Object? totalWorkOrders = freezed,
+    Object? totalOrders = freezed,
     Object? totalRevenue = null,
+    Object? totalCustomers = freezed,
+    Object? activeMembers = freezed,
+    Object? todayOrders = freezed,
     Object? pendingOrders = null,
     Object? inProgressOrders = null,
     Object? completedOrders = null,
     Object? cancelledOrders = null,
-    Object? statusCounts = null,
+    Object? statusCounts = freezed,
   }) {
     return _then(_self.copyWith(
-      totalOrders: null == totalOrders
+      totalWorkOrders: freezed == totalWorkOrders
+          ? _self.totalWorkOrders
+          : totalWorkOrders // ignore: cast_nullable_to_non_nullable
+              as int?,
+      totalOrders: freezed == totalOrders
           ? _self.totalOrders
           : totalOrders // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       totalRevenue: null == totalRevenue
           ? _self.totalRevenue
           : totalRevenue // ignore: cast_nullable_to_non_nullable
               as int,
+      totalCustomers: freezed == totalCustomers
+          ? _self.totalCustomers
+          : totalCustomers // ignore: cast_nullable_to_non_nullable
+              as int?,
+      activeMembers: freezed == activeMembers
+          ? _self.activeMembers
+          : activeMembers // ignore: cast_nullable_to_non_nullable
+              as int?,
+      todayOrders: freezed == todayOrders
+          ? _self.todayOrders
+          : todayOrders // ignore: cast_nullable_to_non_nullable
+              as int?,
       pendingOrders: null == pendingOrders
           ? _self.pendingOrders
           : pendingOrders // ignore: cast_nullable_to_non_nullable
@@ -141,10 +185,10 @@ class _$DashboardStatsModelCopyWithImpl<$Res>
           ? _self.cancelledOrders
           : cancelledOrders // ignore: cast_nullable_to_non_nullable
               as int,
-      statusCounts: null == statusCounts
+      statusCounts: freezed == statusCounts
           ? _self.statusCounts
           : statusCounts // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
+              as Map<String, int>?,
     ));
   }
 }
@@ -243,13 +287,17 @@ extension DashboardStatsModelPatterns on DashboardStatsModel {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: "totalOrders") int totalOrders,
+            @JsonKey(name: "totalWorkOrders") int? totalWorkOrders,
+            @JsonKey(name: "totalOrders") int? totalOrders,
             @JsonKey(name: "totalRevenue") int totalRevenue,
+            @JsonKey(name: "totalCustomers") int? totalCustomers,
+            @JsonKey(name: "activeMembers") int? activeMembers,
+            @JsonKey(name: "todayOrders") int? todayOrders,
             @JsonKey(name: "pendingOrders") int pendingOrders,
             @JsonKey(name: "inProgressOrders") int inProgressOrders,
             @JsonKey(name: "completedOrders") int completedOrders,
             @JsonKey(name: "cancelledOrders") int cancelledOrders,
-            @JsonKey(name: "statusCounts") Map<String, int> statusCounts)?
+            @JsonKey(name: "statusCounts") Map<String, int>? statusCounts)?
         $default, {
     required TResult orElse(),
   }) {
@@ -257,8 +305,12 @@ extension DashboardStatsModelPatterns on DashboardStatsModel {
     switch (_that) {
       case _DashboardStatsModel() when $default != null:
         return $default(
+            _that.totalWorkOrders,
             _that.totalOrders,
             _that.totalRevenue,
+            _that.totalCustomers,
+            _that.activeMembers,
+            _that.todayOrders,
             _that.pendingOrders,
             _that.inProgressOrders,
             _that.completedOrders,
@@ -285,21 +337,29 @@ extension DashboardStatsModelPatterns on DashboardStatsModel {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: "totalOrders") int totalOrders,
+            @JsonKey(name: "totalWorkOrders") int? totalWorkOrders,
+            @JsonKey(name: "totalOrders") int? totalOrders,
             @JsonKey(name: "totalRevenue") int totalRevenue,
+            @JsonKey(name: "totalCustomers") int? totalCustomers,
+            @JsonKey(name: "activeMembers") int? activeMembers,
+            @JsonKey(name: "todayOrders") int? todayOrders,
             @JsonKey(name: "pendingOrders") int pendingOrders,
             @JsonKey(name: "inProgressOrders") int inProgressOrders,
             @JsonKey(name: "completedOrders") int completedOrders,
             @JsonKey(name: "cancelledOrders") int cancelledOrders,
-            @JsonKey(name: "statusCounts") Map<String, int> statusCounts)
+            @JsonKey(name: "statusCounts") Map<String, int>? statusCounts)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _DashboardStatsModel():
         return $default(
+            _that.totalWorkOrders,
             _that.totalOrders,
             _that.totalRevenue,
+            _that.totalCustomers,
+            _that.activeMembers,
+            _that.todayOrders,
             _that.pendingOrders,
             _that.inProgressOrders,
             _that.completedOrders,
@@ -325,21 +385,29 @@ extension DashboardStatsModelPatterns on DashboardStatsModel {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            @JsonKey(name: "totalOrders") int totalOrders,
+            @JsonKey(name: "totalWorkOrders") int? totalWorkOrders,
+            @JsonKey(name: "totalOrders") int? totalOrders,
             @JsonKey(name: "totalRevenue") int totalRevenue,
+            @JsonKey(name: "totalCustomers") int? totalCustomers,
+            @JsonKey(name: "activeMembers") int? activeMembers,
+            @JsonKey(name: "todayOrders") int? todayOrders,
             @JsonKey(name: "pendingOrders") int pendingOrders,
             @JsonKey(name: "inProgressOrders") int inProgressOrders,
             @JsonKey(name: "completedOrders") int completedOrders,
             @JsonKey(name: "cancelledOrders") int cancelledOrders,
-            @JsonKey(name: "statusCounts") Map<String, int> statusCounts)?
+            @JsonKey(name: "statusCounts") Map<String, int>? statusCounts)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _DashboardStatsModel() when $default != null:
         return $default(
+            _that.totalWorkOrders,
             _that.totalOrders,
             _that.totalRevenue,
+            _that.totalCustomers,
+            _that.activeMembers,
+            _that.todayOrders,
             _that.pendingOrders,
             _that.inProgressOrders,
             _that.completedOrders,
@@ -355,25 +423,40 @@ extension DashboardStatsModelPatterns on DashboardStatsModel {
 @JsonSerializable()
 class _DashboardStatsModel extends DashboardStatsModel {
   const _DashboardStatsModel(
-      {@JsonKey(name: "totalOrders") required this.totalOrders,
-      @JsonKey(name: "totalRevenue") required this.totalRevenue,
-      @JsonKey(name: "pendingOrders") required this.pendingOrders,
-      @JsonKey(name: "inProgressOrders") required this.inProgressOrders,
-      @JsonKey(name: "completedOrders") required this.completedOrders,
-      @JsonKey(name: "cancelledOrders") required this.cancelledOrders,
-      @JsonKey(name: "statusCounts")
-      required final Map<String, int> statusCounts})
+      {@JsonKey(name: "totalWorkOrders") this.totalWorkOrders,
+      @JsonKey(name: "totalOrders") this.totalOrders,
+      @JsonKey(name: "totalRevenue") this.totalRevenue = 0,
+      @JsonKey(name: "totalCustomers") this.totalCustomers,
+      @JsonKey(name: "activeMembers") this.activeMembers,
+      @JsonKey(name: "todayOrders") this.todayOrders,
+      @JsonKey(name: "pendingOrders") this.pendingOrders = 0,
+      @JsonKey(name: "inProgressOrders") this.inProgressOrders = 0,
+      @JsonKey(name: "completedOrders") this.completedOrders = 0,
+      @JsonKey(name: "cancelledOrders") this.cancelledOrders = 0,
+      @JsonKey(name: "statusCounts") final Map<String, int>? statusCounts})
       : _statusCounts = statusCounts,
         super._();
   factory _DashboardStatsModel.fromJson(Map<String, dynamic> json) =>
       _$DashboardStatsModelFromJson(json);
 
   @override
+  @JsonKey(name: "totalWorkOrders")
+  final int? totalWorkOrders;
+  @override
   @JsonKey(name: "totalOrders")
-  final int totalOrders;
+  final int? totalOrders;
   @override
   @JsonKey(name: "totalRevenue")
   final int totalRevenue;
+  @override
+  @JsonKey(name: "totalCustomers")
+  final int? totalCustomers;
+  @override
+  @JsonKey(name: "activeMembers")
+  final int? activeMembers;
+  @override
+  @JsonKey(name: "todayOrders")
+  final int? todayOrders;
   @override
   @JsonKey(name: "pendingOrders")
   final int pendingOrders;
@@ -386,13 +469,15 @@ class _DashboardStatsModel extends DashboardStatsModel {
   @override
   @JsonKey(name: "cancelledOrders")
   final int cancelledOrders;
-  final Map<String, int> _statusCounts;
+  final Map<String, int>? _statusCounts;
   @override
   @JsonKey(name: "statusCounts")
-  Map<String, int> get statusCounts {
+  Map<String, int>? get statusCounts {
+    final value = _statusCounts;
+    if (value == null) return null;
     if (_statusCounts is EqualUnmodifiableMapView) return _statusCounts;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_statusCounts);
+    return EqualUnmodifiableMapView(value);
   }
 
   /// Create a copy of DashboardStatsModel
@@ -416,10 +501,18 @@ class _DashboardStatsModel extends DashboardStatsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _DashboardStatsModel &&
+            (identical(other.totalWorkOrders, totalWorkOrders) ||
+                other.totalWorkOrders == totalWorkOrders) &&
             (identical(other.totalOrders, totalOrders) ||
                 other.totalOrders == totalOrders) &&
             (identical(other.totalRevenue, totalRevenue) ||
                 other.totalRevenue == totalRevenue) &&
+            (identical(other.totalCustomers, totalCustomers) ||
+                other.totalCustomers == totalCustomers) &&
+            (identical(other.activeMembers, activeMembers) ||
+                other.activeMembers == activeMembers) &&
+            (identical(other.todayOrders, todayOrders) ||
+                other.todayOrders == todayOrders) &&
             (identical(other.pendingOrders, pendingOrders) ||
                 other.pendingOrders == pendingOrders) &&
             (identical(other.inProgressOrders, inProgressOrders) ||
@@ -436,8 +529,12 @@ class _DashboardStatsModel extends DashboardStatsModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      totalWorkOrders,
       totalOrders,
       totalRevenue,
+      totalCustomers,
+      activeMembers,
+      todayOrders,
       pendingOrders,
       inProgressOrders,
       completedOrders,
@@ -446,7 +543,7 @@ class _DashboardStatsModel extends DashboardStatsModel {
 
   @override
   String toString() {
-    return 'DashboardStatsModel(totalOrders: $totalOrders, totalRevenue: $totalRevenue, pendingOrders: $pendingOrders, inProgressOrders: $inProgressOrders, completedOrders: $completedOrders, cancelledOrders: $cancelledOrders, statusCounts: $statusCounts)';
+    return 'DashboardStatsModel(totalWorkOrders: $totalWorkOrders, totalOrders: $totalOrders, totalRevenue: $totalRevenue, totalCustomers: $totalCustomers, activeMembers: $activeMembers, todayOrders: $todayOrders, pendingOrders: $pendingOrders, inProgressOrders: $inProgressOrders, completedOrders: $completedOrders, cancelledOrders: $cancelledOrders, statusCounts: $statusCounts)';
   }
 }
 
@@ -459,13 +556,17 @@ abstract mixin class _$DashboardStatsModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "totalOrders") int totalOrders,
+      {@JsonKey(name: "totalWorkOrders") int? totalWorkOrders,
+      @JsonKey(name: "totalOrders") int? totalOrders,
       @JsonKey(name: "totalRevenue") int totalRevenue,
+      @JsonKey(name: "totalCustomers") int? totalCustomers,
+      @JsonKey(name: "activeMembers") int? activeMembers,
+      @JsonKey(name: "todayOrders") int? todayOrders,
       @JsonKey(name: "pendingOrders") int pendingOrders,
       @JsonKey(name: "inProgressOrders") int inProgressOrders,
       @JsonKey(name: "completedOrders") int completedOrders,
       @JsonKey(name: "cancelledOrders") int cancelledOrders,
-      @JsonKey(name: "statusCounts") Map<String, int> statusCounts});
+      @JsonKey(name: "statusCounts") Map<String, int>? statusCounts});
 }
 
 /// @nodoc
@@ -481,23 +582,43 @@ class __$DashboardStatsModelCopyWithImpl<$Res>
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? totalOrders = null,
+    Object? totalWorkOrders = freezed,
+    Object? totalOrders = freezed,
     Object? totalRevenue = null,
+    Object? totalCustomers = freezed,
+    Object? activeMembers = freezed,
+    Object? todayOrders = freezed,
     Object? pendingOrders = null,
     Object? inProgressOrders = null,
     Object? completedOrders = null,
     Object? cancelledOrders = null,
-    Object? statusCounts = null,
+    Object? statusCounts = freezed,
   }) {
     return _then(_DashboardStatsModel(
-      totalOrders: null == totalOrders
+      totalWorkOrders: freezed == totalWorkOrders
+          ? _self.totalWorkOrders
+          : totalWorkOrders // ignore: cast_nullable_to_non_nullable
+              as int?,
+      totalOrders: freezed == totalOrders
           ? _self.totalOrders
           : totalOrders // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       totalRevenue: null == totalRevenue
           ? _self.totalRevenue
           : totalRevenue // ignore: cast_nullable_to_non_nullable
               as int,
+      totalCustomers: freezed == totalCustomers
+          ? _self.totalCustomers
+          : totalCustomers // ignore: cast_nullable_to_non_nullable
+              as int?,
+      activeMembers: freezed == activeMembers
+          ? _self.activeMembers
+          : activeMembers // ignore: cast_nullable_to_non_nullable
+              as int?,
+      todayOrders: freezed == todayOrders
+          ? _self.todayOrders
+          : todayOrders // ignore: cast_nullable_to_non_nullable
+              as int?,
       pendingOrders: null == pendingOrders
           ? _self.pendingOrders
           : pendingOrders // ignore: cast_nullable_to_non_nullable
@@ -514,10 +635,10 @@ class __$DashboardStatsModelCopyWithImpl<$Res>
           ? _self.cancelledOrders
           : cancelledOrders // ignore: cast_nullable_to_non_nullable
               as int,
-      statusCounts: null == statusCounts
+      statusCounts: freezed == statusCounts
           ? _self._statusCounts
           : statusCounts // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
+              as Map<String, int>?,
     ));
   }
 }

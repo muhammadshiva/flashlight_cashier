@@ -24,7 +24,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthModel> login(String username, String password) async {
     try {
       final response = await dio.post(
-        '/login',
+        '/auth/login',
         data: {
           'username': username,
           'password': password,
@@ -44,7 +44,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthModel> refreshToken(String refreshToken) async {
     try {
       final response = await dio.post(
-        '/refresh-token',
+        '/auth/refresh-token',
         data: {
           'refreshToken': refreshToken,
         },
@@ -62,7 +62,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<User> getProfile() async {
     try {
-      final response = await dio.get('/profile');
+      final response = await dio.get('/auth/profile');
 
       // Response envelope: { success, message, data: { id, username, ... }, error_code }
       final result = response.data;

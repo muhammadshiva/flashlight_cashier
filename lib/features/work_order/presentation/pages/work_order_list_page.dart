@@ -6,19 +6,10 @@ import '../../../../injection_container.dart';
 import '../../../work_order/domain/usecases/work_order_usecases.dart';
 import '../../domain/entities/work_order.dart';
 
-// Simple Bloc for List Page (Inline or separate file? Separate is better but for speed/simplicity let's use a simple FutureBuilder or a basic cubit if we had one)
-// But we should stick to Clean Architecture pattern.
-// Let's create a WorkOrderListBloc first? Or reuse PosBloc? No, PosBloc is for POS.
-// We need WorkOrderListBloc.
-// For now, I will use a simple FutureBuilder with the UseCase directly injected for the List Page to save time/space,
-// as creating a full Bloc for just listing is verbose, but technically correct.
-// Actually, I'll create a WorkOrderListCubit or Bloc quickly.
-
 import 'package:equatable/equatable.dart';
 
 import '../../../work_order/domain/usecases/update_work_order_status.dart';
 
-// --- Events ---
 abstract class WorkOrderListEvent extends Equatable {
   const WorkOrderListEvent();
   @override

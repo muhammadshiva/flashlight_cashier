@@ -42,15 +42,14 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _onLoginPressed() {
-    return context.go('/dashboard');
-    // if (_formKey.currentState!.validate()) {
-    //   context.read<AuthBloc>().add(
-    //         LoginRequested(
-    //           username: _usernameController.text,
-    //           password: _passwordController.text,
-    //         ),
-    //       );
-    // }
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(
+            LoginRequested(
+              username: _usernameController.text,
+              password: _passwordController.text,
+            ),
+          );
+    }
   }
 
   @override
@@ -216,7 +215,7 @@ class _LoginFormState extends State<LoginForm> {
                             controller: _passwordController,
                             obscureText: !_isPasswordVisible,
                             decoration: InputDecoration(
-                              hintText: '••••••••',
+                              hintText: 'Enter your password',
                               filled: true,
                               fillColor: isDarkMode
                                   ? const Color(0xFF1F1D2B)

@@ -33,12 +33,27 @@ class MemberVehicleRemoteDataSourceImpl
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          final dataList = result['data'] as List;
-          return dataList
-              .map((e) => MemberVehicleModel.fromJson(e as Map<String, dynamic>))
-              .toList();
+          final data = result['data'];
+
+          if (data is Map<String, dynamic> &&
+              data.containsKey('memberVehicles')) {
+            final dataList = data['memberVehicles'] as List;
+            return dataList
+                .map((e) =>
+                    MemberVehicleModel.fromJson(e as Map<String, dynamic>))
+                .toList();
+          }
+
+          // Fallback if data is directly a list
+          if (data is List) {
+            return data
+                .map((e) =>
+                    MemberVehicleModel.fromJson(e as Map<String, dynamic>))
+                .toList();
+          }
         }
-        throw ServerFailure(result['message'] ?? 'Failed to fetch member vehicles');
+        throw ServerFailure(
+            result['message'] ?? 'Failed to fetch member vehicles');
       }
 
       // If response is directly a list
@@ -50,7 +65,8 @@ class MemberVehicleRemoteDataSourceImpl
 
       throw const ServerFailure('Invalid response format');
     } on DioException catch (e) {
-      throw ServerFailure(e.response?.data?['message'] ?? e.message ?? 'Unknown Error');
+      throw ServerFailure(
+          e.response?.data?['message'] ?? e.message ?? 'Unknown Error');
     }
   }
 
@@ -73,18 +89,21 @@ class MemberVehicleRemoteDataSourceImpl
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result.containsKey('data') && result['data'] != null) {
-          return MemberVehicleModel.fromJson(result['data'] as Map<String, dynamic>);
+          return MemberVehicleModel.fromJson(
+              result['data'] as Map<String, dynamic>);
         }
         // If no data key, assume the result itself is the vehicle data
         if (result.containsKey('id')) {
           return MemberVehicleModel.fromJson(result);
         }
-        throw ServerFailure(result['message'] ?? 'Failed to create member vehicle');
+        throw ServerFailure(
+            result['message'] ?? 'Failed to create member vehicle');
       }
 
       throw const ServerFailure('Invalid response format');
     } on DioException catch (e) {
-      throw ServerFailure(e.response?.data?['message'] ?? e.message ?? 'Unknown Error');
+      throw ServerFailure(
+          e.response?.data?['message'] ?? e.message ?? 'Unknown Error');
     }
   }
 
@@ -106,18 +125,21 @@ class MemberVehicleRemoteDataSourceImpl
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result.containsKey('data') && result['data'] != null) {
-          return MemberVehicleModel.fromJson(result['data'] as Map<String, dynamic>);
+          return MemberVehicleModel.fromJson(
+              result['data'] as Map<String, dynamic>);
         }
         // If no data key, assume the result itself is the vehicle data
         if (result.containsKey('id')) {
           return MemberVehicleModel.fromJson(result);
         }
-        throw ServerFailure(result['message'] ?? 'Failed to update member vehicle');
+        throw ServerFailure(
+            result['message'] ?? 'Failed to update member vehicle');
       }
 
       throw const ServerFailure('Invalid response format');
     } on DioException catch (e) {
-      throw ServerFailure(e.response?.data?['message'] ?? e.message ?? 'Unknown Error');
+      throw ServerFailure(
+          e.response?.data?['message'] ?? e.message ?? 'Unknown Error');
     }
   }
 
@@ -126,7 +148,8 @@ class MemberVehicleRemoteDataSourceImpl
     try {
       await dio.delete('/member/vehicles/$id');
     } on DioException catch (e) {
-      throw ServerFailure(e.response?.data?['message'] ?? e.message ?? 'Unknown Error');
+      throw ServerFailure(
+          e.response?.data?['message'] ?? e.message ?? 'Unknown Error');
     }
   }
 }

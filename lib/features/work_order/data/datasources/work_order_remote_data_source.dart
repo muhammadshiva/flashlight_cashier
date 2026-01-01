@@ -39,7 +39,8 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          return WorkOrderModel.fromJson(result['data'] as Map<String, dynamic>);
+          return WorkOrderModel.fromJson(
+              result['data'] as Map<String, dynamic>);
         }
         // If no data key but has id, assume result itself is the work order
         if (result.containsKey('id')) {
@@ -66,10 +67,26 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
           final data = result['data'];
-          final workOrdersList = data['workOrders'] as List;
-          return workOrdersList
-              .map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
-              .toList();
+
+          // Handle both array response and object with workOrders field
+          if (data is List) {
+            return data
+                .map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
+                .toList();
+          }
+
+          if (data is Map<String, dynamic>) {
+            final workOrdersList = data['workOrders'] ?? data['data'];
+            if (workOrdersList is List) {
+              return workOrdersList
+                  .map(
+                      (e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
+                  .toList();
+            }
+          }
+
+          // If data is neither List nor has workOrders field, return empty list
+          return [];
         }
         throw ServerFailure(result['message'] ?? 'Failed to fetch work orders');
       }
@@ -101,7 +118,8 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          return WorkOrderModel.fromJson(result['data'] as Map<String, dynamic>);
+          return WorkOrderModel.fromJson(
+              result['data'] as Map<String, dynamic>);
         }
         // If no data key but has id, assume result itself is the work order
         if (result.containsKey('id')) {
@@ -130,13 +148,15 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          return WorkOrderModel.fromJson(result['data'] as Map<String, dynamic>);
+          return WorkOrderModel.fromJson(
+              result['data'] as Map<String, dynamic>);
         }
         // If no data key but has id, assume result itself is the work order
         if (result.containsKey('id')) {
           return WorkOrderModel.fromJson(result);
         }
-        throw ServerFailure(result['message'] ?? 'Failed to update work order status');
+        throw ServerFailure(
+            result['message'] ?? 'Failed to update work order status');
       }
 
       throw const ServerFailure('Invalid response format');
@@ -156,7 +176,8 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          return WorkOrderModel.fromJson(result['data'] as Map<String, dynamic>);
+          return WorkOrderModel.fromJson(
+              result['data'] as Map<String, dynamic>);
         }
         // If no data key but has id, assume result itself is the work order
         if (result.containsKey('id')) {

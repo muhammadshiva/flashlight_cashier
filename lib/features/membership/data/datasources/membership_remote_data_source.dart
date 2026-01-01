@@ -64,7 +64,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
   Future<MembershipModel> createMembership(MembershipModel membership) async {
     try {
       final response = await dio.post(
-        '/memberships',
+        '/membership',
         data: {
           'customerId': membership.customerId,
           'membershipType': membership.membershipType,
@@ -96,7 +96,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
   @override
   Future<void> deleteMembership(String id) async {
     try {
-      final response = await dio.delete('/memberships/$id');
+      final response = await dio.delete('/membership/$id');
 
       // Handle API envelope: { success, message, data: null, error_code }
       final result = response.data;
@@ -142,7 +142,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
   Future<MembershipModel> updateMembership(String id, MembershipModel membership) async {
     try {
       final response = await dio.put(
-        '/memberships/$id',
+        '/membership/$id',
         data: {
           'membershipType': membership.membershipType,
           'membershipLevel': membership.membershipLevel,

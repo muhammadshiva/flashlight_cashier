@@ -6,6 +6,7 @@ class UserModel extends User {
     required super.username,
     required super.fullName,
     required super.email,
+    super.phoneNumber,
     required super.role,
     required super.status,
   });
@@ -14,8 +15,9 @@ class UserModel extends User {
     return UserModel(
       id: json['id'] ?? '',
       username: json['username'] ?? '',
-      fullName: json['fullName'] ?? '',
+      fullName: json['name'] ?? json['fullName'] ?? '',
       email: json['email'] ?? '',
+      phoneNumber: json['phoneNumber'],
       role: json['role'] ?? 'staff',
       status: json['status'] ?? 'active',
     );
@@ -25,8 +27,9 @@ class UserModel extends User {
     return {
       'id': id,
       'username': username,
-      'fullName': fullName,
+      'name': fullName,
       'email': email,
+      if (phoneNumber != null) 'phoneNumber': phoneNumber,
       'role': role,
       'status': status,
     };

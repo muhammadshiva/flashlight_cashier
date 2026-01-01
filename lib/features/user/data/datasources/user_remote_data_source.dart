@@ -38,8 +38,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     try {
       final body = {
         'username': user.username,
-        'fullName': user.fullName,
+        'name': user.fullName,
         'email': user.email,
+        if (user.phoneNumber != null) 'phoneNumber': user.phoneNumber,
         'role': user.role,
         'password': password,
       };
@@ -60,8 +61,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     try {
       final body = {
         'username': user.username,
-        'fullName': user.fullName,
+        'name': user.fullName,
         'email': user.email,
+        if (user.phoneNumber != null) 'phoneNumber': user.phoneNumber,
         'role': user.role,
         'status': user.status,
       };
