@@ -2,6 +2,7 @@ import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/settings_ui_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/printer_settings_section.dart';
+import 'package:flashlight_pos/features/settings/presentation/widgets/sections/receipt_settings_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -260,6 +261,9 @@ class SettingsDialog extends StatelessWidget {
                 switch (uiState.selectedMenu) {
                   case 'printer_settings':
                     return const PrinterSettingsSection();
+
+                  case 'receipt_settings':
+                    return const ReceiptSettingsSection();
 
                   // Placeholder untuk menu lainnya
                   default:

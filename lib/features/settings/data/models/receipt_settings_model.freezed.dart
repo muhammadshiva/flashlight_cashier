@@ -18,6 +18,10 @@ mixin _$ReceiptSettingsModel {
   bool get showLogo;
   @JsonKey(name: "showTaxDetails")
   bool get showTaxDetails;
+  @JsonKey(name: "showDiscount")
+  bool get showDiscount;
+  @JsonKey(name: "showPaymentMethod")
+  bool get showPaymentMethod;
   @JsonKey(name: "showFooterMessage")
   bool get showFooterMessage;
   @JsonKey(name: "footerMessage")
@@ -41,10 +45,12 @@ mixin _$ReceiptSettingsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is ReceiptSettingsModel &&
-            (identical(other.showLogo, showLogo) ||
-                other.showLogo == showLogo) &&
+            (identical(other.showLogo, showLogo) || other.showLogo == showLogo) &&
             (identical(other.showTaxDetails, showTaxDetails) ||
                 other.showTaxDetails == showTaxDetails) &&
+            (identical(other.showDiscount, showDiscount) || other.showDiscount == showDiscount) &&
+            (identical(other.showPaymentMethod, showPaymentMethod) ||
+                other.showPaymentMethod == showPaymentMethod) &&
             (identical(other.showFooterMessage, showFooterMessage) ||
                 other.showFooterMessage == showFooterMessage) &&
             (identical(other.footerMessage, footerMessage) ||
@@ -55,32 +61,33 @@ mixin _$ReceiptSettingsModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, showLogo, showTaxDetails,
-      showFooterMessage, footerMessage, receiptHeader);
+  int get hashCode => Object.hash(runtimeType, showLogo, showTaxDetails, showDiscount,
+      showPaymentMethod, showFooterMessage, footerMessage, receiptHeader);
 
   @override
   String toString() {
-    return 'ReceiptSettingsModel(showLogo: $showLogo, showTaxDetails: $showTaxDetails, showFooterMessage: $showFooterMessage, footerMessage: $footerMessage, receiptHeader: $receiptHeader)';
+    return 'ReceiptSettingsModel(showLogo: $showLogo, showTaxDetails: $showTaxDetails, showDiscount: $showDiscount, showPaymentMethod: $showPaymentMethod, showFooterMessage: $showFooterMessage, footerMessage: $footerMessage, receiptHeader: $receiptHeader)';
   }
 }
 
 /// @nodoc
 abstract mixin class $ReceiptSettingsModelCopyWith<$Res> {
-  factory $ReceiptSettingsModelCopyWith(ReceiptSettingsModel value,
-          $Res Function(ReceiptSettingsModel) _then) =
+  factory $ReceiptSettingsModelCopyWith(
+          ReceiptSettingsModel value, $Res Function(ReceiptSettingsModel) _then) =
       _$ReceiptSettingsModelCopyWithImpl;
   @useResult
   $Res call(
       {@JsonKey(name: "showLogo") bool showLogo,
       @JsonKey(name: "showTaxDetails") bool showTaxDetails,
+      @JsonKey(name: "showDiscount") bool showDiscount,
+      @JsonKey(name: "showPaymentMethod") bool showPaymentMethod,
       @JsonKey(name: "showFooterMessage") bool showFooterMessage,
       @JsonKey(name: "footerMessage") String footerMessage,
       @JsonKey(name: "receiptHeader") String receiptHeader});
 }
 
 /// @nodoc
-class _$ReceiptSettingsModelCopyWithImpl<$Res>
-    implements $ReceiptSettingsModelCopyWith<$Res> {
+class _$ReceiptSettingsModelCopyWithImpl<$Res> implements $ReceiptSettingsModelCopyWith<$Res> {
   _$ReceiptSettingsModelCopyWithImpl(this._self, this._then);
 
   final ReceiptSettingsModel _self;
@@ -93,6 +100,8 @@ class _$ReceiptSettingsModelCopyWithImpl<$Res>
   $Res call({
     Object? showLogo = null,
     Object? showTaxDetails = null,
+    Object? showDiscount = null,
+    Object? showPaymentMethod = null,
     Object? showFooterMessage = null,
     Object? footerMessage = null,
     Object? receiptHeader = null,
@@ -105,6 +114,14 @@ class _$ReceiptSettingsModelCopyWithImpl<$Res>
       showTaxDetails: null == showTaxDetails
           ? _self.showTaxDetails
           : showTaxDetails // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showDiscount: null == showDiscount
+          ? _self.showDiscount
+          : showDiscount // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showPaymentMethod: null == showPaymentMethod
+          ? _self.showPaymentMethod
+          : showPaymentMethod // ignore: cast_nullable_to_non_nullable
               as bool,
       showFooterMessage: null == showFooterMessage
           ? _self.showFooterMessage
@@ -218,6 +235,8 @@ extension ReceiptSettingsModelPatterns on ReceiptSettingsModel {
     TResult Function(
             @JsonKey(name: "showLogo") bool showLogo,
             @JsonKey(name: "showTaxDetails") bool showTaxDetails,
+            @JsonKey(name: "showDiscount") bool showDiscount,
+            @JsonKey(name: "showPaymentMethod") bool showPaymentMethod,
             @JsonKey(name: "showFooterMessage") bool showFooterMessage,
             @JsonKey(name: "footerMessage") String footerMessage,
             @JsonKey(name: "receiptHeader") String receiptHeader)?
@@ -227,8 +246,14 @@ extension ReceiptSettingsModelPatterns on ReceiptSettingsModel {
     final _that = this;
     switch (_that) {
       case _ReceiptSettingsModel() when $default != null:
-        return $default(_that.showLogo, _that.showTaxDetails,
-            _that.showFooterMessage, _that.footerMessage, _that.receiptHeader);
+        return $default(
+            _that.showLogo,
+            _that.showTaxDetails,
+            _that.showDiscount,
+            _that.showPaymentMethod,
+            _that.showFooterMessage,
+            _that.footerMessage,
+            _that.receiptHeader);
       case _:
         return orElse();
     }
@@ -252,6 +277,8 @@ extension ReceiptSettingsModelPatterns on ReceiptSettingsModel {
     TResult Function(
             @JsonKey(name: "showLogo") bool showLogo,
             @JsonKey(name: "showTaxDetails") bool showTaxDetails,
+            @JsonKey(name: "showDiscount") bool showDiscount,
+            @JsonKey(name: "showPaymentMethod") bool showPaymentMethod,
             @JsonKey(name: "showFooterMessage") bool showFooterMessage,
             @JsonKey(name: "footerMessage") String footerMessage,
             @JsonKey(name: "receiptHeader") String receiptHeader)
@@ -260,8 +287,14 @@ extension ReceiptSettingsModelPatterns on ReceiptSettingsModel {
     final _that = this;
     switch (_that) {
       case _ReceiptSettingsModel():
-        return $default(_that.showLogo, _that.showTaxDetails,
-            _that.showFooterMessage, _that.footerMessage, _that.receiptHeader);
+        return $default(
+            _that.showLogo,
+            _that.showTaxDetails,
+            _that.showDiscount,
+            _that.showPaymentMethod,
+            _that.showFooterMessage,
+            _that.footerMessage,
+            _that.receiptHeader);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -284,6 +317,8 @@ extension ReceiptSettingsModelPatterns on ReceiptSettingsModel {
     TResult? Function(
             @JsonKey(name: "showLogo") bool showLogo,
             @JsonKey(name: "showTaxDetails") bool showTaxDetails,
+            @JsonKey(name: "showDiscount") bool showDiscount,
+            @JsonKey(name: "showPaymentMethod") bool showPaymentMethod,
             @JsonKey(name: "showFooterMessage") bool showFooterMessage,
             @JsonKey(name: "footerMessage") String footerMessage,
             @JsonKey(name: "receiptHeader") String receiptHeader)?
@@ -292,8 +327,14 @@ extension ReceiptSettingsModelPatterns on ReceiptSettingsModel {
     final _that = this;
     switch (_that) {
       case _ReceiptSettingsModel() when $default != null:
-        return $default(_that.showLogo, _that.showTaxDetails,
-            _that.showFooterMessage, _that.footerMessage, _that.receiptHeader);
+        return $default(
+            _that.showLogo,
+            _that.showTaxDetails,
+            _that.showDiscount,
+            _that.showPaymentMethod,
+            _that.showFooterMessage,
+            _that.footerMessage,
+            _that.receiptHeader);
       case _:
         return null;
     }
@@ -302,14 +343,15 @@ extension ReceiptSettingsModelPatterns on ReceiptSettingsModel {
 
 /// @nodoc
 @JsonSerializable()
-class _ReceiptSettingsModel extends ReceiptSettingsModel {
+class _ReceiptSettingsModel implements ReceiptSettingsModel {
   const _ReceiptSettingsModel(
       {@JsonKey(name: "showLogo") required this.showLogo,
       @JsonKey(name: "showTaxDetails") required this.showTaxDetails,
+      @JsonKey(name: "showDiscount") required this.showDiscount,
+      @JsonKey(name: "showPaymentMethod") required this.showPaymentMethod,
       @JsonKey(name: "showFooterMessage") required this.showFooterMessage,
       @JsonKey(name: "footerMessage") required this.footerMessage,
-      @JsonKey(name: "receiptHeader") required this.receiptHeader})
-      : super._();
+      @JsonKey(name: "receiptHeader") required this.receiptHeader});
   factory _ReceiptSettingsModel.fromJson(Map<String, dynamic> json) =>
       _$ReceiptSettingsModelFromJson(json);
 
@@ -319,6 +361,12 @@ class _ReceiptSettingsModel extends ReceiptSettingsModel {
   @override
   @JsonKey(name: "showTaxDetails")
   final bool showTaxDetails;
+  @override
+  @JsonKey(name: "showDiscount")
+  final bool showDiscount;
+  @override
+  @JsonKey(name: "showPaymentMethod")
+  final bool showPaymentMethod;
   @override
   @JsonKey(name: "showFooterMessage")
   final bool showFooterMessage;
@@ -335,8 +383,7 @@ class _ReceiptSettingsModel extends ReceiptSettingsModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
   _$ReceiptSettingsModelCopyWith<_ReceiptSettingsModel> get copyWith =>
-      __$ReceiptSettingsModelCopyWithImpl<_ReceiptSettingsModel>(
-          this, _$identity);
+      __$ReceiptSettingsModelCopyWithImpl<_ReceiptSettingsModel>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -350,10 +397,12 @@ class _ReceiptSettingsModel extends ReceiptSettingsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _ReceiptSettingsModel &&
-            (identical(other.showLogo, showLogo) ||
-                other.showLogo == showLogo) &&
+            (identical(other.showLogo, showLogo) || other.showLogo == showLogo) &&
             (identical(other.showTaxDetails, showTaxDetails) ||
                 other.showTaxDetails == showTaxDetails) &&
+            (identical(other.showDiscount, showDiscount) || other.showDiscount == showDiscount) &&
+            (identical(other.showPaymentMethod, showPaymentMethod) ||
+                other.showPaymentMethod == showPaymentMethod) &&
             (identical(other.showFooterMessage, showFooterMessage) ||
                 other.showFooterMessage == showFooterMessage) &&
             (identical(other.footerMessage, footerMessage) ||
@@ -364,34 +413,41 @@ class _ReceiptSettingsModel extends ReceiptSettingsModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, showLogo, showTaxDetails,
-      showFooterMessage, footerMessage, receiptHeader);
+  int get hashCode => Object.hash(runtimeType, showLogo, showTaxDetails, showDiscount,
+      showPaymentMethod, showFooterMessage, footerMessage, receiptHeader);
 
   @override
   String toString() {
-    return 'ReceiptSettingsModel(showLogo: $showLogo, showTaxDetails: $showTaxDetails, showFooterMessage: $showFooterMessage, footerMessage: $footerMessage, receiptHeader: $receiptHeader)';
+    return 'ReceiptSettingsModel(showLogo: $showLogo, showTaxDetails: $showTaxDetails, showDiscount: $showDiscount, showPaymentMethod: $showPaymentMethod, showFooterMessage: $showFooterMessage, footerMessage: $footerMessage, receiptHeader: $receiptHeader)';
+  }
+
+  @override
+  ReceiptSettings toEntity() {
+    // TODO: implement toEntity
+    throw UnimplementedError();
   }
 }
 
 /// @nodoc
 abstract mixin class _$ReceiptSettingsModelCopyWith<$Res>
     implements $ReceiptSettingsModelCopyWith<$Res> {
-  factory _$ReceiptSettingsModelCopyWith(_ReceiptSettingsModel value,
-          $Res Function(_ReceiptSettingsModel) _then) =
+  factory _$ReceiptSettingsModelCopyWith(
+          _ReceiptSettingsModel value, $Res Function(_ReceiptSettingsModel) _then) =
       __$ReceiptSettingsModelCopyWithImpl;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: "showLogo") bool showLogo,
       @JsonKey(name: "showTaxDetails") bool showTaxDetails,
+      @JsonKey(name: "showDiscount") bool showDiscount,
+      @JsonKey(name: "showPaymentMethod") bool showPaymentMethod,
       @JsonKey(name: "showFooterMessage") bool showFooterMessage,
       @JsonKey(name: "footerMessage") String footerMessage,
       @JsonKey(name: "receiptHeader") String receiptHeader});
 }
 
 /// @nodoc
-class __$ReceiptSettingsModelCopyWithImpl<$Res>
-    implements _$ReceiptSettingsModelCopyWith<$Res> {
+class __$ReceiptSettingsModelCopyWithImpl<$Res> implements _$ReceiptSettingsModelCopyWith<$Res> {
   __$ReceiptSettingsModelCopyWithImpl(this._self, this._then);
 
   final _ReceiptSettingsModel _self;
@@ -404,6 +460,8 @@ class __$ReceiptSettingsModelCopyWithImpl<$Res>
   $Res call({
     Object? showLogo = null,
     Object? showTaxDetails = null,
+    Object? showDiscount = null,
+    Object? showPaymentMethod = null,
     Object? showFooterMessage = null,
     Object? footerMessage = null,
     Object? receiptHeader = null,
@@ -416,6 +474,14 @@ class __$ReceiptSettingsModelCopyWithImpl<$Res>
       showTaxDetails: null == showTaxDetails
           ? _self.showTaxDetails
           : showTaxDetails // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showDiscount: null == showDiscount
+          ? _self.showDiscount
+          : showDiscount // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showPaymentMethod: null == showPaymentMethod
+          ? _self.showPaymentMethod
+          : showPaymentMethod // ignore: cast_nullable_to_non_nullable
               as bool,
       showFooterMessage: null == showFooterMessage
           ? _self.showFooterMessage

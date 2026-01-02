@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:flashlight_pos/config/themes/app_colors.dart';
+import 'package:flashlight_pos/shared/widgets/toggle_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -524,7 +525,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
           value: '11.0%',
         ),
         32.verticalSpace,
-        _buildToggleItem(
+        ToggleItem(
           label: 'Auto Calculate Tax',
           description: 'Automatically calculate tax for transactions',
           value: autoCalculateTax,
@@ -587,58 +588,6 @@ class _SettingsDialogState extends State<SettingsDialog> {
     );
   }
 
-  Widget _buildToggleItem({
-    required String label,
-    required String description,
-    required bool value,
-    required ValueChanged<bool>? onChanged,
-    bool isLoading = false,
-  }) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.blackFoundation600,
-                ),
-              ),
-              4.verticalSpace,
-              Text(
-                description,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: isLoading ? AppColors.textGray2.withOpacity(0.5) : AppColors.textGray2,
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (isLoading)
-          const SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangeAccent),
-            ),
-          )
-        else
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeThumbColor: AppColors.orangeAccent,
-            activeTrackColor: AppColors.warning3,
-          ),
-      ],
-    );
-  }
-
   Widget _buildPrinterSettings() {
     // Check if platform is mobile
     final bool isMobilePlatform = Platform.isAndroid || Platform.isIOS;
@@ -679,14 +628,16 @@ class _SettingsDialogState extends State<SettingsDialog> {
         ],
 
         // Bluetooth Toggle
-        _buildToggleItem(
+        ToggleItem(
           label: 'Bluetooth',
           description: 'Enable Bluetooth to connect to printer',
           value: bluetoothEnabled,
           isLoading: isTogglingBluetooth,
-          onChanged: isTogglingBluetooth ? null : (value) {
-            _handleBluetoothToggle(value);
-          },
+          onChanged: isTogglingBluetooth
+              ? null
+              : (value) {
+                  _handleBluetoothToggle(value);
+                },
         ),
 
         24.verticalSpace,
@@ -994,7 +945,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
         ),
         16.verticalSpace,
 
-        _buildToggleItem(
+        ToggleItem(
           label: 'Auto Print Receipt',
           description: 'Automatically print receipt after transaction',
           value: autoPrintReceipt,
@@ -1007,7 +958,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
 
         24.verticalSpace,
 
-        _buildToggleItem(
+        ToggleItem(
           label: 'Print Logo',
           description: 'Include store logo on printed receipts',
           value: printLogo,

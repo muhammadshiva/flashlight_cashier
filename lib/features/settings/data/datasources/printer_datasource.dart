@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
+
 import '../models/printer_device_model.dart';
 
 abstract class PrinterDataSource {

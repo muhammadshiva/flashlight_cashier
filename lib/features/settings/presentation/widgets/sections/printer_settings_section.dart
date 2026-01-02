@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:flashlight_pos/shared/widgets/toggle_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,8 +66,7 @@ class PrinterSettingsSection extends StatelessWidget {
             ],
 
             // Bluetooth Toggle
-            _buildToggleItem(
-              context,
+            ToggleItem(
               label: 'Bluetooth',
               description: 'Enable Bluetooth to connect to printer',
               value: printerSettings.bluetoothEnabled,
@@ -229,8 +230,7 @@ class PrinterSettingsSection extends StatelessWidget {
                   ),
                   itemBuilder: (context, index) {
                     final printer = state.availablePrinters[index];
-                    final isConnected =
-                        printerSettings.connectedPrinterMac == printer.macAddress;
+                    final isConnected = printerSettings.connectedPrinterMac == printer.macAddress;
 
                     return InkWell(
                       onTap: state.isConnectingPrinter
@@ -259,8 +259,7 @@ class PrinterSettingsSection extends StatelessWidget {
                                     printer.name,
                                     style: TextStyle(
                                       fontSize: 13,
-                                      fontWeight:
-                                          isConnected ? FontWeight.w600 : FontWeight.w400,
+                                      fontWeight: isConnected ? FontWeight.w600 : FontWeight.w400,
                                       color: AppColors.blackFoundation600,
                                     ),
                                   ),
@@ -343,8 +342,7 @@ class PrinterSettingsSection extends StatelessWidget {
             ),
             16.verticalSpace,
 
-            _buildToggleItem(
-              context,
+            ToggleItem(
               label: 'Auto Print Receipt',
               description: 'Automatically print receipt after transaction',
               value: printerSettings.autoPrintReceipt,
@@ -359,8 +357,7 @@ class PrinterSettingsSection extends StatelessWidget {
 
             24.verticalSpace,
 
-            _buildToggleItem(
-              context,
+            ToggleItem(
               label: 'Print Logo',
               description: 'Include store logo on printed receipts',
               value: printerSettings.printLogo,
@@ -489,59 +486,6 @@ class PrinterSettingsSection extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildToggleItem(
-    BuildContext context, {
-    required String label,
-    required String description,
-    required bool value,
-    required ValueChanged<bool>? onChanged,
-    bool isLoading = false,
-  }) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.blackFoundation600,
-                ),
-              ),
-              4.verticalSpace,
-              Text(
-                description,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: isLoading ? AppColors.textGray2.withOpacity(0.5) : AppColors.textGray2,
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (isLoading)
-          const SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangeAccent),
-            ),
-          )
-        else
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeColor: AppColors.orangeAccent,
-            activeTrackColor: AppColors.warning3,
-          ),
-      ],
     );
   }
 

@@ -184,8 +184,7 @@ class PrinterSettingsSection extends StatelessWidget {
         return Column(
           children: [
             // Bluetooth Toggle
-            _buildToggleItem(
-              context,
+            ToggleItem(
               label: 'Bluetooth',
               value: printerSettings.bluetoothEnabled,
               isLoading: state.isTogglingBluetooth,

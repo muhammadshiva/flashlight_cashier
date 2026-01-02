@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../domain/entities/receipt_settings.dart';
 import '../models/app_settings_model.dart';
 import '../models/notification_settings_model.dart';
 import '../models/printer_settings_model.dart';
@@ -101,13 +102,15 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
       return ReceiptSettingsModel.fromJson(json.decode(jsonString));
     } else {
       return ReceiptSettingsModel.fromEntity(
-        const ReceiptSettingsModel(
+        const ReceiptSettings(
           showLogo: true,
           showTaxDetails: true,
+          showDiscount: true,
+          showPaymentMethod: true,
           showFooterMessage: true,
           footerMessage: 'Thank you for your purchase!',
           receiptHeader: 'RECEIPT',
-        ).toEntity(),
+        ),
       );
     }
   }

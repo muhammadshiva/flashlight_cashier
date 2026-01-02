@@ -1,18 +1,17 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_dialog.dart';
 import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
-import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 
 class CashierOrderDetail extends StatelessWidget {
   final WorkOrder? selectedOrder;
   final Customer? customer;
   final Vehicle? vehicle;
   final VoidCallback? onPay;
-  final Function(String item)?
-      onAddService; // Changed to String for mock simplicity
+  final Function(String item)? onAddService; // Changed to String for mock simplicity
   final Function(Map<String, dynamic> item)? onRemove;
 
   const CashierOrderDetail({
@@ -94,8 +93,7 @@ class CashierOrderDetail extends StatelessWidget {
                       price: s.priceAtOrder,
                       type: 'Service',
                       id: s.id,
-                      onRemove: () =>
-                          onRemove?.call({'id': s.id, 'type': 'Service'}),
+                      onRemove: () => onRemove?.call({'id': s.id, 'type': 'Service'}),
                     )),
                 ...order.products.map((p) => _OrderItemRow(
                       name: p.product?.name ?? 'Product',
@@ -103,8 +101,7 @@ class CashierOrderDetail extends StatelessWidget {
                       price: p.priceAtOrder,
                       type: 'Product',
                       id: p.id,
-                      onRemove: () =>
-                          onRemove?.call({'id': p.id, 'type': 'Product'}),
+                      onRemove: () => onRemove?.call({'id': p.id, 'type': 'Product'}),
                     )),
                 if (order.services.isEmpty && order.products.isEmpty)
                   const Padding(
@@ -127,11 +124,11 @@ class CashierOrderDetail extends StatelessWidget {
   }
 }
 
-class _QuickActionChip extends StatelessWidget {
+class QuickActionChip extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _QuickActionChip({required this.label, required this.onTap});
+  const QuickActionChip({super.key, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -187,8 +184,7 @@ class _OrderHeader extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1E293B),
                           borderRadius: BorderRadius.circular(4),
@@ -272,14 +268,10 @@ class _InfoTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label,
-                  style:
-                      const TextStyle(fontSize: 12, color: Color(0xFF94A3B8))),
+              Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF94A3B8))),
               Text(value,
                   style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF334155)),
+                      fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
                   overflow: TextOverflow.ellipsis),
             ],
           ),
@@ -316,9 +308,8 @@ class _OrderItemRow extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: type == 'Service'
-                  ? Colors.blue.withOpacity(0.1)
-                  : Colors.orange.withOpacity(0.1),
+              color:
+                  type == 'Service' ? Colors.blue.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -367,8 +358,7 @@ class _OrderItemRow extends StatelessWidget {
               const SizedBox(width: 8),
               IconButton(
                 onPressed: onRemove,
-                icon: const Icon(Icons.delete_outline,
-                    size: 20, color: Color(0xFFEF4444)),
+                icon: const Icon(Icons.delete_outline, size: 20, color: Color(0xFFEF4444)),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 tooltip: 'Remove Item',

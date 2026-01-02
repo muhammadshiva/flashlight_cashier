@@ -2,6 +2,8 @@
 class ReceiptSettings {
   final bool showLogo;
   final bool showTaxDetails;
+  final bool showDiscount;
+  final bool showPaymentMethod;
   final bool showFooterMessage;
   final String footerMessage;
   final String receiptHeader;
@@ -9,6 +11,8 @@ class ReceiptSettings {
   const ReceiptSettings({
     required this.showLogo,
     required this.showTaxDetails,
+    required this.showDiscount,
+    required this.showPaymentMethod,
     required this.showFooterMessage,
     required this.footerMessage,
     required this.receiptHeader,
@@ -18,6 +22,8 @@ class ReceiptSettings {
     return const ReceiptSettings(
       showLogo: true,
       showTaxDetails: true,
+      showDiscount: true,
+      showPaymentMethod: true,
       showFooterMessage: true,
       footerMessage: 'Thank you for your purchase!',
       receiptHeader: 'RECEIPT',
@@ -27,6 +33,8 @@ class ReceiptSettings {
   ReceiptSettings copyWith({
     bool? showLogo,
     bool? showTaxDetails,
+    bool? showDiscount,
+    bool? showPaymentMethod,
     bool? showFooterMessage,
     String? footerMessage,
     String? receiptHeader,
@@ -34,6 +42,8 @@ class ReceiptSettings {
     return ReceiptSettings(
       showLogo: showLogo ?? this.showLogo,
       showTaxDetails: showTaxDetails ?? this.showTaxDetails,
+      showDiscount: showDiscount ?? this.showDiscount,
+      showPaymentMethod: showPaymentMethod ?? this.showPaymentMethod,
       showFooterMessage: showFooterMessage ?? this.showFooterMessage,
       footerMessage: footerMessage ?? this.footerMessage,
       receiptHeader: receiptHeader ?? this.receiptHeader,
@@ -47,6 +57,8 @@ class ReceiptSettings {
     return other is ReceiptSettings &&
         other.showLogo == showLogo &&
         other.showTaxDetails == showTaxDetails &&
+        other.showDiscount == showDiscount &&
+        other.showPaymentMethod == showPaymentMethod &&
         other.showFooterMessage == showFooterMessage &&
         other.footerMessage == footerMessage &&
         other.receiptHeader == receiptHeader;
@@ -57,6 +69,8 @@ class ReceiptSettings {
     return Object.hash(
       showLogo,
       showTaxDetails,
+      showDiscount,
+      showPaymentMethod,
       showFooterMessage,
       footerMessage,
       receiptHeader,
