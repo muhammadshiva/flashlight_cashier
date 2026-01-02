@@ -6,7 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../auth/presentation/bloc/auth_bloc.dart';
-import 'settings_dialog.dart';
+import '../../../settings/presentation/bloc/settings_bloc.dart';
+import '../../../settings/presentation/widgets/settings_dialog.dart';
 
 class DashboardTopNavigation extends StatelessWidget {
   const DashboardTopNavigation({super.key});
@@ -264,10 +265,13 @@ class _ProfileMenuButton extends StatelessWidget {
                 const SnackBar(content: Text('Profile page - coming soon')),
               );
             } else if (value == 'settings') {
-              // Show settings dialog
+              // Show settings dialog with global SettingsBloc
               showDialog(
                 context: context,
-                builder: (context) => const SettingsDialog(),
+                builder: (_) => BlocProvider.value(
+                  value: context.read<SettingsBloc>(),
+                  child: const SettingsDialog(),
+                ),
               );
             } else if (value == 'signout') {
               // Sign out action

@@ -47,8 +47,7 @@ class ReportsPage extends StatelessWidget {
                 ),
               );
             } else if (state is ReportsLoaded) {
-              final sortedDates = state.dailyRevenue.keys.toList()
-                ..sort((a, b) => b.compareTo(a));
+              final sortedDates = state.dailyRevenue.keys.toList()..sort((a, b) => b.compareTo(a));
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(32.0),
@@ -72,8 +71,7 @@ class ReportsPage extends StatelessWidget {
                         _buildSummaryCard(
                           'Total Pendapatan',
                           CurrencyFormatter.format(
-                            state.dailyRevenue.values
-                                .fold(0, (sum, amount) => sum + amount),
+                            state.dailyRevenue.values.fold(0, (sum, amount) => sum + amount),
                           ),
                           Icons.attach_money,
                           AppColors.dashboardGreen,
@@ -102,8 +100,7 @@ class ReportsPage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              _ServiceRevenueTable(
-                                  serviceRevenue: state.serviceRevenue),
+                              _ServiceRevenueTable(serviceRevenue: state.serviceRevenue),
                             ],
                           ),
                         ),
@@ -210,10 +207,10 @@ class _HeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Laporan Penjualan',
           style: TextStyle(
             fontSize: 24,
@@ -221,19 +218,19 @@ class _HeaderSection extends StatelessWidget {
             color: Color(0xFF1E293B), // Slate-900
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Row(
           children: [
-            const Text(
+            Text(
               'Dashboard',
               style: TextStyle(
                 fontSize: 14,
                 color: Color(0xFF64748B), // Slate-500
               ),
             ),
-            const SizedBox(width: 8),
-            const Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
+            Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
+            SizedBox(width: 8),
             Text(
               'Laporan',
               style: TextStyle(
