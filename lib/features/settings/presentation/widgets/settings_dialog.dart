@@ -1,11 +1,13 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/printer_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/settings_ui_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/store_info_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/printer_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/receipt_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/store_info_section.dart';
 import 'package:flashlight_pos/injection_container.dart';
+import 'package:flashlight_pos/shared/models/ui_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -271,7 +273,10 @@ class SettingsDialog extends StatelessWidget {
                     );
 
                   case 'printer_settings':
-                    return const PrinterSettingsSection();
+                    return BlocProvider(
+                      create: (_) => sl<PrinterSettingsCubit>(),
+                      child: const PrinterSettingsSection(),
+                    );
 
                   case 'receipt_settings':
                     return const ReceiptSettingsSection();

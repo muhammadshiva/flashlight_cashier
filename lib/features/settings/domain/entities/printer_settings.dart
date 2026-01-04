@@ -5,7 +5,6 @@ class PrinterSettings {
   final String? connectedPrinterMac;
   final String paperSize; // '58mm' or '80mm'
   final bool autoPrintReceipt;
-  final bool printLogo;
 
   const PrinterSettings({
     required this.bluetoothEnabled,
@@ -13,7 +12,6 @@ class PrinterSettings {
     this.connectedPrinterMac,
     required this.paperSize,
     required this.autoPrintReceipt,
-    required this.printLogo,
   });
 
   factory PrinterSettings.initial() {
@@ -23,7 +21,6 @@ class PrinterSettings {
       connectedPrinterMac: null,
       paperSize: '58mm',
       autoPrintReceipt: true,
-      printLogo: true,
     );
   }
 
@@ -35,7 +32,6 @@ class PrinterSettings {
     String? connectedPrinterMac,
     String? paperSize,
     bool? autoPrintReceipt,
-    bool? printLogo,
   }) {
     return PrinterSettings(
       bluetoothEnabled: bluetoothEnabled ?? this.bluetoothEnabled,
@@ -43,7 +39,6 @@ class PrinterSettings {
       connectedPrinterMac: connectedPrinterMac ?? this.connectedPrinterMac,
       paperSize: paperSize ?? this.paperSize,
       autoPrintReceipt: autoPrintReceipt ?? this.autoPrintReceipt,
-      printLogo: printLogo ?? this.printLogo,
     );
   }
 
@@ -55,7 +50,6 @@ class PrinterSettings {
       connectedPrinterMac: null,
       paperSize: paperSize,
       autoPrintReceipt: autoPrintReceipt,
-      printLogo: printLogo,
     );
   }
 
@@ -68,8 +62,7 @@ class PrinterSettings {
         other.connectedPrinterName == connectedPrinterName &&
         other.connectedPrinterMac == connectedPrinterMac &&
         other.paperSize == paperSize &&
-        other.autoPrintReceipt == autoPrintReceipt &&
-        other.printLogo == printLogo;
+        other.autoPrintReceipt == autoPrintReceipt;
   }
 
   @override
@@ -80,7 +73,6 @@ class PrinterSettings {
       connectedPrinterMac,
       paperSize,
       autoPrintReceipt,
-      printLogo,
     );
   }
 }

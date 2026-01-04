@@ -1,27 +1,49 @@
-// ignore_for_file: invalid_annotation_target
-
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/security_settings.dart';
 
-part 'security_settings_model.freezed.dart';
-part 'security_settings_model.g.dart';
+/// Security Settings Model
+///
+/// Data layer model for security settings with JSON serialization
+/// Uses manual implementation without Freezed code generation
+class SecuritySettingsModel extends Equatable {
+  final bool requirePinForRefund;
+  final bool requirePinForDiscount;
+  final bool requirePinForVoid;
+  final bool autoLockAfterInactivity;
+  final int autoLockDurationMinutes;
 
-@freezed
-class SecuritySettingsModel with _$SecuritySettingsModel {
-  const SecuritySettingsModel._();
+  const SecuritySettingsModel({
+    required this.requirePinForRefund,
+    required this.requirePinForDiscount,
+    required this.requirePinForVoid,
+    required this.autoLockAfterInactivity,
+    required this.autoLockDurationMinutes,
+  });
 
-  const factory SecuritySettingsModel({
-    @JsonKey(name: "requirePinForRefund") required bool requirePinForRefund,
-    @JsonKey(name: "requirePinForDiscount") required bool requirePinForDiscount,
-    @JsonKey(name: "requirePinForVoid") required bool requirePinForVoid,
-    @JsonKey(name: "autoLockAfterInactivity") required bool autoLockAfterInactivity,
-    @JsonKey(name: "autoLockDurationMinutes") required int autoLockDurationMinutes,
-  }) = _SecuritySettingsModel;
+  /// Create model from JSON
+  factory SecuritySettingsModel.fromJson(Map<String, dynamic> json) {
+    return SecuritySettingsModel(
+      requirePinForRefund: json['requirePinForRefund'] as bool,
+      requirePinForDiscount: json['requirePinForDiscount'] as bool,
+      requirePinForVoid: json['requirePinForVoid'] as bool,
+      autoLockAfterInactivity: json['autoLockAfterInactivity'] as bool,
+      autoLockDurationMinutes: json['autoLockDurationMinutes'] as int,
+    );
+  }
 
-  factory SecuritySettingsModel.fromJson(Map<String, dynamic> json) =>
-      _$SecuritySettingsModelFromJson(json);
+  /// Convert model to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'requirePinForRefund': requirePinForRefund,
+      'requirePinForDiscount': requirePinForDiscount,
+      'requirePinForVoid': requirePinForVoid,
+      'autoLockAfterInactivity': autoLockAfterInactivity,
+      'autoLockDurationMinutes': autoLockDurationMinutes,
+    };
+  }
 
+  /// Create model from domain entity
   factory SecuritySettingsModel.fromEntity(SecuritySettings entity) {
     return SecuritySettingsModel(
       requirePinForRefund: entity.requirePinForRefund,
@@ -32,37 +54,40 @@ class SecuritySettingsModel with _$SecuritySettingsModel {
     );
   }
 
-  SecuritySettings toEntity() => SecuritySettings(
-        requirePinForRefund: requirePinForRefund,
-        requirePinForDiscount: requirePinForDiscount,
-        requirePinForVoid: requirePinForVoid,
-        autoLockAfterInactivity: autoLockAfterInactivity,
-        autoLockDurationMinutes: autoLockDurationMinutes,
-      );
-
-  @override
-  // TODO: implement autoLockAfterInactivity
-  bool get autoLockAfterInactivity => throw UnimplementedError();
-
-  @override
-  // TODO: implement autoLockDurationMinutes
-  int get autoLockDurationMinutes => throw UnimplementedError();
-
-  @override
-  // TODO: implement requirePinForDiscount
-  bool get requirePinForDiscount => throw UnimplementedError();
-
-  @override
-  // TODO: implement requirePinForRefund
-  bool get requirePinForRefund => throw UnimplementedError();
-
-  @override
-  // TODO: implement requirePinForVoid
-  bool get requirePinForVoid => throw UnimplementedError();
-
-  @override
-  Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+  /// Convert model to domain entity
+  SecuritySettings toEntity() {
+    return SecuritySettings(
+      requirePinForRefund: requirePinForRefund,
+      requirePinForDiscount: requirePinForDiscount,
+      requirePinForVoid: requirePinForVoid,
+      autoLockAfterInactivity: autoLockAfterInactivity,
+      autoLockDurationMinutes: autoLockDurationMinutes,
+    );
   }
+
+  /// Create a copy with updated fields
+  SecuritySettingsModel copyWith({
+    bool? requirePinForRefund,
+    bool? requirePinForDiscount,
+    bool? requirePinForVoid,
+    bool? autoLockAfterInactivity,
+    int? autoLockDurationMinutes,
+  }) {
+    return SecuritySettingsModel(
+      requirePinForRefund: requirePinForRefund ?? this.requirePinForRefund,
+      requirePinForDiscount: requirePinForDiscount ?? this.requirePinForDiscount,
+      requirePinForVoid: requirePinForVoid ?? this.requirePinForVoid,
+      autoLockAfterInactivity: autoLockAfterInactivity ?? this.autoLockAfterInactivity,
+      autoLockDurationMinutes: autoLockDurationMinutes ?? this.autoLockDurationMinutes,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        requirePinForRefund,
+        requirePinForDiscount,
+        requirePinForVoid,
+        autoLockAfterInactivity,
+        autoLockDurationMinutes,
+      ];
 }

@@ -1,30 +1,73 @@
-// ignore_for_file: invalid_annotation_target
-
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/app_settings.dart';
 
-part 'app_settings_model.freezed.dart';
-part 'app_settings_model.g.dart';
+/// App Settings Model
+///
+/// Data layer model for app settings with JSON serialization
+/// Uses manual implementation without Freezed code generation
+class AppSettingsModel extends Equatable {
+  final String storeName;
+  final String storeAddress;
+  final String storePhone;
+  final String storeEmail;
+  final double taxRate;
+  final bool autoCalculateTax;
+  final String language;
+  final String region;
+  final String currencySymbol;
+  final String theme;
+  final double fontSize;
 
-@freezed
-class AppSettingsModel with _$AppSettingsModel {
-  const factory AppSettingsModel({
-    @JsonKey(name: "storeName") required String storeName,
-    @JsonKey(name: "storeAddress") required String storeAddress,
-    @JsonKey(name: "storePhone") required String storePhone,
-    @JsonKey(name: "storeEmail") required String storeEmail,
-    @JsonKey(name: "taxRate") required double taxRate,
-    @JsonKey(name: "autoCalculateTax") required bool autoCalculateTax,
-    @JsonKey(name: "language") required String language,
-    @JsonKey(name: "region") required String region,
-    @JsonKey(name: "currencySymbol") required String currencySymbol,
-    @JsonKey(name: "theme") required String theme,
-    @JsonKey(name: "fontSize") required double fontSize,
-  }) = _AppSettingsModel;
+  const AppSettingsModel({
+    required this.storeName,
+    required this.storeAddress,
+    required this.storePhone,
+    required this.storeEmail,
+    required this.taxRate,
+    required this.autoCalculateTax,
+    required this.language,
+    required this.region,
+    required this.currencySymbol,
+    required this.theme,
+    required this.fontSize,
+  });
 
-  factory AppSettingsModel.fromJson(Map<String, dynamic> json) => _$AppSettingsModelFromJson(json);
+  /// Create model from JSON
+  factory AppSettingsModel.fromJson(Map<String, dynamic> json) {
+    return AppSettingsModel(
+      storeName: json['storeName'] as String,
+      storeAddress: json['storeAddress'] as String,
+      storePhone: json['storePhone'] as String,
+      storeEmail: json['storeEmail'] as String,
+      taxRate: (json['taxRate'] as num).toDouble(),
+      autoCalculateTax: json['autoCalculateTax'] as bool,
+      language: json['language'] as String,
+      region: json['region'] as String,
+      currencySymbol: json['currencySymbol'] as String,
+      theme: json['theme'] as String,
+      fontSize: (json['fontSize'] as num).toDouble(),
+    );
+  }
 
+  /// Convert model to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'storeName': storeName,
+      'storeAddress': storeAddress,
+      'storePhone': storePhone,
+      'storeEmail': storeEmail,
+      'taxRate': taxRate,
+      'autoCalculateTax': autoCalculateTax,
+      'language': language,
+      'region': region,
+      'currencySymbol': currencySymbol,
+      'theme': theme,
+      'fontSize': fontSize,
+    };
+  }
+
+  /// Create model from domain entity
   factory AppSettingsModel.fromEntity(AppSettings entity) {
     return AppSettingsModel(
       storeName: entity.storeName,
@@ -41,67 +84,64 @@ class AppSettingsModel with _$AppSettingsModel {
     );
   }
 
-  AppSettings toEntity() => AppSettings(
-        storeName: storeName,
-        storeAddress: storeAddress,
-        storePhone: storePhone,
-        storeEmail: storeEmail,
-        taxRate: taxRate,
-        autoCalculateTax: autoCalculateTax,
-        language: language,
-        region: region,
-        currencySymbol: currencySymbol,
-        theme: theme,
-        fontSize: fontSize,
-      );
-
-  @override
-  // TODO: implement autoCalculateTax
-  bool get autoCalculateTax => throw UnimplementedError();
-
-  @override
-  // TODO: implement currencySymbol
-  String get currencySymbol => throw UnimplementedError();
-
-  @override
-  // TODO: implement fontSize
-  double get fontSize => throw UnimplementedError();
-
-  @override
-  // TODO: implement language
-  String get language => throw UnimplementedError();
-
-  @override
-  // TODO: implement region
-  String get region => throw UnimplementedError();
-
-  @override
-  // TODO: implement storeAddress
-  String get storeAddress => throw UnimplementedError();
-
-  @override
-  // TODO: implement storeEmail
-  String get storeEmail => throw UnimplementedError();
-
-  @override
-  // TODO: implement storeName
-  String get storeName => throw UnimplementedError();
-
-  @override
-  // TODO: implement storePhone
-  String get storePhone => throw UnimplementedError();
-
-  @override
-  // TODO: implement taxRate
-  double get taxRate => throw UnimplementedError();
-
-  @override
-  // TODO: implement theme
-  String get theme => throw UnimplementedError();
-
-  @override
-  Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+  /// Convert model to domain entity
+  AppSettings toEntity() {
+    return AppSettings(
+      storeName: storeName,
+      storeAddress: storeAddress,
+      storePhone: storePhone,
+      storeEmail: storeEmail,
+      taxRate: taxRate,
+      autoCalculateTax: autoCalculateTax,
+      language: language,
+      region: region,
+      currencySymbol: currencySymbol,
+      theme: theme,
+      fontSize: fontSize,
+    );
   }
+
+  /// Create a copy with updated fields
+  AppSettingsModel copyWith({
+    String? storeName,
+    String? storeAddress,
+    String? storePhone,
+    String? storeEmail,
+    double? taxRate,
+    bool? autoCalculateTax,
+    String? language,
+    String? region,
+    String? currencySymbol,
+    String? theme,
+    double? fontSize,
+  }) {
+    return AppSettingsModel(
+      storeName: storeName ?? this.storeName,
+      storeAddress: storeAddress ?? this.storeAddress,
+      storePhone: storePhone ?? this.storePhone,
+      storeEmail: storeEmail ?? this.storeEmail,
+      taxRate: taxRate ?? this.taxRate,
+      autoCalculateTax: autoCalculateTax ?? this.autoCalculateTax,
+      language: language ?? this.language,
+      region: region ?? this.region,
+      currencySymbol: currencySymbol ?? this.currencySymbol,
+      theme: theme ?? this.theme,
+      fontSize: fontSize ?? this.fontSize,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        storeName,
+        storeAddress,
+        storePhone,
+        storeEmail,
+        taxRate,
+        autoCalculateTax,
+        language,
+        region,
+        currencySymbol,
+        theme,
+        fontSize,
+      ];
 }

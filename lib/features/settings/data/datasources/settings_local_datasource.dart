@@ -103,7 +103,6 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
           connectedPrinterMac: null,
           paperSize: '58mm',
           autoPrintReceipt: true,
-          printLogo: true,
         ).toEntity(),
       );
     }

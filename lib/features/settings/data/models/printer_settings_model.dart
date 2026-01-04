@@ -1,28 +1,49 @@
-// ignore_for_file: invalid_annotation_target
-
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/printer_settings.dart';
 
-part 'printer_settings_model.freezed.dart';
-part 'printer_settings_model.g.dart';
+/// Printer Settings Model
+///
+/// Data layer model for printer settings with JSON serialization
+/// Uses manual implementation without Freezed code generation
+class PrinterSettingsModel extends Equatable {
+  final bool bluetoothEnabled;
+  final String? connectedPrinterName;
+  final String? connectedPrinterMac;
+  final String paperSize;
+  final bool autoPrintReceipt;
 
-@freezed
-class PrinterSettingsModel with _$PrinterSettingsModel {
-  const PrinterSettingsModel._();
+  const PrinterSettingsModel({
+    required this.bluetoothEnabled,
+    this.connectedPrinterName,
+    this.connectedPrinterMac,
+    required this.paperSize,
+    required this.autoPrintReceipt,
+  });
 
-  const factory PrinterSettingsModel({
-    @JsonKey(name: "bluetoothEnabled") required bool bluetoothEnabled,
-    @JsonKey(name: "connectedPrinterName") String? connectedPrinterName,
-    @JsonKey(name: "connectedPrinterMac") String? connectedPrinterMac,
-    @JsonKey(name: "paperSize") required String paperSize,
-    @JsonKey(name: "autoPrintReceipt") required bool autoPrintReceipt,
-    @JsonKey(name: "printLogo") required bool printLogo,
-  }) = _PrinterSettingsModel;
+  /// Create model from JSON
+  factory PrinterSettingsModel.fromJson(Map<String, dynamic> json) {
+    return PrinterSettingsModel(
+      bluetoothEnabled: json['bluetoothEnabled'] as bool,
+      connectedPrinterName: json['connectedPrinterName'] as String?,
+      connectedPrinterMac: json['connectedPrinterMac'] as String?,
+      paperSize: json['paperSize'] as String,
+      autoPrintReceipt: json['autoPrintReceipt'] as bool,
+    );
+  }
 
-  factory PrinterSettingsModel.fromJson(Map<String, dynamic> json) =>
-      _$PrinterSettingsModelFromJson(json);
+  /// Convert model to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'bluetoothEnabled': bluetoothEnabled,
+      'connectedPrinterName': connectedPrinterName,
+      'connectedPrinterMac': connectedPrinterMac,
+      'paperSize': paperSize,
+      'autoPrintReceipt': autoPrintReceipt,
+    };
+  }
 
+  /// Create model from domain entity
   factory PrinterSettingsModel.fromEntity(PrinterSettings entity) {
     return PrinterSettingsModel(
       bluetoothEnabled: entity.bluetoothEnabled,
@@ -30,46 +51,43 @@ class PrinterSettingsModel with _$PrinterSettingsModel {
       connectedPrinterMac: entity.connectedPrinterMac,
       paperSize: entity.paperSize,
       autoPrintReceipt: entity.autoPrintReceipt,
-      printLogo: entity.printLogo,
     );
   }
 
-  PrinterSettings toEntity() => PrinterSettings(
-        bluetoothEnabled: bluetoothEnabled,
-        connectedPrinterName: connectedPrinterName,
-        connectedPrinterMac: connectedPrinterMac,
-        paperSize: paperSize,
-        autoPrintReceipt: autoPrintReceipt,
-        printLogo: printLogo,
-      );
-
-  @override
-  // TODO: implement autoPrintReceipt
-  bool get autoPrintReceipt => throw UnimplementedError();
-
-  @override
-  // TODO: implement bluetoothEnabled
-  bool get bluetoothEnabled => throw UnimplementedError();
-
-  @override
-  // TODO: implement connectedPrinterMac
-  String? get connectedPrinterMac => throw UnimplementedError();
-
-  @override
-  // TODO: implement connectedPrinterName
-  String? get connectedPrinterName => throw UnimplementedError();
-
-  @override
-  // TODO: implement paperSize
-  String get paperSize => throw UnimplementedError();
-
-  @override
-  // TODO: implement printLogo
-  bool get printLogo => throw UnimplementedError();
-
-  @override
-  Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+  /// Convert model to domain entity
+  PrinterSettings toEntity() {
+    return PrinterSettings(
+      bluetoothEnabled: bluetoothEnabled,
+      connectedPrinterName: connectedPrinterName,
+      connectedPrinterMac: connectedPrinterMac,
+      paperSize: paperSize,
+      autoPrintReceipt: autoPrintReceipt,
+    );
   }
+
+  /// Create a copy with updated fields
+  PrinterSettingsModel copyWith({
+    bool? bluetoothEnabled,
+    String? connectedPrinterName,
+    String? connectedPrinterMac,
+    String? paperSize,
+    bool? autoPrintReceipt,
+  }) {
+    return PrinterSettingsModel(
+      bluetoothEnabled: bluetoothEnabled ?? this.bluetoothEnabled,
+      connectedPrinterName: connectedPrinterName ?? this.connectedPrinterName,
+      connectedPrinterMac: connectedPrinterMac ?? this.connectedPrinterMac,
+      paperSize: paperSize ?? this.paperSize,
+      autoPrintReceipt: autoPrintReceipt ?? this.autoPrintReceipt,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        bluetoothEnabled,
+        connectedPrinterName,
+        connectedPrinterMac,
+        paperSize,
+        autoPrintReceipt,
+      ];
 }

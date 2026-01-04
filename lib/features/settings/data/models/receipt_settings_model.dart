@@ -1,27 +1,57 @@
-// ignore_for_file: invalid_annotation_target
-
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/receipt_settings.dart';
 
-part 'receipt_settings_model.freezed.dart';
-part 'receipt_settings_model.g.dart';
+/// Receipt Settings Model
+///
+/// Data layer model for receipt settings with JSON serialization
+/// Uses manual implementation without Freezed code generation
+class ReceiptSettingsModel extends Equatable {
+  final bool showLogo;
+  final bool showTaxDetails;
+  final bool showDiscount;
+  final bool showPaymentMethod;
+  final bool showFooterMessage;
+  final String footerMessage;
+  final String receiptHeader;
 
-@freezed
-class ReceiptSettingsModel with _$ReceiptSettingsModel {
-  const factory ReceiptSettingsModel({
-    @JsonKey(name: "showLogo") required bool showLogo,
-    @JsonKey(name: "showTaxDetails") required bool showTaxDetails,
-    @JsonKey(name: "showDiscount") required bool showDiscount,
-    @JsonKey(name: "showPaymentMethod") required bool showPaymentMethod,
-    @JsonKey(name: "showFooterMessage") required bool showFooterMessage,
-    @JsonKey(name: "footerMessage") required String footerMessage,
-    @JsonKey(name: "receiptHeader") required String receiptHeader,
-  }) = _ReceiptSettingsModel;
+  const ReceiptSettingsModel({
+    required this.showLogo,
+    required this.showTaxDetails,
+    required this.showDiscount,
+    required this.showPaymentMethod,
+    required this.showFooterMessage,
+    required this.footerMessage,
+    required this.receiptHeader,
+  });
 
-  factory ReceiptSettingsModel.fromJson(Map<String, dynamic> json) =>
-      _$ReceiptSettingsModelFromJson(json);
+  /// Create model from JSON
+  factory ReceiptSettingsModel.fromJson(Map<String, dynamic> json) {
+    return ReceiptSettingsModel(
+      showLogo: json['showLogo'] as bool,
+      showTaxDetails: json['showTaxDetails'] as bool,
+      showDiscount: json['showDiscount'] as bool,
+      showPaymentMethod: json['showPaymentMethod'] as bool,
+      showFooterMessage: json['showFooterMessage'] as bool,
+      footerMessage: json['footerMessage'] as String,
+      receiptHeader: json['receiptHeader'] as String,
+    );
+  }
 
+  /// Convert model to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'showLogo': showLogo,
+      'showTaxDetails': showTaxDetails,
+      'showDiscount': showDiscount,
+      'showPaymentMethod': showPaymentMethod,
+      'showFooterMessage': showFooterMessage,
+      'footerMessage': footerMessage,
+      'receiptHeader': receiptHeader,
+    };
+  }
+
+  /// Create model from domain entity
   factory ReceiptSettingsModel.fromEntity(ReceiptSettings entity) {
     return ReceiptSettingsModel(
       showLogo: entity.showLogo,
@@ -34,47 +64,48 @@ class ReceiptSettingsModel with _$ReceiptSettingsModel {
     );
   }
 
-  ReceiptSettings toEntity() => ReceiptSettings(
-        showLogo: showLogo,
-        showTaxDetails: showTaxDetails,
-        showDiscount: showDiscount,
-        showPaymentMethod: showPaymentMethod,
-        showFooterMessage: showFooterMessage,
-        footerMessage: footerMessage,
-        receiptHeader: receiptHeader,
-      );
-
-  @override
-  // TODO: implement footerMessage
-  String get footerMessage => throw UnimplementedError();
-
-  @override
-  // TODO: implement receiptHeader
-  String get receiptHeader => throw UnimplementedError();
-
-  @override
-  // TODO: implement showDiscount
-  bool get showDiscount => throw UnimplementedError();
-
-  @override
-  // TODO: implement showFooterMessage
-  bool get showFooterMessage => throw UnimplementedError();
-
-  @override
-  // TODO: implement showLogo
-  bool get showLogo => throw UnimplementedError();
-
-  @override
-  // TODO: implement showPaymentMethod
-  bool get showPaymentMethod => throw UnimplementedError();
-
-  @override
-  // TODO: implement showTaxDetails
-  bool get showTaxDetails => throw UnimplementedError();
-
-  @override
-  Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+  /// Convert model to domain entity
+  ReceiptSettings toEntity() {
+    return ReceiptSettings(
+      showLogo: showLogo,
+      showTaxDetails: showTaxDetails,
+      showDiscount: showDiscount,
+      showPaymentMethod: showPaymentMethod,
+      showFooterMessage: showFooterMessage,
+      footerMessage: footerMessage,
+      receiptHeader: receiptHeader,
+    );
   }
+
+  /// Create a copy with updated fields
+  ReceiptSettingsModel copyWith({
+    bool? showLogo,
+    bool? showTaxDetails,
+    bool? showDiscount,
+    bool? showPaymentMethod,
+    bool? showFooterMessage,
+    String? footerMessage,
+    String? receiptHeader,
+  }) {
+    return ReceiptSettingsModel(
+      showLogo: showLogo ?? this.showLogo,
+      showTaxDetails: showTaxDetails ?? this.showTaxDetails,
+      showDiscount: showDiscount ?? this.showDiscount,
+      showPaymentMethod: showPaymentMethod ?? this.showPaymentMethod,
+      showFooterMessage: showFooterMessage ?? this.showFooterMessage,
+      footerMessage: footerMessage ?? this.footerMessage,
+      receiptHeader: receiptHeader ?? this.receiptHeader,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        showLogo,
+        showTaxDetails,
+        showDiscount,
+        showPaymentMethod,
+        showFooterMessage,
+        footerMessage,
+        receiptHeader,
+      ];
 }

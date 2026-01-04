@@ -12,11 +12,13 @@ import '../../../features/settings/domain/repositories/store_info_repository.dar
 import '../../../features/settings/domain/usecases/connect_printer.dart';
 import '../../../features/settings/domain/usecases/disconnect_printer.dart';
 import '../../../features/settings/domain/usecases/get_app_settings.dart';
+import '../../../features/settings/domain/usecases/get_printer_settings.dart';
 import '../../../features/settings/domain/usecases/get_store_info.dart';
 import '../../../features/settings/domain/usecases/scan_printers.dart';
 import '../../../features/settings/domain/usecases/update_app_settings.dart';
 import '../../../features/settings/domain/usecases/update_printer_settings.dart';
 import '../../../features/settings/presentation/bloc/settings_bloc.dart';
+import '../../../features/settings/presentation/cubit/printer_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/store_info_cubit.dart';
 
 final _sl = GetIt.instance;
@@ -43,6 +45,19 @@ class SettingsInjector {
     );
 
     // ============================================
+    // Cubits - Register as Factory
+    // ============================================
+    _sl.registerFactory<PrinterSettingsCubit>(
+      () => PrinterSettingsCubit(
+        getPrinterSettings: _sl(),
+        updatePrinterSettings: _sl(),
+        scanPrinters: _sl(),
+        connectPrinter: _sl(),
+        disconnectPrinter: _sl(),
+      ),
+    );
+
+    // ============================================
     // Use Cases - Register as Lazy Singleton
     // ============================================
     _sl.registerLazySingleton<GetAppSettings>(
@@ -51,6 +66,10 @@ class SettingsInjector {
 
     _sl.registerLazySingleton<UpdateAppSettings>(
       () => UpdateAppSettings(_sl()),
+    );
+
+    _sl.registerLazySingleton<GetPrinterSettings>(
+      () => GetPrinterSettings(_sl()),
     );
 
     _sl.registerLazySingleton<ScanPrinters>(
