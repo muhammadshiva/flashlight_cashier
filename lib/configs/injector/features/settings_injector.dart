@@ -1,17 +1,23 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/network/dio_client.dart';
 import '../../../features/settings/data/datasources/printer_datasource.dart';
 import '../../../features/settings/data/datasources/settings_local_datasource.dart';
+import '../../../features/settings/data/datasources/store_info_remote_datasource.dart';
 import '../../../features/settings/data/repositories/settings_repository_impl.dart';
+import '../../../features/settings/data/repositories/store_info_repository_impl.dart';
 import '../../../features/settings/domain/repositories/settings_repository.dart';
+import '../../../features/settings/domain/repositories/store_info_repository.dart';
 import '../../../features/settings/domain/usecases/connect_printer.dart';
 import '../../../features/settings/domain/usecases/disconnect_printer.dart';
 import '../../../features/settings/domain/usecases/get_app_settings.dart';
+import '../../../features/settings/domain/usecases/get_store_info.dart';
 import '../../../features/settings/domain/usecases/scan_printers.dart';
 import '../../../features/settings/domain/usecases/update_app_settings.dart';
 import '../../../features/settings/domain/usecases/update_printer_settings.dart';
 import '../../../features/settings/presentation/bloc/settings_bloc.dart';
+import '../../../features/settings/presentation/cubit/store_info_cubit.dart';
 
 final _sl = GetIt.instance;
 
@@ -84,6 +90,30 @@ class SettingsInjector {
 
     _sl.registerLazySingleton<PrinterDataSource>(
       () => PrinterDataSourceImpl(),
+    );
+
+    // ============================================
+    // Store Info - Cubit, Use Case, Repository, Data Source
+    // ============================================
+
+    // Cubit
+    _sl.registerFactory<StoreInfoCubit>(
+      () => StoreInfoCubit(getStoreInfo: _sl()),
+    );
+
+    // Use Case
+    _sl.registerLazySingleton<GetStoreInfo>(
+      () => GetStoreInfo(_sl()),
+    );
+
+    // Repository
+    _sl.registerLazySingleton<StoreInfoRepository>(
+      () => StoreInfoRepositoryImpl(remoteDataSource: _sl()),
+    );
+
+    // Data Source
+    _sl.registerLazySingleton<StoreInfoRemoteDataSource>(
+      () => StoreInfoRemoteDataSourceImpl(dio: _sl<DioClient>().dio),
     );
   }
 }

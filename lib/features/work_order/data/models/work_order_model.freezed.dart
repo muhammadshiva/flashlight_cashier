@@ -1219,7 +1219,7 @@ class __$WorkOrderResponseModelCopyWithImpl<$Res>
 
 /// @nodoc
 mixin _$WorkOrderDataModel {
-  @JsonKey(name: "workOrders")
+  @JsonKey(name: "data")
   List<WorkOrderModel> get workOrders;
   @JsonKey(name: "total")
   int get total;
@@ -1263,7 +1263,7 @@ abstract mixin class $WorkOrderDataModelCopyWith<$Res> {
       _$WorkOrderDataModelCopyWithImpl;
   @useResult
   $Res call(
-      {@JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+      {@JsonKey(name: "data") List<WorkOrderModel> workOrders,
       @JsonKey(name: "total") int total});
 }
 
@@ -1389,8 +1389,7 @@ extension WorkOrderDataModelPatterns on WorkOrderDataModel {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+    TResult Function(@JsonKey(name: "data") List<WorkOrderModel> workOrders,
             @JsonKey(name: "total") int total)?
         $default, {
     required TResult orElse(),
@@ -1419,8 +1418,7 @@ extension WorkOrderDataModelPatterns on WorkOrderDataModel {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+    TResult Function(@JsonKey(name: "data") List<WorkOrderModel> workOrders,
             @JsonKey(name: "total") int total)
         $default,
   ) {
@@ -1447,8 +1445,7 @@ extension WorkOrderDataModelPatterns on WorkOrderDataModel {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+    TResult? Function(@JsonKey(name: "data") List<WorkOrderModel> workOrders,
             @JsonKey(name: "total") int total)?
         $default,
   ) {
@@ -1466,8 +1463,7 @@ extension WorkOrderDataModelPatterns on WorkOrderDataModel {
 @JsonSerializable()
 class _WorkOrderDataModel implements WorkOrderDataModel {
   const _WorkOrderDataModel(
-      {@JsonKey(name: "workOrders")
-      required final List<WorkOrderModel> workOrders,
+      {@JsonKey(name: "data") required final List<WorkOrderModel> workOrders,
       @JsonKey(name: "total") required this.total})
       : _workOrders = workOrders;
   factory _WorkOrderDataModel.fromJson(Map<String, dynamic> json) =>
@@ -1475,7 +1471,7 @@ class _WorkOrderDataModel implements WorkOrderDataModel {
 
   final List<WorkOrderModel> _workOrders;
   @override
-  @JsonKey(name: "workOrders")
+  @JsonKey(name: "data")
   List<WorkOrderModel> get workOrders {
     if (_workOrders is EqualUnmodifiableListView) return _workOrders;
     // ignore: implicit_dynamic_type
@@ -1531,7 +1527,7 @@ abstract mixin class _$WorkOrderDataModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+      {@JsonKey(name: "data") List<WorkOrderModel> workOrders,
       @JsonKey(name: "total") int total});
 }
 

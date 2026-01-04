@@ -494,6 +494,7 @@ class _AppSettingsModel implements AppSettingsModel {
 
   @override
   AppSettings toEntity() {
+    // TODO: implement toEntity
     throw UnimplementedError();
   }
 }

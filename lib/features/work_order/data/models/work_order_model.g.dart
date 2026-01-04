@@ -80,7 +80,7 @@ Map<String, dynamic> _$WorkOrderResponseModelToJson(
 
 _WorkOrderDataModel _$WorkOrderDataModelFromJson(Map<String, dynamic> json) =>
     _WorkOrderDataModel(
-      workOrders: (json['workOrders'] as List<dynamic>)
+      workOrders: (json['data'] as List<dynamic>)
           .map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       total: (json['total'] as num).toInt(),
@@ -88,6 +88,6 @@ _WorkOrderDataModel _$WorkOrderDataModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$WorkOrderDataModelToJson(_WorkOrderDataModel instance) =>
     <String, dynamic>{
-      'workOrders': instance.workOrders,
+      'data': instance.workOrders,
       'total': instance.total,
     };
