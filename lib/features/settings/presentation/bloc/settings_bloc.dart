@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:flashlight_pos/core/usecase/usecase.dart';
+import 'package:flashlight_pos/features/settings/data/models/settings_data.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/app_settings.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/notification_settings.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/printer_device.dart';
@@ -17,12 +17,10 @@ import 'package:flashlight_pos/features/settings/domain/usecases/get_app_setting
 import 'package:flashlight_pos/features/settings/domain/usecases/scan_printers.dart';
 import 'package:flashlight_pos/features/settings/domain/usecases/update_app_settings.dart';
 import 'package:flashlight_pos/features/settings/domain/usecases/update_printer_settings.dart';
-import 'package:flashlight_pos/features/settings/presentation/bloc/settings_converters.dart';
+import 'package:flashlight_pos/shared/models/ui_state_model.dart';
 
 part 'settings_event.dart';
 part 'settings_state.dart';
-part 'settings_bloc.freezed.dart';
-part 'settings_bloc.g.dart';
 
 class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
   final GetAppSettings getAppSettings;
@@ -62,39 +60,67 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     _bluetoothStateSubscription = FlutterBluePlus.adapterState.listen(
       (BluetoothAdapterState adapterState) {
         final bluetoothEnabled = adapterState == BluetoothAdapterState.on;
+        final currentPrinterSettings = state.printerSettings;
 
-        // Update printer settings with current Bluetooth state
-        add(UpdatePrinterSettingsEvent(
-          settings: state.printerSettings.copyWith(
-            bluetoothEnabled: bluetoothEnabled,
-          ),
-        ));
+        if (currentPrinterSettings != null) {
+          // Update printer settings with current Bluetooth state
+          add(UpdatePrinterSettingsEvent(
+            settings: currentPrinterSettings.copyWith(
+              bluetoothEnabled: bluetoothEnabled,
+            ),
+          ));
 
-        // Clear printer connection if Bluetooth is turned off
-        if (!bluetoothEnabled && state.printerSettings.isConnected) {
-          add(const DisconnectPrinterEvent());
+          // Clear printer connection if Bluetooth is turned off
+          if (!bluetoothEnabled && currentPrinterSettings.isConnected) {
+            add(const DisconnectPrinterEvent());
+          }
         }
       },
     );
+  }
+
+  // Helper method to update SettingsData within UIStateModel
+  void _updateSettingsData(
+    Emitter<SettingsState> emit,
+    SettingsData Function(SettingsData) update,
+  ) {
+    final currentData = state.data.maybeWhen(
+      success: (data) => data,
+      orElse: () => SettingsData.initial(),
+    );
+
+    final updatedData = update(currentData);
+
+    emit(state.copyWith(
+      data: UIStateModel.success(data: updatedData),
+    ));
   }
 
   Future<void> _onLoadSettings(
     LoadSettings event,
     Emitter<SettingsState> emit,
   ) async {
-    emit(state.copyWith(status: SettingsStatus.loading));
+    emit(state.copyWith(data: const UIStateModel.loading()));
 
     final result = await getAppSettings(NoParams());
 
     result.fold(
       (failure) => emit(state.copyWith(
-        status: SettingsStatus.failure,
-        errorMessage: failure.message,
+        data: UIStateModel.error(message: failure.message),
       )),
-      (appSettings) => emit(state.copyWith(
-        appSettings: appSettings,
-        status: SettingsStatus.success,
-      )),
+      (appSettings) {
+        // Update only appSettings in SettingsData
+        final currentData = state.data.maybeWhen(
+          success: (data) => data,
+          orElse: () => SettingsData.initial(),
+        );
+
+        final updatedData = currentData.copyWith(appSettings: appSettings);
+
+        emit(state.copyWith(
+          data: UIStateModel.success(data: updatedData),
+        ));
+      },
     );
   }
 
@@ -102,11 +128,14 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     UpdateStoreInfo event,
     Emitter<SettingsState> emit,
   ) async {
-    final updatedAppSettings = state.appSettings.copyWith(
-      storeName: event.storeName ?? state.appSettings.storeName,
-      storeAddress: event.storeAddress ?? state.appSettings.storeAddress,
-      storePhone: event.storePhone ?? state.appSettings.storePhone,
-      storeEmail: event.storeEmail ?? state.appSettings.storeEmail,
+    final currentAppSettings = state.appSettings;
+    if (currentAppSettings == null) return;
+
+    final updatedAppSettings = currentAppSettings.copyWith(
+      storeName: event.storeName ?? currentAppSettings.storeName,
+      storeAddress: event.storeAddress ?? currentAppSettings.storeAddress,
+      storePhone: event.storePhone ?? currentAppSettings.storePhone,
+      storeEmail: event.storeEmail ?? currentAppSettings.storeEmail,
     );
 
     final result = await updateAppSettings(
@@ -115,13 +144,12 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
 
     result.fold(
       (failure) => emit(state.copyWith(
-        status: SettingsStatus.failure,
-        errorMessage: failure.message,
+        data: UIStateModel.error(message: failure.message),
       )),
-      (_) => emit(state.copyWith(
-        appSettings: updatedAppSettings,
-        status: SettingsStatus.success,
-      )),
+      (_) => _updateSettingsData(
+        emit,
+        (data) => data.copyWith(appSettings: updatedAppSettings),
+      ),
     );
   }
 
@@ -129,9 +157,12 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     UpdatePOSSettings event,
     Emitter<SettingsState> emit,
   ) async {
-    final updatedAppSettings = state.appSettings.copyWith(
-      taxRate: event.taxRate ?? state.appSettings.taxRate,
-      autoCalculateTax: event.autoCalculateTax ?? state.appSettings.autoCalculateTax,
+    final currentAppSettings = state.appSettings;
+    if (currentAppSettings == null) return;
+
+    final updatedAppSettings = currentAppSettings.copyWith(
+      taxRate: event.taxRate ?? currentAppSettings.taxRate,
+      autoCalculateTax: event.autoCalculateTax ?? currentAppSettings.autoCalculateTax,
     );
 
     final result = await updateAppSettings(
@@ -140,13 +171,12 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
 
     result.fold(
       (failure) => emit(state.copyWith(
-        status: SettingsStatus.failure,
-        errorMessage: failure.message,
+        data: UIStateModel.error(message: failure.message),
       )),
-      (_) => emit(state.copyWith(
-        appSettings: updatedAppSettings,
-        status: SettingsStatus.success,
-      )),
+      (_) => _updateSettingsData(
+        emit,
+        (data) => data.copyWith(appSettings: updatedAppSettings),
+      ),
     );
   }
 
@@ -166,8 +196,7 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
       log('Error toggling Bluetooth: $e', name: 'SettingsBloc');
       emit(state.copyWith(
         isTogglingBluetooth: false,
-        status: SettingsStatus.failure,
-        errorMessage: 'Failed to toggle Bluetooth: $e',
+        data: UIStateModel.error(message: 'Failed to toggle Bluetooth: $e'),
       ));
     }
   }
@@ -183,13 +212,11 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     result.fold(
       (failure) => emit(state.copyWith(
         isScanningPrinters: false,
-        status: SettingsStatus.failure,
-        errorMessage: failure.message,
+        data: UIStateModel.error(message: failure.message),
       )),
       (devices) => emit(state.copyWith(
         isScanningPrinters: false,
         availablePrinters: devices,
-        status: SettingsStatus.success,
       )),
     );
   }
@@ -207,26 +234,27 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     result.fold(
       (failure) => emit(state.copyWith(
         isConnectingPrinter: false,
-        status: SettingsStatus.failure,
-        errorMessage: failure.message,
+        data: UIStateModel.error(message: failure.message),
       )),
       (success) {
         if (success) {
-          final updatedSettings = state.printerSettings.copyWith(
-            connectedPrinterName: event.device.name,
-            connectedPrinterMac: event.device.macAddress,
-          );
+          final currentPrinterSettings = state.printerSettings;
+          if (currentPrinterSettings != null) {
+            final updatedSettings = currentPrinterSettings.copyWith(
+              connectedPrinterName: event.device.name,
+              connectedPrinterMac: event.device.macAddress,
+            );
 
-          emit(state.copyWith(
-            isConnectingPrinter: false,
-            printerSettings: updatedSettings,
-            status: SettingsStatus.success,
-          ));
+            emit(state.copyWith(isConnectingPrinter: false));
+            _updateSettingsData(
+              emit,
+              (data) => data.copyWith(printerSettings: updatedSettings),
+            );
+          }
         } else {
           emit(state.copyWith(
             isConnectingPrinter: false,
-            status: SettingsStatus.failure,
-            errorMessage: 'Failed to connect to printer',
+            data: const UIStateModel.error(message: 'Failed to connect to printer'),
           ));
         }
       },
@@ -241,15 +269,17 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
 
     result.fold(
       (failure) => emit(state.copyWith(
-        status: SettingsStatus.failure,
-        errorMessage: failure.message,
+        data: UIStateModel.error(message: failure.message),
       )),
       (_) {
-        final updatedSettings = state.printerSettings.clearConnection();
-        emit(state.copyWith(
-          printerSettings: updatedSettings,
-          status: SettingsStatus.success,
-        ));
+        final currentPrinterSettings = state.printerSettings;
+        if (currentPrinterSettings != null) {
+          final updatedSettings = currentPrinterSettings.clearConnection();
+          _updateSettingsData(
+            emit,
+            (data) => data.copyWith(printerSettings: updatedSettings),
+          );
+        }
       },
     );
   }
@@ -264,13 +294,12 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
 
     result.fold(
       (failure) => emit(state.copyWith(
-        status: SettingsStatus.failure,
-        errorMessage: failure.message,
+        data: UIStateModel.error(message: failure.message),
       )),
-      (_) => emit(state.copyWith(
-        printerSettings: event.settings,
-        status: SettingsStatus.success,
-      )),
+      (_) => _updateSettingsData(
+        emit,
+        (data) => data.copyWith(printerSettings: event.settings),
+      ),
     );
   }
 
@@ -278,30 +307,30 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     UpdateReceiptSettingsEvent event,
     Emitter<SettingsState> emit,
   ) async {
-    emit(state.copyWith(
-      receiptSettings: event.settings,
-      status: SettingsStatus.success,
-    ));
+    _updateSettingsData(
+      emit,
+      (data) => data.copyWith(receiptSettings: event.settings),
+    );
   }
 
   Future<void> _onUpdateNotificationSettings(
     UpdateNotificationSettingsEvent event,
     Emitter<SettingsState> emit,
   ) async {
-    emit(state.copyWith(
-      notificationSettings: event.settings,
-      status: SettingsStatus.success,
-    ));
+    _updateSettingsData(
+      emit,
+      (data) => data.copyWith(notificationSettings: event.settings),
+    );
   }
 
   Future<void> _onUpdateSecuritySettings(
     UpdateSecuritySettingsEvent event,
     Emitter<SettingsState> emit,
   ) async {
-    emit(state.copyWith(
-      securitySettings: event.settings,
-      status: SettingsStatus.success,
-    ));
+    _updateSettingsData(
+      emit,
+      (data) => data.copyWith(securitySettings: event.settings),
+    );
   }
 
   @override

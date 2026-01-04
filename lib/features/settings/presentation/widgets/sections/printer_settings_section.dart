@@ -30,6 +30,11 @@ class PrinterSettingsSection extends StatelessWidget {
         final printerSettings = state.printerSettings;
         final isMobilePlatform = Platform.isAndroid || Platform.isIOS;
 
+        // Return loading state if printer settings not available
+        if (printerSettings == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -147,7 +152,7 @@ class PrinterSettingsSection extends StatelessWidget {
                     IconButton(
                       onPressed: () {
                         context.read<SettingsBloc>().add(
-                              const SettingsEvent.disconnectPrinter(),
+                              const DisconnectPrinterEvent(),
                             );
                       },
                       icon: const Icon(Icons.close, color: AppColors.error600, size: 20),
@@ -168,7 +173,7 @@ class PrinterSettingsSection extends StatelessWidget {
                     ? null
                     : () {
                         context.read<SettingsBloc>().add(
-                              const SettingsEvent.scanPrinters(),
+                              const ScanPrintersEvent(),
                             );
                       },
                 icon: state.isScanningPrinters
@@ -237,7 +242,7 @@ class PrinterSettingsSection extends StatelessWidget {
                           ? null
                           : () {
                               context.read<SettingsBloc>().add(
-                                    SettingsEvent.connectPrinter(device: printer),
+                                    ConnectPrinterEvent(device: printer),
                                   );
                             },
                       child: Container(
@@ -321,7 +326,7 @@ class PrinterSettingsSection extends StatelessWidget {
               onChanged: (value) {
                 if (value != null) {
                   context.read<SettingsBloc>().add(
-                        SettingsEvent.updatePrinterSettings(
+                        UpdatePrinterSettingsEvent(
                           settings: printerSettings.copyWith(paperSize: value),
                         ),
                       );
@@ -348,7 +353,7 @@ class PrinterSettingsSection extends StatelessWidget {
               value: printerSettings.autoPrintReceipt,
               onChanged: (value) {
                 context.read<SettingsBloc>().add(
-                      SettingsEvent.updatePrinterSettings(
+                      UpdatePrinterSettingsEvent(
                         settings: printerSettings.copyWith(autoPrintReceipt: value),
                       ),
                     );
@@ -363,7 +368,7 @@ class PrinterSettingsSection extends StatelessWidget {
               value: printerSettings.printLogo,
               onChanged: (value) {
                 context.read<SettingsBloc>().add(
-                      SettingsEvent.updatePrinterSettings(
+                      UpdatePrinterSettingsEvent(
                         settings: printerSettings.copyWith(printLogo: value),
                       ),
                     );
@@ -411,7 +416,7 @@ class PrinterSettingsSection extends StatelessWidget {
     // Permissions granted, toggle Bluetooth
     if (context.mounted) {
       context.read<SettingsBloc>().add(
-            SettingsEvent.toggleBluetooth(enable: enable),
+            ToggleBluetooth(enable: enable),
           );
     }
   }

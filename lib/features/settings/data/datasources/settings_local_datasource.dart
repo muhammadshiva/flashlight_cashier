@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../domain/entities/receipt_settings.dart';
 import '../models/app_settings_model.dart';
 import '../models/notification_settings_model.dart';
@@ -37,11 +40,30 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
 
   @override
   Future<AppSettingsModel> getAppSettings() async {
-    final jsonString = sharedPreferences.getString(_keyAppSettings);
-    if (jsonString != null) {
-      return AppSettingsModel.fromJson(json.decode(jsonString));
-    } else {
-      // Return default settings if not found
+    try {
+      final jsonString = sharedPreferences.getString(_keyAppSettings);
+      if (jsonString != null) {
+        return AppSettingsModel.fromJson(json.decode(jsonString));
+      } else {
+        // Return default settings if not found
+        return AppSettingsModel.fromEntity(
+          const AppSettingsModel(
+            storeName: 'Mocca POS',
+            storeAddress: 'Jl. Merdeka No. 123, Jakarta',
+            storePhone: '+62 21 1234 5678',
+            storeEmail: 'info@moccapos.com',
+            taxRate: 11.0,
+            autoCalculateTax: true,
+            language: 'id_ID',
+            region: 'Indonesia',
+            currencySymbol: 'Rp',
+            theme: 'light',
+            fontSize: 14.0,
+          ).toEntity(),
+        );
+      }
+    } on Exception catch (e, stackTrace) {
+      log("Error: $e", error: e, stackTrace: stackTrace);
       return AppSettingsModel.fromEntity(
         const AppSettingsModel(
           storeName: 'Mocca POS',

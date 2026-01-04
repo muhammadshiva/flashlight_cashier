@@ -28,15 +28,17 @@ class SettingsDialog extends StatelessWidget {
       create: (_) => SettingsUICubit(),
       child: BlocListener<SettingsBloc, SettingsState>(
         listener: (context, state) {
-          // Show snackbar untuk errors
-          if (state.status == SettingsStatus.failure && state.errorMessage != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage!),
-                backgroundColor: AppColors.error600,
-              ),
-            );
-          }
+          // Show snackbar for errors
+          state.data.whenOrNull(
+            error: (message) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                  backgroundColor: AppColors.error600,
+                ),
+              );
+            },
+          );
         },
         child: Dialog(
           insetPadding: EdgeInsets.symmetric(vertical: 70.h),

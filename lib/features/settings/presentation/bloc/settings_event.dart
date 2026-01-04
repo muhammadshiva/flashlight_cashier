@@ -1,52 +1,110 @@
 part of 'settings_bloc.dart';
 
-@freezed
-class SettingsEvent with _$SettingsEvent {
-  // Initial Load
-  const factory SettingsEvent.loadSettings() = LoadSettings;
+abstract class SettingsEvent extends Equatable {
+  const SettingsEvent();
 
-  // App Settings (Store Info + POS Settings)
-  const factory SettingsEvent.updateStoreInfo({
-    String? storeName,
-    String? storeAddress,
-    String? storePhone,
-    String? storeEmail,
-  }) = UpdateStoreInfo;
+  @override
+  List<Object?> get props => [];
+}
 
-  const factory SettingsEvent.updatePOSSettings({
-    double? taxRate,
-    bool? autoCalculateTax,
-  }) = UpdatePOSSettings;
+// Initial Load
+class LoadSettings extends SettingsEvent {
+  const LoadSettings();
+}
 
-  // Printer Events
-  const factory SettingsEvent.toggleBluetooth({
-    required bool enable,
-  }) = ToggleBluetooth;
+// App Settings (Store Info + POS Settings)
+class UpdateStoreInfo extends SettingsEvent {
+  final String? storeName;
+  final String? storeAddress;
+  final String? storePhone;
+  final String? storeEmail;
 
-  const factory SettingsEvent.scanPrinters() = ScanPrintersEvent;
+  const UpdateStoreInfo({
+    this.storeName,
+    this.storeAddress,
+    this.storePhone,
+    this.storeEmail,
+  });
 
-  const factory SettingsEvent.connectPrinter({
-    required PrinterDevice device,
-  }) = ConnectPrinterEvent;
+  @override
+  List<Object?> get props => [storeName, storeAddress, storePhone, storeEmail];
+}
 
-  const factory SettingsEvent.disconnectPrinter() = DisconnectPrinterEvent;
+class UpdatePOSSettings extends SettingsEvent {
+  final double? taxRate;
+  final bool? autoCalculateTax;
 
-  const factory SettingsEvent.updatePrinterSettings({
-    required PrinterSettings settings,
-  }) = UpdatePrinterSettingsEvent;
+  const UpdatePOSSettings({
+    this.taxRate,
+    this.autoCalculateTax,
+  });
 
-  // Receipt Events
-  const factory SettingsEvent.updateReceiptSettings({
-    required ReceiptSettings settings,
-  }) = UpdateReceiptSettingsEvent;
+  @override
+  List<Object?> get props => [taxRate, autoCalculateTax];
+}
 
-  // Notification Events
-  const factory SettingsEvent.updateNotificationSettings({
-    required NotificationSettings settings,
-  }) = UpdateNotificationSettingsEvent;
+// Printer Events
+class ToggleBluetooth extends SettingsEvent {
+  final bool enable;
 
-  // Security Events
-  const factory SettingsEvent.updateSecuritySettings({
-    required SecuritySettings settings,
-  }) = UpdateSecuritySettingsEvent;
+  const ToggleBluetooth({required this.enable});
+
+  @override
+  List<Object?> get props => [enable];
+}
+
+class ScanPrintersEvent extends SettingsEvent {
+  const ScanPrintersEvent();
+}
+
+class ConnectPrinterEvent extends SettingsEvent {
+  final PrinterDevice device;
+
+  const ConnectPrinterEvent({required this.device});
+
+  @override
+  List<Object?> get props => [device];
+}
+
+class DisconnectPrinterEvent extends SettingsEvent {
+  const DisconnectPrinterEvent();
+}
+
+class UpdatePrinterSettingsEvent extends SettingsEvent {
+  final PrinterSettings settings;
+
+  const UpdatePrinterSettingsEvent({required this.settings});
+
+  @override
+  List<Object?> get props => [settings];
+}
+
+// Receipt Events
+class UpdateReceiptSettingsEvent extends SettingsEvent {
+  final ReceiptSettings settings;
+
+  const UpdateReceiptSettingsEvent({required this.settings});
+
+  @override
+  List<Object?> get props => [settings];
+}
+
+// Notification Events
+class UpdateNotificationSettingsEvent extends SettingsEvent {
+  final NotificationSettings settings;
+
+  const UpdateNotificationSettingsEvent({required this.settings});
+
+  @override
+  List<Object?> get props => [settings];
+}
+
+// Security Events
+class UpdateSecuritySettingsEvent extends SettingsEvent {
+  final SecuritySettings settings;
+
+  const UpdateSecuritySettingsEvent({required this.settings});
+
+  @override
+  List<Object?> get props => [settings];
 }

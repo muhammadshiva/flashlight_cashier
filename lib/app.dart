@@ -25,7 +25,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => sl<AuthBloc>()),
         BlocProvider(create: (_) => ThemeBloc()),
         BlocProvider(
-          create: (_) => sl<SettingsBloc>()..add(const SettingsEvent.loadSettings()),
+          create: (_) => sl<SettingsBloc>()..add(const LoadSettings()),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

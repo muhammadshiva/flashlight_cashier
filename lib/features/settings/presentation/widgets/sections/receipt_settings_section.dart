@@ -23,6 +23,11 @@ class ReceiptSettingsSection extends StatelessWidget {
         final receiptSettings = state.receiptSettings;
         final appSettings = state.appSettings;
 
+        // Return loading state if settings not available
+        if (receiptSettings == null || appSettings == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -49,7 +54,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     value: receiptSettings.showLogo,
                     onChanged: (value) {
                       context.read<SettingsBloc>().add(
-                            SettingsEvent.updateReceiptSettings(
+                            UpdateReceiptSettingsEvent(
                               settings: receiptSettings.copyWith(showLogo: value),
                             ),
                           );
@@ -64,7 +69,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     value: receiptSettings.showTaxDetails,
                     onChanged: (value) {
                       context.read<SettingsBloc>().add(
-                            SettingsEvent.updateReceiptSettings(
+                            UpdateReceiptSettingsEvent(
                               settings: receiptSettings.copyWith(showTaxDetails: value),
                             ),
                           );
@@ -79,7 +84,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     value: receiptSettings.showDiscount,
                     onChanged: (value) {
                       context.read<SettingsBloc>().add(
-                            SettingsEvent.updateReceiptSettings(
+                            UpdateReceiptSettingsEvent(
                               settings: receiptSettings.copyWith(showDiscount: value),
                             ),
                           );
@@ -94,7 +99,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     value: receiptSettings.showPaymentMethod,
                     onChanged: (value) {
                       context.read<SettingsBloc>().add(
-                            SettingsEvent.updateReceiptSettings(
+                            UpdateReceiptSettingsEvent(
                               settings: receiptSettings.copyWith(showPaymentMethod: value),
                             ),
                           );
@@ -109,7 +114,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     value: receiptSettings.showFooterMessage,
                     onChanged: (value) {
                       context.read<SettingsBloc>().add(
-                            SettingsEvent.updateReceiptSettings(
+                            UpdateReceiptSettingsEvent(
                               settings: receiptSettings.copyWith(showFooterMessage: value),
                             ),
                           );
@@ -136,7 +141,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     value: receiptSettings.receiptHeader,
                     onChanged: (value) {
                       context.read<SettingsBloc>().add(
-                            SettingsEvent.updateReceiptSettings(
+                            UpdateReceiptSettingsEvent(
                               settings: receiptSettings.copyWith(receiptHeader: value),
                             ),
                           );
@@ -154,7 +159,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     maxLines: 2,
                     onChanged: (value) {
                       context.read<SettingsBloc>().add(
-                            SettingsEvent.updateReceiptSettings(
+                            UpdateReceiptSettingsEvent(
                               settings: receiptSettings.copyWith(footerMessage: value),
                             ),
                           );
