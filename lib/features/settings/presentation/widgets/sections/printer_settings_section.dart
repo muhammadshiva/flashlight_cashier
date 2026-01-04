@@ -44,284 +44,63 @@ class PrinterSettingsSection extends StatelessWidget {
       children: [
         // Platform Warning for non-mobile platforms
         if (!isMobilePlatform) ...[
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.warning50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.warning3),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.info_outline,
-                  color: AppColors.warning7,
-                  size: 24,
-                ),
-                12.horizontalSpace,
-                const Expanded(
-                  child: Text(
-                    'Bluetooth printer features are only available on Android and iOS platforms. Please run this app on a mobile device to use Bluetooth printer functionality.',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.blackFoundation600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const PlatformWarningWidget(),
           24.verticalSpace,
         ],
 
         // Bluetooth Toggle
-        ToggleItem(
-          label: 'Bluetooth',
-          description: 'Enable Bluetooth to connect to printer',
-          value: printerSettings.bluetoothEnabled,
-          isLoading: state.isTogglingBluetooth,
-          onChanged: state.isTogglingBluetooth
-              ? null
-              : (value) {
-                  _requestBluetoothPermissions(context, value);
-                },
+        BluetoothToggleWidget(
+          bluetoothEnabled: printerSettings.bluetoothEnabled,
+          isTogglingBluetooth: state.isTogglingBluetooth,
+          onToggle: (value) => _requestBluetoothPermissions(context, value),
         ),
 
         24.verticalSpace,
 
         // Printer Connection Section
-        const Text(
-          'Bluetooth Printer',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: AppColors.blackFoundation600,
-          ),
-        ),
+        const SectionTitleWidget(title: 'Bluetooth Printer'),
         16.verticalSpace,
 
         // Connected Printer Display
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.backgroundGrey6,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.borderGray),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: printerSettings.connectedPrinterName == null
-                      ? AppColors.backgroundGrey3.withOpacity(0.3)
-                      : AppColors.success50,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.print_outlined,
-                  color: printerSettings.connectedPrinterName == null
-                      ? AppColors.textGray2
-                      : AppColors.success600,
-                  size: 24,
-                ),
-              ),
-              16.horizontalSpace,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      printerSettings.connectedPrinterName ?? 'No Printer Connected',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.blackFoundation600,
-                      ),
-                    ),
-                    4.verticalSpace,
-                    Text(
-                      printerSettings.connectedPrinterName == null
-                          ? 'Connect a Bluetooth printer to print receipts'
-                          : 'Ready to print',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.textGray2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (printerSettings.connectedPrinterName != null)
-                IconButton(
-                  onPressed: () {
-                    context.read<PrinterSettingsCubit>().disconnectFromPrinter();
-                  },
-                  icon: const Icon(Icons.close, color: AppColors.error600, size: 20),
-                ),
-            ],
-          ),
+        ConnectedPrinterWidget(
+          connectedPrinterName: printerSettings.connectedPrinterName,
+          onDisconnect: () => context.read<PrinterSettingsCubit>().disconnectFromPrinter(),
         ),
 
         16.verticalSpace,
 
         // Search Printer Button
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed:
-                (!printerSettings.bluetoothEnabled || state.isScanningPrinters || !isMobilePlatform)
-                    ? null
-                    : () {
-                        context.read<PrinterSettingsCubit>().scanForPrinters();
-                      },
-            icon: state.isScanningPrinters
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangePrimary),
-                    ),
-                  )
-                : const Icon(Icons.bluetooth_searching, color: AppColors.orangePrimary),
-            label: Text(
-              state.isScanningPrinters ? 'Searching...' : 'Search for Printers',
-              style: TextStyle(
-                color: (!printerSettings.bluetoothEnabled || state.isScanningPrinters)
-                    ? AppColors.textGray2
-                    : AppColors.orangePrimary,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              side: BorderSide(
-                color: (!printerSettings.bluetoothEnabled || state.isScanningPrinters)
-                    ? AppColors.textGray2
-                    : AppColors.orangePrimary,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
+        SearchPrinterButtonWidget(
+          bluetoothEnabled: printerSettings.bluetoothEnabled,
+          isScanningPrinters: state.isScanningPrinters,
+          isMobilePlatform: isMobilePlatform,
+          onSearch: () => context.read<PrinterSettingsCubit>().scanForPrinters(),
         ),
 
         // Available Printers List
         if (state.availablePrinters.isNotEmpty) ...[
           16.verticalSpace,
-          const Text(
-            'Available Devices',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors.blackFoundation600,
-            ),
-          ),
-          8.verticalSpace,
-          Container(
-            constraints: const BoxConstraints(maxHeight: 200),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.borderGray),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: state.availablePrinters.length,
-              separatorBuilder: (context, index) => const Divider(
-                height: 1,
-                color: AppColors.borderGray,
-              ),
-              itemBuilder: (context, index) {
-                final printer = state.availablePrinters[index];
-                final isConnected = printerSettings.connectedPrinterMac == printer.macAddress;
-
-                return InkWell(
-                  onTap: state.isConnectingPrinter
-                      ? null
-                      : () {
-                          context.read<PrinterSettingsCubit>().connectToPrinter(printer);
-                        },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    color: isConnected ? AppColors.success50 : Colors.transparent,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.print,
-                          color: isConnected ? AppColors.success600 : AppColors.textGray2,
-                          size: 20,
-                        ),
-                        12.horizontalSpace,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                printer.name,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: isConnected ? FontWeight.w600 : FontWeight.w400,
-                                  color: AppColors.blackFoundation600,
-                                ),
-                              ),
-                              2.verticalSpace,
-                              Text(
-                                printer.macAddress,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  color: AppColors.textGray2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        if (isConnected)
-                          const Icon(
-                            Icons.check_circle,
-                            color: AppColors.success600,
-                            size: 20,
-                          )
-                        else if (state.isConnectingPrinter)
-                          const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangePrimary),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+          AvailablePrintersWidget(
+            availablePrinters: state.availablePrinters,
+            connectedPrinterMac: printerSettings.connectedPrinterMac,
+            isConnectingPrinter: state.isConnectingPrinter,
+            onConnectToPrinter: (printer) =>
+                context.read<PrinterSettingsCubit>().connectToPrinter(printer),
           ),
         ],
 
         32.verticalSpace,
 
         // Printer Configuration
-        const Text(
-          'Printer Configuration',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: AppColors.blackFoundation600,
-          ),
-        ),
+        const SectionTitleWidget(title: 'Printer Configuration'),
         16.verticalSpace,
 
         // Paper Size Selection
-        _buildDropdownItem(
-          context,
-          label: 'Paper Size',
-          value: printerSettings.paperSize,
-          items: const ['58mm', '80mm'],
+        PaperSizeDropdownWidget(
+          paperSize: printerSettings.paperSize,
           onChanged: (value) {
             if (value != null) {
-              context.read<PrinterSettingsCubit>().updatePrinterSettings(
+              context.read<PrinterSettingsCubit>().updateSettings(
                     printerSettings.copyWith(paperSize: value),
                   );
             }
@@ -331,22 +110,10 @@ class PrinterSettingsSection extends StatelessWidget {
         24.verticalSpace,
 
         // Print Options
-        const Text(
-          'Print Options',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: AppColors.blackFoundation600,
-          ),
-        ),
-        16.verticalSpace,
-
-        ToggleItem(
-          label: 'Auto Print Receipt',
-          description: 'Automatically print receipt after transaction',
-          value: printerSettings.autoPrintReceipt,
-          onChanged: (value) {
-            context.read<PrinterSettingsCubit>().updatePrinterSettings(
+        PrintOptionsWidget(
+          autoPrintReceipt: printerSettings.autoPrintReceipt,
+          onAutoPrintChanged: (value) {
+            context.read<PrinterSettingsCubit>().updateSettings(
                   printerSettings.copyWith(autoPrintReceipt: value),
                 );
           },
@@ -499,20 +266,345 @@ class PrinterSettingsSection extends StatelessWidget {
       },
     );
   }
+}
 
-  Widget _buildDropdownItem(
-    BuildContext context, {
-    required String label,
-    required String value,
-    required List<String> items,
-    required ValueChanged<String?> onChanged,
-  }) {
+/// Platform Warning Widget for non-mobile platforms
+class PlatformWarningWidget extends StatelessWidget {
+  const PlatformWarningWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.warning50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.warning3),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.info_outline,
+            color: AppColors.warning7,
+            size: 24,
+          ),
+          12.horizontalSpace,
+          const Expanded(
+            child: Text(
+              'Bluetooth printer features are only available on Android and iOS platforms. Please run this app on a mobile device to use Bluetooth printer functionality.',
+              style: TextStyle(
+                fontSize: 13,
+                color: AppColors.blackFoundation600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Bluetooth Toggle Widget
+class BluetoothToggleWidget extends StatelessWidget {
+  final bool bluetoothEnabled;
+  final bool isTogglingBluetooth;
+  final Function(bool) onToggle;
+
+  const BluetoothToggleWidget({
+    super.key,
+    required this.bluetoothEnabled,
+    required this.isTogglingBluetooth,
+    required this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ToggleItem(
+      label: 'Bluetooth',
+      description: 'Enable Bluetooth to connect to printer',
+      value: bluetoothEnabled,
+      isLoading: isTogglingBluetooth,
+      onChanged: isTogglingBluetooth ? null : onToggle,
+    );
+  }
+}
+
+/// Connected Printer Display Widget
+class ConnectedPrinterWidget extends StatelessWidget {
+  final String? connectedPrinterName;
+  final VoidCallback onDisconnect;
+
+  const ConnectedPrinterWidget({
+    super.key,
+    this.connectedPrinterName,
+    required this.onDisconnect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundGrey6,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.borderGray),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: connectedPrinterName == null
+                  ? AppColors.backgroundGrey3.withOpacity(0.3)
+                  : AppColors.success50,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.print_outlined,
+              color: connectedPrinterName == null ? AppColors.textGray2 : AppColors.success600,
+              size: 24,
+            ),
+          ),
+          16.horizontalSpace,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  connectedPrinterName ?? 'No Printer Connected',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.blackFoundation600,
+                  ),
+                ),
+                4.verticalSpace,
+                Text(
+                  connectedPrinterName == null
+                      ? 'Connect a Bluetooth printer to print receipts'
+                      : 'Ready to print',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textGray2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (connectedPrinterName != null)
+            IconButton(
+              onPressed: onDisconnect,
+              icon: const Icon(Icons.close, color: AppColors.error600, size: 20),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Search Printer Button Widget
+class SearchPrinterButtonWidget extends StatelessWidget {
+  final bool bluetoothEnabled;
+  final bool isScanningPrinters;
+  final bool isMobilePlatform;
+  final VoidCallback onSearch;
+
+  const SearchPrinterButtonWidget({
+    super.key,
+    required this.bluetoothEnabled,
+    required this.isScanningPrinters,
+    required this.isMobilePlatform,
+    required this.onSearch,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isEnabled = bluetoothEnabled && !isScanningPrinters && isMobilePlatform;
+
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: isEnabled ? onSearch : null,
+        icon: isScanningPrinters
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangePrimary),
+                ),
+              )
+            : const Icon(Icons.bluetooth_searching, color: AppColors.orangePrimary),
+        label: Text(
+          isScanningPrinters ? 'Searching...' : 'Search for Printers',
+          style: TextStyle(
+            color: isEnabled ? AppColors.orangePrimary : AppColors.textGray2,
+          ),
+        ),
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          side: BorderSide(
+            color: isEnabled ? AppColors.orangePrimary : AppColors.textGray2,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Available Printers List Widget
+class AvailablePrintersWidget extends StatelessWidget {
+  final List<dynamic> availablePrinters;
+  final String? connectedPrinterMac;
+  final bool isConnectingPrinter;
+  final Function(dynamic) onConnectToPrinter;
+
+  const AvailablePrintersWidget({
+    super.key,
+    required this.availablePrinters,
+    this.connectedPrinterMac,
+    required this.isConnectingPrinter,
+    required this.onConnectToPrinter,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
+        const Text(
+          'Available Devices',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackFoundation600,
+          ),
+        ),
+        8.verticalSpace,
+        Container(
+          constraints: const BoxConstraints(maxHeight: 200),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.borderGray),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemCount: availablePrinters.length,
+            separatorBuilder: (context, index) => const Divider(
+              height: 1,
+              color: AppColors.borderGray,
+            ),
+            itemBuilder: (context, index) {
+              final printer = availablePrinters[index];
+              final isConnected = connectedPrinterMac == printer.macAddress;
+
+              return InkWell(
+                onTap: isConnectingPrinter ? null : () => onConnectToPrinter(printer),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  color: isConnected ? AppColors.success50 : Colors.transparent,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.print,
+                        color: isConnected ? AppColors.success600 : AppColors.textGray2,
+                        size: 20,
+                      ),
+                      12.horizontalSpace,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              printer.name,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: isConnected ? FontWeight.w600 : FontWeight.w400,
+                                color: AppColors.blackFoundation600,
+                              ),
+                            ),
+                            2.verticalSpace,
+                            Text(
+                              printer.macAddress,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textGray2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (isConnected)
+                        const Icon(
+                          Icons.check_circle,
+                          color: AppColors.success600,
+                          size: 20,
+                        )
+                      else if (isConnectingPrinter)
+                        const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangePrimary),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Section Title Widget
+class SectionTitleWidget extends StatelessWidget {
+  final String title;
+
+  const SectionTitleWidget({
+    super.key,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+        color: AppColors.blackFoundation600,
+      ),
+    );
+  }
+}
+
+/// Paper Size Dropdown Widget
+class PaperSizeDropdownWidget extends StatelessWidget {
+  final String paperSize;
+  final Function(String?) onChanged;
+
+  const PaperSizeDropdownWidget({
+    super.key,
+    required this.paperSize,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Paper Size',
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: AppColors.blackFoundation600,
@@ -526,11 +618,11 @@ class PrinterSettingsSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButton<String>(
-            value: value,
+            value: paperSize,
             isExpanded: true,
             underline: const SizedBox(),
             icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textGray2),
-            items: items.map((String item) {
+            items: const ['58mm', '80mm'].map((String item) {
               return DropdownMenuItem<String>(
                 value: item,
                 child: Text(
@@ -544,6 +636,35 @@ class PrinterSettingsSection extends StatelessWidget {
             }).toList(),
             onChanged: onChanged,
           ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Print Options Widget
+class PrintOptionsWidget extends StatelessWidget {
+  final bool autoPrintReceipt;
+  final Function(bool) onAutoPrintChanged;
+
+  const PrintOptionsWidget({
+    super.key,
+    required this.autoPrintReceipt,
+    required this.onAutoPrintChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionTitleWidget(title: 'Print Options'),
+        16.verticalSpace,
+        ToggleItem(
+          label: 'Auto Print Receipt',
+          description: 'Automatically print receipt after transaction',
+          value: autoPrintReceipt,
+          onChanged: onAutoPrintChanged,
         ),
       ],
     );

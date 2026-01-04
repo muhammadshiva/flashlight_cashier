@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flashlight_pos/core/usecase/usecase.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/printer_device.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/printer_settings.dart';
@@ -12,6 +11,8 @@ import 'package:flashlight_pos/features/settings/domain/usecases/get_printer_set
 import 'package:flashlight_pos/features/settings/domain/usecases/scan_printers.dart';
 import 'package:flashlight_pos/features/settings/domain/usecases/update_printer_settings.dart';
 import 'package:flashlight_pos/shared/models/ui_state_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 part 'printer_settings_state.dart';
 
