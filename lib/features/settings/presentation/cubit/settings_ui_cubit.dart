@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
 part 'settings_ui_state.dart';
-part 'settings_ui_cubit.freezed.dart';
 
 /// Cubit for managing Settings Dialog UI state
 /// Handles menu selection, dialog expansion, and other UI-only state

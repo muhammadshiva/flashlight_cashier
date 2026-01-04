@@ -1,27 +1,32 @@
 part of 'settings_ui_cubit.dart';
 
-@freezed
-class SettingsUIState with _$SettingsUIState {
-  const factory SettingsUIState({
-    @Default('store_info') String selectedMenu,
-    @Default(false) bool isDialogExpanded,
+class SettingsUIState extends Equatable {
+  final String selectedMenu;
+  final bool isDialogExpanded;
+  final String? searchQuery;
+  final bool isDirty;
+
+  const SettingsUIState({
+    this.selectedMenu = 'store_info',
+    this.isDialogExpanded = false,
+    this.searchQuery,
+    this.isDirty = false,
+  });
+
+  @override
+  List<Object?> get props => [selectedMenu, isDialogExpanded, searchQuery, isDirty];
+
+  SettingsUIState copyWith({
+    String? selectedMenu,
+    bool? isDialogExpanded,
     String? searchQuery,
-    @Default(false) bool isDirty,
-  }) = _SettingsUIState;
-
-  @override
-  // TODO: implement isDialogExpanded
-  bool get isDialogExpanded => throw UnimplementedError();
-
-  @override
-  // TODO: implement isDirty
-  bool get isDirty => throw UnimplementedError();
-
-  @override
-  // TODO: implement searchQuery
-  String? get searchQuery => throw UnimplementedError();
-
-  @override
-  // TODO: implement selectedMenu
-  String get selectedMenu => throw UnimplementedError();
+    bool? isDirty,
+  }) {
+    return SettingsUIState(
+      selectedMenu: selectedMenu ?? this.selectedMenu,
+      isDialogExpanded: isDialogExpanded ?? this.isDialogExpanded,
+      searchQuery: searchQuery ?? this.searchQuery,
+      isDirty: isDirty ?? this.isDirty,
+    );
+  }
 }

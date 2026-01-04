@@ -1,6 +1,7 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/store_info.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/store_info_cubit.dart';
+import 'package:flashlight_pos/shared/models/ui_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,13 +33,14 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StoreInfoCubit, StoreInfoState>(
+    return BlocBuilder<StoreInfoCubit, UIStateModel<StoreInfo>>(
       builder: (context, state) {
         return state.when(
-          initial: () => _buildLoading(),
+          idle: () => _buildLoading(),
           loading: () => _buildLoading(),
-          loaded: (storeInfo) => _buildContent(context, storeInfo),
+          success: (storeInfo) => _buildContent(context, storeInfo),
           error: (message) => _buildError(context, message),
+          empty: (message) => _buildError(context, message),
         );
       },
     );
