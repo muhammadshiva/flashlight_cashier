@@ -10,18 +10,23 @@ import '../../../features/settings/data/repositories/store_info_repository_impl.
 import '../../../features/settings/domain/repositories/settings_repository.dart';
 import '../../../features/settings/domain/repositories/store_info_repository.dart';
 import '../../../features/settings/domain/usecases/connect_printer.dart';
+import '../../../features/settings/domain/usecases/create_backup.dart';
 import '../../../features/settings/domain/usecases/disconnect_printer.dart';
 import '../../../features/settings/domain/usecases/get_app_settings.dart';
+import '../../../features/settings/domain/usecases/get_backup_settings.dart';
 import '../../../features/settings/domain/usecases/get_notification_settings.dart';
 import '../../../features/settings/domain/usecases/get_printer_settings.dart';
 import '../../../features/settings/domain/usecases/get_security_settings.dart';
 import '../../../features/settings/domain/usecases/get_store_info.dart';
+import '../../../features/settings/domain/usecases/restore_backup.dart';
 import '../../../features/settings/domain/usecases/scan_printers.dart';
 import '../../../features/settings/domain/usecases/update_app_settings.dart';
+import '../../../features/settings/domain/usecases/update_backup_settings.dart';
 import '../../../features/settings/domain/usecases/update_notification_settings.dart';
 import '../../../features/settings/domain/usecases/update_printer_settings.dart';
 import '../../../features/settings/domain/usecases/update_security_settings.dart';
 import '../../../features/settings/presentation/bloc/settings_bloc.dart';
+import '../../../features/settings/presentation/cubit/backup_settings/backup_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/language_settings/language_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/notification_settings/notification_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/pos_settings/pos_settings_cubit.dart';
@@ -87,6 +92,15 @@ class SettingsInjector {
       ),
     );
 
+    _sl.registerFactory<BackupSettingsCubit>(
+      () => BackupSettingsCubit(
+        getBackupSettings: _sl(),
+        updateBackupSettings: _sl(),
+        createBackup: _sl(),
+        restoreBackup: _sl(),
+      ),
+    );
+
     // ============================================
     // Use Cases - Register as Lazy Singleton
     // ============================================
@@ -132,6 +146,22 @@ class SettingsInjector {
 
     _sl.registerLazySingleton<UpdateSecuritySettings>(
       () => UpdateSecuritySettings(_sl()),
+    );
+
+    _sl.registerLazySingleton<GetBackupSettings>(
+      () => GetBackupSettings(_sl()),
+    );
+
+    _sl.registerLazySingleton<UpdateBackupSettings>(
+      () => UpdateBackupSettings(_sl()),
+    );
+
+    _sl.registerLazySingleton<CreateBackup>(
+      () => CreateBackup(_sl()),
+    );
+
+    _sl.registerLazySingleton<RestoreBackup>(
+      () => RestoreBackup(_sl()),
     );
 
     // ============================================

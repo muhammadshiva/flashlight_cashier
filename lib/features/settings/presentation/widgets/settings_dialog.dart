@@ -1,11 +1,14 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
+import 'package:flashlight_pos/configs/injector/injector_config.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/backup_settings/backup_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/notification_settings/notification_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/pos_settings/pos_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/security_settings/security_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/store_info/store_info_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/ui_setting/settings_ui_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/widgets/sections/backup_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/language_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/notification_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/pos_settings_section.dart';
@@ -13,7 +16,6 @@ import 'package:flashlight_pos/features/settings/presentation/widgets/sections/p
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/receipt_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/security_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/store_info_section.dart';
-import 'package:flashlight_pos/injection_container.dart';
 import 'package:flashlight_pos/shared/models/ui_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -272,80 +274,90 @@ class SettingsDialog extends StatelessWidget {
 
         // Content based on selected menu
         Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: BlocBuilder<SettingsUICubit, SettingsUIState>(
-              builder: (context, uiState) {
-                switch (uiState.selectedMenu) {
-                  case 'store_info':
-                    return BlocProvider(
-                      create: (_) => sl<StoreInfoCubit>(),
-                      child: const StoreInfoSection(),
-                    );
-
-                  case 'pos_settings':
-                    return BlocProvider(
-                      create: (_) => sl<POSSettingsCubit>(),
-                      child: const POSSettingsSection(),
-                    );
-
-                  case 'printer_settings':
-                    return BlocProvider(
-                      create: (_) => sl<PrinterSettingsCubit>(),
-                      child: const PrinterSettingsSection(),
-                    );
-
-                  case 'receipt_settings':
-                    return const ReceiptSettingsSection();
-
-                  case 'language':
-                    return const LanguageSettingsSection();
-
-                  case 'notifications':
-                    return BlocProvider(
-                      create: (_) => sl<NotificationSettingsCubit>(),
-                      child: const NotificationSettingsSection(),
-                    );
-
-                  case 'security':
-                    return BlocProvider(
-                      create: (_) => sl<SecuritySettingsCubit>(),
-                      child: const SecuritySettingsSection(),
-                    );
-
-                  // Placeholder untuk menu lainnya
-                  default:
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(48),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.construction_outlined,
-                              size: 64,
-                              color: AppColors.textGray2.withValues(alpha: 0.5),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Content for ${_getContentTitle(uiState.selectedMenu)} coming soon',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: AppColors.textGray2,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                }
-              },
-            ),
+          child: BlocBuilder<SettingsUICubit, SettingsUIState>(
+            builder: (context, uiState) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: _buildContentForMenu(uiState.selectedMenu),
+              );
+            },
           ),
         ),
       ],
     );
+  }
+
+  Widget _buildContentForMenu(String selectedMenu) {
+    switch (selectedMenu) {
+      case 'store_info':
+        return BlocProvider(
+          create: (_) => sl<StoreInfoCubit>(),
+          child: const StoreInfoSection(),
+        );
+
+      case 'pos_settings':
+        return BlocProvider(
+          create: (_) => sl<POSSettingsCubit>(),
+          child: const POSSettingsSection(),
+        );
+
+      case 'printer_settings':
+        return BlocProvider(
+          create: (_) => sl<PrinterSettingsCubit>(),
+          child: const PrinterSettingsSection(),
+        );
+
+      case 'receipt_settings':
+        return const ReceiptSettingsSection();
+
+      case 'language':
+        return const LanguageSettingsSection();
+
+      case 'notifications':
+        return BlocProvider(
+          create: (_) => sl<NotificationSettingsCubit>(),
+          child: const NotificationSettingsSection(),
+        );
+
+      case 'security':
+        return BlocProvider(
+          create: (_) => sl<SecuritySettingsCubit>(),
+          child: const SecuritySettingsSection(),
+        );
+
+      case 'backup':
+        return BlocProvider(
+          create: (_) => sl<BackupSettingsCubit>(),
+          child: const BackupSettingsSection(),
+        );
+
+      // Placeholder untuk menu lainnya
+      default:
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(48),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.construction_outlined,
+                  size: 64,
+                  color: AppColors.textGray2.withValues(alpha: 0.5),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Content for ${_getContentTitle(selectedMenu)} coming soon',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textGray2,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        );
+    }
   }
 
   String _getContentTitle(String menu) {

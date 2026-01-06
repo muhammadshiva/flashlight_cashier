@@ -3,11 +3,13 @@ import 'package:flashlight_pos/core/error/failures.dart';
 import 'package:flashlight_pos/features/settings/data/datasources/printer_datasource.dart';
 import 'package:flashlight_pos/features/settings/data/datasources/settings_local_datasource.dart';
 import 'package:flashlight_pos/features/settings/data/models/app_settings_model.dart';
+import 'package:flashlight_pos/features/settings/data/models/backup_settings_model.dart';
 import 'package:flashlight_pos/features/settings/data/models/notification_settings_model.dart';
 import 'package:flashlight_pos/features/settings/data/models/printer_settings_model.dart';
 import 'package:flashlight_pos/features/settings/data/models/receipt_settings_model.dart';
 import 'package:flashlight_pos/features/settings/data/models/security_settings_model.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/app_settings.dart';
+import 'package:flashlight_pos/features/settings/domain/entities/backup_settings.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/notification_settings.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/printer_device.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/printer_settings.dart';
@@ -166,6 +168,84 @@ class SettingsRepositoryImpl implements SettingsRepository {
       return const Right(unit);
     } catch (e) {
       return Left(CacheFailure('Failed to update security settings: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, BackupSettings>> getBackupSettings() async {
+    try {
+      final model = await localDataSource.getBackupSettings();
+      return Right(model.toEntity());
+    } catch (e) {
+      return Left(CacheFailure('Failed to get backup settings: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateBackupSettings(BackupSettings settings) async {
+    try {
+      final model = BackupSettingsModel.fromEntity(settings);
+      await localDataSource.saveBackupSettings(model);
+      return const Right(unit);
+    } catch (e) {
+      return Left(CacheFailure('Failed to update backup settings: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> createBackup(String backupPath) async {
+    try {
+      // Simulate backup creation process
+      // In real implementation, this would:
+      // 1. Collect all data based on backup settings
+      // 2. Create ZIP file with all data
+      // 3. Save to specified path
+      // 4. Update last backup date
+
+      // For now, just simulate success
+      await Future.delayed(const Duration(seconds: 2));
+
+      // Update last backup date
+      final currentSettingsResult = await getBackupSettings();
+      final currentSettings = currentSettingsResult.fold(
+        (failure) => null,
+        (currentSettings) => currentSettings,
+      );
+
+      if (currentSettings == null) {
+        return const Left(CacheFailure('Failed to get current backup settings'));
+      }
+
+      final updatedSettings = currentSettings.copyWith(
+        lastBackupDate: DateTime.now().toIso8601String(),
+        backupLocation: backupPath,
+      );
+      final updateResult = await updateBackupSettings(updatedSettings);
+      return updateResult.fold(
+        (failure) => Left(failure),
+        (_) => Right(backupPath),
+      );
+    } catch (e) {
+      return Left(CacheFailure('Failed to create backup: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> restoreBackup(String backupPath) async {
+    try {
+      // Simulate restore process
+      // In real implementation, this would:
+      // 1. Extract ZIP file
+      // 2. Validate backup data
+      // 3. Restore all data to appropriate storage
+      // 4. Clear existing data if needed
+
+      // For now, just simulate success
+      await Future.delayed(const Duration(seconds: 3));
+
+      return const Right(unit);
+    } catch (e) {
+      return Left(CacheFailure('Failed to restore backup: $e'));
     }
   }
 }

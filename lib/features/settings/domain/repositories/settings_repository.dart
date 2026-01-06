@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flashlight_pos/core/error/failures.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/app_settings.dart';
+import 'package:flashlight_pos/features/settings/domain/entities/backup_settings.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/notification_settings.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/printer_device.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/printer_settings.dart';
@@ -33,4 +34,10 @@ abstract class SettingsRepository {
   // Security Settings
   Future<Either<Failure, SecuritySettings>> getSecuritySettings();
   Future<Either<Failure, Unit>> updateSecuritySettings(SecuritySettings settings);
+
+  // Backup Settings
+  Future<Either<Failure, BackupSettings>> getBackupSettings();
+  Future<Either<Failure, Unit>> updateBackupSettings(BackupSettings settings);
+  Future<Either<Failure, String>> createBackup(String backupPath);
+  Future<Either<Failure, Unit>> restoreBackup(String backupPath);
 }

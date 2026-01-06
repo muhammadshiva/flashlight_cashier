@@ -9,6 +9,7 @@ import '../models/notification_settings_model.dart';
 import '../models/printer_settings_model.dart';
 import '../models/receipt_settings_model.dart';
 import '../models/security_settings_model.dart';
+import '../models/backup_settings_model.dart';
 
 abstract class SettingsLocalDataSource {
   Future<AppSettingsModel> getAppSettings();
@@ -25,6 +26,9 @@ abstract class SettingsLocalDataSource {
 
   Future<SecuritySettingsModel> getSecuritySettings();
   Future<void> saveSecuritySettings(SecuritySettingsModel settings);
+
+  Future<BackupSettingsModel> getBackupSettings();
+  Future<void> saveBackupSettings(BackupSettingsModel settings);
 }
 
 class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
@@ -35,6 +39,7 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   static const String _keyReceiptSettings = 'RECEIPT_SETTINGS';
   static const String _keyNotificationSettings = 'NOTIFICATION_SETTINGS';
   static const String _keySecuritySettings = 'SECURITY_SETTINGS';
+  static const String _keyBackupSettings = 'BACKUP_SETTINGS';
 
   SettingsLocalDataSourceImpl({required this.sharedPreferences});
 
@@ -198,6 +203,35 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   Future<void> saveSecuritySettings(SecuritySettingsModel settings) async {
     await sharedPreferences.setString(
       _keySecuritySettings,
+      json.encode(settings.toJson()),
+    );
+  }
+
+  @override
+  Future<BackupSettingsModel> getBackupSettings() async {
+    final jsonString = sharedPreferences.getString(_keyBackupSettings);
+    if (jsonString != null) {
+      return BackupSettingsModel.fromJson(json.decode(jsonString));
+    } else {
+      return BackupSettingsModel.fromEntity(
+        const BackupSettingsModel(
+          autoBackupEnabled: false,
+          autoBackupIntervalDays: 7,
+          lastBackupDate: null,
+          backupLocation: null,
+          includeTransactionData: true,
+          includeCustomerData: true,
+          includeProductData: true,
+          includeSettingsData: true,
+        ).toEntity(),
+      );
+    }
+  }
+
+  @override
+  Future<void> saveBackupSettings(BackupSettingsModel settings) async {
+    await sharedPreferences.setString(
+      _keyBackupSettings,
       json.encode(settings.toJson()),
     );
   }
