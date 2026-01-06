@@ -10,11 +10,14 @@ class AppSettings {
   // POS Settings
   final double taxRate;
   final bool autoCalculateTax;
+  final bool autoPrintReceipt;
 
   // Language & Region
   final String language;
   final String region;
   final String currencySymbol;
+  final String currencyCode; // IDR, USD, EUR, etc.
+  final int decimalPlaces; // 0, 1, 2, 3
 
   // Display Settings
   final String theme;
@@ -27,9 +30,12 @@ class AppSettings {
     required this.storeEmail,
     required this.taxRate,
     required this.autoCalculateTax,
+    required this.autoPrintReceipt,
     required this.language,
     required this.region,
     required this.currencySymbol,
+    required this.currencyCode,
+    required this.decimalPlaces,
     required this.theme,
     required this.fontSize,
   });
@@ -42,9 +48,12 @@ class AppSettings {
       storeEmail: 'info@moccapos.com',
       taxRate: 11.0,
       autoCalculateTax: true,
+      autoPrintReceipt: true,
       language: 'id_ID',
       region: 'Indonesia',
       currencySymbol: 'Rp',
+      currencyCode: 'IDR',
+      decimalPlaces: 2,
       theme: 'light',
       fontSize: 14.0,
     );
@@ -57,9 +66,12 @@ class AppSettings {
     String? storeEmail,
     double? taxRate,
     bool? autoCalculateTax,
+    bool? autoPrintReceipt,
     String? language,
     String? region,
     String? currencySymbol,
+    String? currencyCode,
+    int? decimalPlaces,
     String? theme,
     double? fontSize,
   }) {
@@ -70,9 +82,12 @@ class AppSettings {
       storeEmail: storeEmail ?? this.storeEmail,
       taxRate: taxRate ?? this.taxRate,
       autoCalculateTax: autoCalculateTax ?? this.autoCalculateTax,
+      autoPrintReceipt: autoPrintReceipt ?? this.autoPrintReceipt,
       language: language ?? this.language,
       region: region ?? this.region,
       currencySymbol: currencySymbol ?? this.currencySymbol,
+      currencyCode: currencyCode ?? this.currencyCode,
+      decimalPlaces: decimalPlaces ?? this.decimalPlaces,
       theme: theme ?? this.theme,
       fontSize: fontSize ?? this.fontSize,
     );
@@ -89,9 +104,12 @@ class AppSettings {
         other.storeEmail == storeEmail &&
         other.taxRate == taxRate &&
         other.autoCalculateTax == autoCalculateTax &&
+        other.autoPrintReceipt == autoPrintReceipt &&
         other.language == language &&
         other.region == region &&
         other.currencySymbol == currencySymbol &&
+        other.currencyCode == currencyCode &&
+        other.decimalPlaces == decimalPlaces &&
         other.theme == theme &&
         other.fontSize == fontSize;
   }
@@ -105,9 +123,12 @@ class AppSettings {
       storeEmail,
       taxRate,
       autoCalculateTax,
+      autoPrintReceipt,
       language,
       region,
       currencySymbol,
+      currencyCode,
+      decimalPlaces,
       theme,
       fontSize,
     );

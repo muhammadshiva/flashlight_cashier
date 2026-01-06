@@ -33,14 +33,20 @@ class UpdateStoreInfo extends SettingsEvent {
 class UpdatePOSSettings extends SettingsEvent {
   final double? taxRate;
   final bool? autoCalculateTax;
+  final bool? autoPrintReceipt;
+  final String? currencyCode;
+  final int? decimalPlaces;
 
   const UpdatePOSSettings({
     this.taxRate,
     this.autoCalculateTax,
+    this.autoPrintReceipt,
+    this.currencyCode,
+    this.decimalPlaces,
   });
 
   @override
-  List<Object?> get props => [taxRate, autoCalculateTax];
+  List<Object?> get props => [taxRate, autoCalculateTax, autoPrintReceipt, currencyCode, decimalPlaces];
 }
 
 // Printer Events

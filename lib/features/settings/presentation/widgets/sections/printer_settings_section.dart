@@ -108,18 +108,6 @@ class PrinterSettingsSection extends StatelessWidget {
         ),
 
         24.verticalSpace,
-
-        // Print Options
-        PrintOptionsWidget(
-          autoPrintReceipt: printerSettings.autoPrintReceipt,
-          onAutoPrintChanged: (value) {
-            context.read<PrinterSettingsCubit>().updateSettings(
-                  printerSettings.copyWith(autoPrintReceipt: value),
-                );
-          },
-        ),
-
-        24.verticalSpace,
       ],
     );
   }

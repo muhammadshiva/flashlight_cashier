@@ -1,8 +1,10 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/pos_settings/pos_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/ui_setting/settings_ui_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/store_info/store_info_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/widgets/sections/pos_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/printer_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/receipt_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/store_info_section.dart';
@@ -28,44 +30,48 @@ class SettingsDialog extends StatelessWidget {
     return BlocProvider(
       // Create UI Cubit for this dialog (dialog-scoped)
       create: (_) => SettingsUICubit(),
-      child: BlocListener<SettingsBloc, SettingsState>(
-        listener: (context, state) {
-          // Show snackbar for errors
-          state.data.whenOrNull(
-            error: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(message),
-                  backgroundColor: AppColors.error600,
-                ),
+      child: Builder(
+        builder: (context) {
+          return BlocListener<SettingsBloc, SettingsState>(
+            listener: (context, state) {
+              // Show snackbar for errors
+              state.data.whenOrNull(
+                error: (message) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                      backgroundColor: AppColors.error600,
+                    ),
+                  );
+                },
               );
             },
+            child: Dialog(
+              insetPadding: EdgeInsets.symmetric(vertical: 70.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Container(
+                width: dialogWidth,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    // Left Sidebar Menu
+                    _buildSidebar(),
+
+                    // Right Content Area
+                    Expanded(
+                      child: _buildContent(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           );
         },
-        child: Dialog(
-          insetPadding: EdgeInsets.symmetric(vertical: 70.h),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Container(
-            width: dialogWidth,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                // Left Sidebar Menu
-                _buildSidebar(),
-
-                // Right Content Area
-                Expanded(
-                  child: _buildContent(),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -270,6 +276,12 @@ class SettingsDialog extends StatelessWidget {
                     return BlocProvider(
                       create: (_) => sl<StoreInfoCubit>(),
                       child: const StoreInfoSection(),
+                    );
+
+                  case 'pos_settings':
+                    return BlocProvider(
+                      create: (_) => sl<POSSettingsCubit>(),
+                      child: const POSSettingsSection(),
                     );
 
                   case 'printer_settings':

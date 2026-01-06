@@ -163,6 +163,9 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     final updatedAppSettings = currentAppSettings.copyWith(
       taxRate: event.taxRate ?? currentAppSettings.taxRate,
       autoCalculateTax: event.autoCalculateTax ?? currentAppSettings.autoCalculateTax,
+      autoPrintReceipt: event.autoPrintReceipt ?? currentAppSettings.autoPrintReceipt,
+      currencyCode: event.currencyCode ?? currentAppSettings.currencyCode,
+      decimalPlaces: event.decimalPlaces ?? currentAppSettings.decimalPlaces,
     );
 
     final result = await updateAppSettings(

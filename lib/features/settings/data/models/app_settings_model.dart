@@ -13,9 +13,12 @@ class AppSettingsModel extends Equatable {
   final String storeEmail;
   final double taxRate;
   final bool autoCalculateTax;
+  final bool autoPrintReceipt;
   final String language;
   final String region;
   final String currencySymbol;
+  final String currencyCode;
+  final int decimalPlaces;
   final String theme;
   final double fontSize;
 
@@ -26,9 +29,12 @@ class AppSettingsModel extends Equatable {
     required this.storeEmail,
     required this.taxRate,
     required this.autoCalculateTax,
+    required this.autoPrintReceipt,
     required this.language,
     required this.region,
     required this.currencySymbol,
+    required this.currencyCode,
+    required this.decimalPlaces,
     required this.theme,
     required this.fontSize,
   });
@@ -42,9 +48,12 @@ class AppSettingsModel extends Equatable {
       storeEmail: json['storeEmail'] as String,
       taxRate: (json['taxRate'] as num).toDouble(),
       autoCalculateTax: json['autoCalculateTax'] as bool,
+      autoPrintReceipt: json['autoPrintReceipt'] as bool? ?? true,
       language: json['language'] as String,
       region: json['region'] as String,
       currencySymbol: json['currencySymbol'] as String,
+      currencyCode: json['currencyCode'] as String? ?? 'IDR',
+      decimalPlaces: json['decimalPlaces'] as int? ?? 2,
       theme: json['theme'] as String,
       fontSize: (json['fontSize'] as num).toDouble(),
     );
@@ -59,9 +68,12 @@ class AppSettingsModel extends Equatable {
       'storeEmail': storeEmail,
       'taxRate': taxRate,
       'autoCalculateTax': autoCalculateTax,
+      'autoPrintReceipt': autoPrintReceipt,
       'language': language,
       'region': region,
       'currencySymbol': currencySymbol,
+      'currencyCode': currencyCode,
+      'decimalPlaces': decimalPlaces,
       'theme': theme,
       'fontSize': fontSize,
     };
@@ -76,9 +88,12 @@ class AppSettingsModel extends Equatable {
       storeEmail: entity.storeEmail,
       taxRate: entity.taxRate,
       autoCalculateTax: entity.autoCalculateTax,
+      autoPrintReceipt: entity.autoPrintReceipt,
       language: entity.language,
       region: entity.region,
       currencySymbol: entity.currencySymbol,
+      currencyCode: entity.currencyCode,
+      decimalPlaces: entity.decimalPlaces,
       theme: entity.theme,
       fontSize: entity.fontSize,
     );
@@ -93,9 +108,12 @@ class AppSettingsModel extends Equatable {
       storeEmail: storeEmail,
       taxRate: taxRate,
       autoCalculateTax: autoCalculateTax,
+      autoPrintReceipt: autoPrintReceipt,
       language: language,
       region: region,
       currencySymbol: currencySymbol,
+      currencyCode: currencyCode,
+      decimalPlaces: decimalPlaces,
       theme: theme,
       fontSize: fontSize,
     );
@@ -109,9 +127,12 @@ class AppSettingsModel extends Equatable {
     String? storeEmail,
     double? taxRate,
     bool? autoCalculateTax,
+    bool? autoPrintReceipt,
     String? language,
     String? region,
     String? currencySymbol,
+    String? currencyCode,
+    int? decimalPlaces,
     String? theme,
     double? fontSize,
   }) {
@@ -122,9 +143,12 @@ class AppSettingsModel extends Equatable {
       storeEmail: storeEmail ?? this.storeEmail,
       taxRate: taxRate ?? this.taxRate,
       autoCalculateTax: autoCalculateTax ?? this.autoCalculateTax,
+      autoPrintReceipt: autoPrintReceipt ?? this.autoPrintReceipt,
       language: language ?? this.language,
       region: region ?? this.region,
       currencySymbol: currencySymbol ?? this.currencySymbol,
+      currencyCode: currencyCode ?? this.currencyCode,
+      decimalPlaces: decimalPlaces ?? this.decimalPlaces,
       theme: theme ?? this.theme,
       fontSize: fontSize ?? this.fontSize,
     );
@@ -138,9 +162,12 @@ class AppSettingsModel extends Equatable {
         storeEmail,
         taxRate,
         autoCalculateTax,
+        autoPrintReceipt,
         language,
         region,
         currencySymbol,
+        currencyCode,
+        decimalPlaces,
         theme,
         fontSize,
       ];
