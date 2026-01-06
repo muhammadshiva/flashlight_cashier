@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../../core/usecase/usecase.dart';
+
 import '../../domain/entities/product.dart';
 import '../../domain/usecases/product_usecases.dart';
 import '../../domain/usecases/update_product.dart';
@@ -79,8 +79,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             ? source
             : source
                 .where((p) =>
-                    p.name.toLowerCase().contains(query) ||
-                    p.id.toLowerCase().contains(query))
+                    p.name.toLowerCase().contains(query) || p.id.toLowerCase().contains(query))
                 .toList();
 
         const itemsPerPage = 10;

@@ -1,24 +1,25 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talker_bloc_logger/talker_bloc_logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../core/cache/secure_local_storage.dart';
-import 'package:talker_flutter/talker_flutter.dart';
-import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/network/network_info.dart';
 import 'features/auth_injector.dart';
 import 'features/customer_injector.dart';
-import 'features/membership_injector.dart';
-import 'features/vehicle_injector.dart';
-import 'features/member_vehicle_injector.dart';
-import 'features/service_injector.dart';
-import 'features/product_injector.dart';
-import 'features/work_order_injector.dart';
 import 'features/dashboard_injector.dart';
-import 'features/user_injector.dart';
+import 'features/member_vehicle_injector.dart';
+import 'features/membership_injector.dart';
+import 'features/product_injector.dart';
+import 'features/profile_injector.dart';
 import 'features/report_injector.dart';
+import 'features/service_injector.dart';
 import 'features/settings_injector.dart';
+import 'features/user_injector.dart';
+import 'features/vehicle_injector.dart';
+import 'features/work_order_injector.dart';
 
 /// Global service locator instance.
 final sl = GetIt.instance;
@@ -54,8 +55,7 @@ Future<void> configureDependencies() async {
   // Utilities
   final talker = TalkerFlutter.init();
   sl.registerLazySingleton<Talker>(() => talker);
-  sl.registerLazySingleton<BlocObserver>(
-      () => TalkerBlocObserver(talker: sl()));
+  sl.registerLazySingleton<BlocObserver>(() => TalkerBlocObserver(talker: sl()));
 
   // ============================================
   // Feature Dependencies
@@ -72,6 +72,7 @@ Future<void> configureDependencies() async {
   UserInjector.init();
   ReportInjector.init();
   SettingsInjector.init();
+  ProfileInjector.init();
 }
 
 /// Resets all registrations - useful for testing.

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../profile/presentation/widgets/profile_dialog.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../../../settings/presentation/widgets/settings_dialog.dart';
 
@@ -260,9 +261,10 @@ class _ProfileMenuButton extends StatelessWidget {
           ],
           onSelected: (value) {
             if (value == 'profile') {
-              // TODO: Navigate to profile page
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Profile page - coming soon')),
+              // Show profile dialog
+              showDialog(
+                context: context,
+                builder: (_) => const ProfileDialogWithCubit(),
               );
             } else if (value == 'settings') {
               // Show settings dialog with global SettingsBloc
@@ -275,7 +277,7 @@ class _ProfileMenuButton extends StatelessWidget {
               );
             } else if (value == 'signout') {
               // Sign out action
-              context.read<AuthBloc>().add(LogoutRequested());
+              context.read<AuthBloc>().add(const LogoutRequested());
               context.go(AppRoutes.login);
             }
           },
@@ -285,8 +287,7 @@ class _ProfileMenuButton extends StatelessWidget {
               children: [
                 const CircleAvatar(
                   radius: 16,
-                  backgroundImage:
-                      NetworkImage('https://i.pravatar.cc/150?u=a042581f4e29026024d'),
+                  backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=a042581f4e29026024d'),
                 ),
                 const SizedBox(width: 12),
                 Column(
