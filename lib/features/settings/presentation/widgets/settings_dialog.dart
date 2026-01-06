@@ -1,8 +1,8 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
-import 'package:flashlight_pos/features/settings/presentation/cubit/printer_settings_cubit.dart';
-import 'package:flashlight_pos/features/settings/presentation/cubit/settings_ui_cubit.dart';
-import 'package:flashlight_pos/features/settings/presentation/cubit/store_info_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/ui_setting/settings_ui_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/store_info/store_info_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/printer_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/receipt_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/store_info_section.dart';

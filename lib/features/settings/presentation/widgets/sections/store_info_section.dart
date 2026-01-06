@@ -1,6 +1,6 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/store_info.dart';
-import 'package:flashlight_pos/features/settings/presentation/cubit/store_info_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/store_info/store_info_cubit.dart';
 import 'package:flashlight_pos/shared/models/ui_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

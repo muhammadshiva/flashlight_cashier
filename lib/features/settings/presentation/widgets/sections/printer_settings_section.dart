@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:flashlight_pos/config/themes/app_colors.dart';
-import 'package:flashlight_pos/features/settings/presentation/cubit/printer_settings_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
 import 'package:flashlight_pos/shared/models/ui_state_model.dart';
 import 'package:flashlight_pos/shared/widgets/toggle_item.dart';
 import 'package:flutter/material.dart';

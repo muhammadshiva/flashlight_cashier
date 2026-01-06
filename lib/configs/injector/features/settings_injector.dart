@@ -18,8 +18,8 @@ import '../../../features/settings/domain/usecases/scan_printers.dart';
 import '../../../features/settings/domain/usecases/update_app_settings.dart';
 import '../../../features/settings/domain/usecases/update_printer_settings.dart';
 import '../../../features/settings/presentation/bloc/settings_bloc.dart';
-import '../../../features/settings/presentation/cubit/printer_settings_cubit.dart';
-import '../../../features/settings/presentation/cubit/store_info_cubit.dart';
+import '../../../features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
+import '../../../features/settings/presentation/cubit/store_info/store_info_cubit.dart';
 
 final _sl = GetIt.instance;
 
