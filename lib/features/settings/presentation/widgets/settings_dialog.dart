@@ -3,6 +3,7 @@ import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc
 import 'package:flashlight_pos/features/settings/presentation/cubit/notification_settings/notification_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/pos_settings/pos_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/security_settings/security_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/store_info/store_info_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/ui_setting/settings_ui_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/language_settings_section.dart';
@@ -10,6 +11,7 @@ import 'package:flashlight_pos/features/settings/presentation/widgets/sections/n
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/pos_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/printer_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/receipt_settings_section.dart';
+import 'package:flashlight_pos/features/settings/presentation/widgets/sections/security_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/store_info_section.dart';
 import 'package:flashlight_pos/injection_container.dart';
 import 'package:flashlight_pos/shared/models/ui_state_model.dart';
@@ -303,6 +305,12 @@ class SettingsDialog extends StatelessWidget {
                     return BlocProvider(
                       create: (_) => sl<NotificationSettingsCubit>(),
                       child: const NotificationSettingsSection(),
+                    );
+
+                  case 'security':
+                    return BlocProvider(
+                      create: (_) => sl<SecuritySettingsCubit>(),
+                      child: const SecuritySettingsSection(),
                     );
 
                   // Placeholder untuk menu lainnya

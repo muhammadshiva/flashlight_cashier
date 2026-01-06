@@ -14,16 +14,19 @@ import '../../../features/settings/domain/usecases/disconnect_printer.dart';
 import '../../../features/settings/domain/usecases/get_app_settings.dart';
 import '../../../features/settings/domain/usecases/get_notification_settings.dart';
 import '../../../features/settings/domain/usecases/get_printer_settings.dart';
+import '../../../features/settings/domain/usecases/get_security_settings.dart';
 import '../../../features/settings/domain/usecases/get_store_info.dart';
 import '../../../features/settings/domain/usecases/scan_printers.dart';
 import '../../../features/settings/domain/usecases/update_app_settings.dart';
 import '../../../features/settings/domain/usecases/update_notification_settings.dart';
 import '../../../features/settings/domain/usecases/update_printer_settings.dart';
+import '../../../features/settings/domain/usecases/update_security_settings.dart';
 import '../../../features/settings/presentation/bloc/settings_bloc.dart';
 import '../../../features/settings/presentation/cubit/language_settings/language_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/notification_settings/notification_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/pos_settings/pos_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
+import '../../../features/settings/presentation/cubit/security_settings/security_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/store_info/store_info_cubit.dart';
 
 final _sl = GetIt.instance;
@@ -77,6 +80,13 @@ class SettingsInjector {
       ),
     );
 
+    _sl.registerFactory<SecuritySettingsCubit>(
+      () => SecuritySettingsCubit(
+        getSecuritySettings: _sl(),
+        updateSecuritySettings: _sl(),
+      ),
+    );
+
     // ============================================
     // Use Cases - Register as Lazy Singleton
     // ============================================
@@ -114,6 +124,14 @@ class SettingsInjector {
 
     _sl.registerLazySingleton<UpdateNotificationSettings>(
       () => UpdateNotificationSettings(_sl()),
+    );
+
+    _sl.registerLazySingleton<GetSecuritySettings>(
+      () => GetSecuritySettings(_sl()),
+    );
+
+    _sl.registerLazySingleton<UpdateSecuritySettings>(
+      () => UpdateSecuritySettings(_sl()),
     );
 
     // ============================================
