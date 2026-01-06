@@ -2,8 +2,9 @@ import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/pos_settings/pos_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
-import 'package:flashlight_pos/features/settings/presentation/cubit/ui_setting/settings_ui_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/store_info/store_info_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/ui_setting/settings_ui_cubit.dart';
+import 'package:flashlight_pos/features/settings/presentation/widgets/sections/language_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/pos_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/printer_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/receipt_settings_section.dart';
@@ -137,7 +138,7 @@ class SettingsDialog extends StatelessWidget {
                     _buildMenuItem(
                       context,
                       icon: Icons.language_outlined,
-                      label: 'Language & Region',
+                      label: 'Language',
                       value: 'language',
                       isSelected: uiState.selectedMenu == 'language',
                     ),
@@ -293,6 +294,9 @@ class SettingsDialog extends StatelessWidget {
                   case 'receipt_settings':
                     return const ReceiptSettingsSection();
 
+                  case 'language':
+                    return const LanguageSettingsSection();
+
                   // Placeholder untuk menu lainnya
                   default:
                     return Center(
@@ -339,7 +343,7 @@ class SettingsDialog extends StatelessWidget {
       case 'receipt_settings':
         return 'Receipt Settings';
       case 'language':
-        return 'Language & Region';
+        return 'Language';
       case 'notifications':
         return 'Notifications';
       case 'security':

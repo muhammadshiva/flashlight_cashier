@@ -18,6 +18,7 @@ import '../../../features/settings/domain/usecases/scan_printers.dart';
 import '../../../features/settings/domain/usecases/update_app_settings.dart';
 import '../../../features/settings/domain/usecases/update_printer_settings.dart';
 import '../../../features/settings/presentation/bloc/settings_bloc.dart';
+import '../../../features/settings/presentation/cubit/language_settings/language_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/pos_settings/pos_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
 import '../../../features/settings/presentation/cubit/store_info/store_info_cubit.dart';
@@ -48,6 +49,10 @@ class SettingsInjector {
     // ============================================
     // Cubits - Register as Factory
     // ============================================
+    _sl.registerFactory<LanguageSettingsCubit>(
+      () => LanguageSettingsCubit(settingsBloc: _sl()),
+    );
+
     _sl.registerFactory<POSSettingsCubit>(
       () => POSSettingsCubit(settingsBloc: _sl()),
     );

@@ -1,5 +1,5 @@
 /// Domain Entity for Application Settings
-/// Contains: Store Information, POS Settings, Language & Region, Display Settings
+/// Contains: Store Information, POS Settings, Language, Display Settings
 class AppSettings {
   // Store Information
   final String storeName;
@@ -12,7 +12,7 @@ class AppSettings {
   final bool autoCalculateTax;
   final bool autoPrintReceipt;
 
-  // Language & Region
+  // Language
   final String language;
   final String region;
   final String currencySymbol;

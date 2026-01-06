@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:flashlight_pos/core/usecase/usecase.dart';
 import 'package:flashlight_pos/features/settings/data/models/settings_data.dart';
 import 'package:flashlight_pos/features/settings/domain/entities/app_settings.dart';
@@ -18,6 +17,8 @@ import 'package:flashlight_pos/features/settings/domain/usecases/scan_printers.d
 import 'package:flashlight_pos/features/settings/domain/usecases/update_app_settings.dart';
 import 'package:flashlight_pos/features/settings/domain/usecases/update_printer_settings.dart';
 import 'package:flashlight_pos/shared/models/ui_state_model.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 part 'settings_event.dart';
 part 'settings_state.dart';
@@ -43,6 +44,7 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     on<LoadSettings>(_onLoadSettings);
     on<UpdateStoreInfo>(_onUpdateStoreInfo);
     on<UpdatePOSSettings>(_onUpdatePOSSettings);
+    on<UpdateLanguageSettings>(_onUpdateLanguageSettings);
     on<ToggleBluetooth>(_onToggleBluetooth);
     on<ScanPrintersEvent>(_onScanPrinters);
     on<ConnectPrinterEvent>(_onConnectPrinter);
@@ -166,6 +168,32 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
       autoPrintReceipt: event.autoPrintReceipt ?? currentAppSettings.autoPrintReceipt,
       currencyCode: event.currencyCode ?? currentAppSettings.currencyCode,
       decimalPlaces: event.decimalPlaces ?? currentAppSettings.decimalPlaces,
+    );
+
+    final result = await updateAppSettings(
+      UpdateAppSettingsParams(settings: updatedAppSettings),
+    );
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+        data: UIStateModel.error(message: failure.message),
+      )),
+      (_) => _updateSettingsData(
+        emit,
+        (data) => data.copyWith(appSettings: updatedAppSettings),
+      ),
+    );
+  }
+
+  Future<void> _onUpdateLanguageSettings(
+    UpdateLanguageSettings event,
+    Emitter<SettingsState> emit,
+  ) async {
+    final currentAppSettings = state.appSettings;
+    if (currentAppSettings == null) return;
+
+    final updatedAppSettings = currentAppSettings.copyWith(
+      language: event.language ?? currentAppSettings.language,
     );
 
     final result = await updateAppSettings(

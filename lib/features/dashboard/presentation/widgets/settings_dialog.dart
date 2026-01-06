@@ -313,7 +313,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
                         ),
                         _buildMenuItem(
                           icon: Icons.language_outlined,
-                          label: 'Language & Region',
+                          label: 'Language',
                           value: 'language',
                         ),
                         _buildMenuItem(
@@ -450,7 +450,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
       case 'receipt_settings':
         return 'Receipt Settings';
       case 'language':
-        return 'Language & Region';
+        return 'Language';
       case 'notifications':
         return 'Notifications';
       case 'security':

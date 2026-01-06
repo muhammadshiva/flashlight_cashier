@@ -46,7 +46,20 @@ class UpdatePOSSettings extends SettingsEvent {
   });
 
   @override
-  List<Object?> get props => [taxRate, autoCalculateTax, autoPrintReceipt, currencyCode, decimalPlaces];
+  List<Object?> get props =>
+      [taxRate, autoCalculateTax, autoPrintReceipt, currencyCode, decimalPlaces];
+}
+
+// Language Settings Events
+class UpdateLanguageSettings extends SettingsEvent {
+  final String? language;
+
+  const UpdateLanguageSettings({
+    this.language,
+  });
+
+  @override
+  List<Object?> get props => [language];
 }
 
 // Printer Events
