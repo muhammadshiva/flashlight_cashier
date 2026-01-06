@@ -169,20 +169,6 @@ class SettingsDialog extends StatelessWidget {
                       value: 'backup',
                       isSelected: uiState.selectedMenu == 'backup',
                     ),
-                    _buildMenuItem(
-                      context,
-                      icon: Icons.display_settings_outlined,
-                      label: 'Display',
-                      value: 'display',
-                      isSelected: uiState.selectedMenu == 'display',
-                    ),
-                    _buildMenuItem(
-                      context,
-                      icon: Icons.data_usage_outlined,
-                      label: 'Data Management',
-                      value: 'data_management',
-                      isSelected: uiState.selectedMenu == 'data_management',
-                    ),
                   ],
                 );
               },
@@ -378,10 +364,6 @@ class SettingsDialog extends StatelessWidget {
         return 'Security';
       case 'backup':
         return 'Backup & Restore';
-      case 'display':
-        return 'Display';
-      case 'data_management':
-        return 'Data Management';
       default:
         return 'Settings';
     }

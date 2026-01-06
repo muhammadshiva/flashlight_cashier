@@ -156,7 +156,8 @@ class _BackupSettingsSectionState extends State<BackupSettingsSection>
     BackupSettingsState state,
   ) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: _defaultSpacing),
+      padding:
+          EdgeInsets.symmetric(horizontal: _defaultSpacing).copyWith(bottom: _largeSpacing * 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
