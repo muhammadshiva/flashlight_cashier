@@ -1,10 +1,12 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:flashlight_pos/features/settings/presentation/cubit/notification_settings/notification_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/pos_settings/pos_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/printer_setting/printer_settings_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/store_info/store_info_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/cubit/ui_setting/settings_ui_cubit.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/language_settings_section.dart';
+import 'package:flashlight_pos/features/settings/presentation/widgets/sections/notification_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/pos_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/printer_settings_section.dart';
 import 'package:flashlight_pos/features/settings/presentation/widgets/sections/receipt_settings_section.dart';
@@ -297,6 +299,12 @@ class SettingsDialog extends StatelessWidget {
                   case 'language':
                     return const LanguageSettingsSection();
 
+                  case 'notifications':
+                    return BlocProvider(
+                      create: (_) => sl<NotificationSettingsCubit>(),
+                      child: const NotificationSettingsSection(),
+                    );
+
                   // Placeholder untuk menu lainnya
                   default:
                     return Center(
@@ -308,7 +316,7 @@ class SettingsDialog extends StatelessWidget {
                             Icon(
                               Icons.construction_outlined,
                               size: 64,
-                              color: AppColors.textGray2.withOpacity(0.5),
+                              color: AppColors.textGray2.withValues(alpha: 0.5),
                             ),
                             const SizedBox(height: 16),
                             Text(

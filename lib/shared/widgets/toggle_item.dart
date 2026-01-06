@@ -44,7 +44,7 @@ class ToggleItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   color:
-                      isLoading ? AppColors.textGray2.withValues(alpha: 0.5) : AppColors.textGray2,
+                      isLoading ? AppColors.textGray2.withValues(alpha: 0.5) : AppColors.textGray3,
                 ),
               ),
             ],
