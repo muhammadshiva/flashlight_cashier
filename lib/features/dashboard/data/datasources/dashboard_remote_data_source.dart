@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flashlight_pos/core/constants/api_constans.dart';
+
 import '../../../../core/error/failures.dart';
 import '../models/dashboard_stats_model.dart';
 
 abstract class DashboardRemoteDataSource {
-  Future<DashboardStatsModel> getDashboardStats();
+  Future<DashboardStatsModel> getDashboardStats({bool isPrototype = false});
 }
 
 class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
@@ -12,9 +14,13 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   DashboardRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<DashboardStatsModel> getDashboardStats() async {
+  Future<DashboardStatsModel> getDashboardStats({bool isPrototype = false}) async {
     try {
-      final response = await dio.get('/dashboard/stats');
+      if (isPrototype) {
+        return DashboardStatsModel.prototypeData;
+      }
+
+      final response = await dio.get(ApiConst.dashboardStats);
 
       // Response envelope: { success, message, data: {...}, error_code }
       final result = response.data;

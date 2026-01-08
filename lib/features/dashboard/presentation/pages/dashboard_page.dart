@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_state.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/widgets/cashier_dashboard_layout.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -41,8 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
         // Only show snackbar when transitioning TO error state
         // or when the error message changes
         return current is DashboardError &&
-            (previous is! DashboardError ||
-                previous.message != current.message);
+            (previous is! DashboardError || previous.message != current.message);
       },
       listener: (context, state) {
         // Show snackbar on error
@@ -57,8 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
           messenger.showSnackBar(
             SnackBar(
-              content:
-                  const Text('Gagal memuat data dashboard. Silakan coba lagi.'),
+              content: const Text('Gagal memuat data dashboard. Silakan coba lagi.'),
               backgroundColor: Colors.red,
               behavior: SnackBarBehavior.floating, // Make it less intrusive
               margin: const EdgeInsets.all(16),

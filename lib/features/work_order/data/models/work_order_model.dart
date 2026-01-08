@@ -11,8 +11,7 @@ import 'work_order_service_model.dart';
 part 'work_order_model.freezed.dart';
 part 'work_order_model.g.dart';
 
-WorkOrderModel workOrderModelFromJson(String str) =>
-    WorkOrderModel.fromJson(json.decode(str));
+WorkOrderModel workOrderModelFromJson(String str) => WorkOrderModel.fromJson(json.decode(str));
 
 String workOrderModelToJson(WorkOrderModel data) => json.encode(data.toJson());
 
@@ -33,19 +32,14 @@ abstract class WorkOrderModel with _$WorkOrderModel {
     @JsonKey(name: "paymentMethod") String? paymentMethod,
     @JsonKey(name: "paidAmount") @Default(0) int paidAmount,
     @JsonKey(name: "totalPrice") required int totalPrice,
-    @JsonKey(name: "services")
-    @Default([])
-    List<WorkOrderServiceModel> serviceModels,
-    @JsonKey(name: "products")
-    @Default([])
-    List<WorkOrderProductModel> productModels,
+    @JsonKey(name: "services") @Default([]) List<WorkOrderServiceModel> serviceModels,
+    @JsonKey(name: "products") @Default([]) List<WorkOrderProductModel> productModels,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "completedAt") DateTime? completedAt,
   }) = _WorkOrderModel;
 
-  factory WorkOrderModel.fromJson(Map<String, dynamic> json) =>
-      _$WorkOrderModelFromJson(json);
+  factory WorkOrderModel.fromJson(Map<String, dynamic> json) => _$WorkOrderModelFromJson(json);
 
   WorkOrder toEntity() => WorkOrder(
         id: id,

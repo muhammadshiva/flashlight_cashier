@@ -52,7 +52,8 @@ mixin _$WorkOrderModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
   $WorkOrderModelCopyWith<WorkOrderModel> get copyWith =>
-      _$WorkOrderModelCopyWithImpl<WorkOrderModel>(this as WorkOrderModel, _$identity);
+      _$WorkOrderModelCopyWithImpl<WorkOrderModel>(
+          this as WorkOrderModel, _$identity);
 
   /// Serializes this WorkOrderModel to a JSON map.
   Map<String, dynamic> toJson();
@@ -65,10 +66,12 @@ mixin _$WorkOrderModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.workOrderCode, workOrderCode) ||
                 other.workOrderCode == workOrderCode) &&
-            (identical(other.customerId, customerId) || other.customerId == customerId) &&
+            (identical(other.customerId, customerId) ||
+                other.customerId == customerId) &&
             (identical(other.vehicleDataId, vehicleDataId) ||
                 other.vehicleDataId == vehicleDataId) &&
-            (identical(other.queueNumber, queueNumber) || other.queueNumber == queueNumber) &&
+            (identical(other.queueNumber, queueNumber) ||
+                other.queueNumber == queueNumber) &&
             (identical(other.estimatedTime, estimatedTime) ||
                 other.estimatedTime == estimatedTime) &&
             (identical(other.status, status) || other.status == status) &&
@@ -76,13 +79,20 @@ mixin _$WorkOrderModel {
                 other.paymentStatus == paymentStatus) &&
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
-            (identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount) &&
-            (identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice) &&
-            const DeepCollectionEquality().equals(other.serviceModels, serviceModels) &&
-            const DeepCollectionEquality().equals(other.productModels, productModels) &&
-            (identical(other.createdAt, createdAt) || other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt) &&
-            (identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+            (identical(other.paidAmount, paidAmount) ||
+                other.paidAmount == paidAmount) &&
+            (identical(other.totalPrice, totalPrice) ||
+                other.totalPrice == totalPrice) &&
+            const DeepCollectionEquality()
+                .equals(other.serviceModels, serviceModels) &&
+            const DeepCollectionEquality()
+                .equals(other.productModels, productModels) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.completedAt, completedAt) ||
+                other.completedAt == completedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -114,7 +124,8 @@ mixin _$WorkOrderModel {
 
 /// @nodoc
 abstract mixin class $WorkOrderModelCopyWith<$Res> {
-  factory $WorkOrderModelCopyWith(WorkOrderModel value, $Res Function(WorkOrderModel) _then) =
+  factory $WorkOrderModelCopyWith(
+          WorkOrderModel value, $Res Function(WorkOrderModel) _then) =
       _$WorkOrderModelCopyWithImpl;
   @useResult
   $Res call(
@@ -137,7 +148,8 @@ abstract mixin class $WorkOrderModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$WorkOrderModelCopyWithImpl<$Res> implements $WorkOrderModelCopyWith<$Res> {
+class _$WorkOrderModelCopyWithImpl<$Res>
+    implements $WorkOrderModelCopyWith<$Res> {
   _$WorkOrderModelCopyWithImpl(this._self, this._then);
 
   final WorkOrderModel _self;
@@ -339,8 +351,10 @@ extension WorkOrderModelPatterns on WorkOrderModel {
             @JsonKey(name: "paymentMethod") String? paymentMethod,
             @JsonKey(name: "paidAmount") int paidAmount,
             @JsonKey(name: "totalPrice") int totalPrice,
-            @JsonKey(name: "services") List<WorkOrderServiceModel> serviceModels,
-            @JsonKey(name: "products") List<WorkOrderProductModel> productModels,
+            @JsonKey(name: "services")
+            List<WorkOrderServiceModel> serviceModels,
+            @JsonKey(name: "products")
+            List<WorkOrderProductModel> productModels,
             @JsonKey(name: "createdAt") DateTime? createdAt,
             @JsonKey(name: "updatedAt") DateTime? updatedAt,
             @JsonKey(name: "completedAt") DateTime? completedAt)?
@@ -399,8 +413,10 @@ extension WorkOrderModelPatterns on WorkOrderModel {
             @JsonKey(name: "paymentMethod") String? paymentMethod,
             @JsonKey(name: "paidAmount") int paidAmount,
             @JsonKey(name: "totalPrice") int totalPrice,
-            @JsonKey(name: "services") List<WorkOrderServiceModel> serviceModels,
-            @JsonKey(name: "products") List<WorkOrderProductModel> productModels,
+            @JsonKey(name: "services")
+            List<WorkOrderServiceModel> serviceModels,
+            @JsonKey(name: "products")
+            List<WorkOrderProductModel> productModels,
             @JsonKey(name: "createdAt") DateTime? createdAt,
             @JsonKey(name: "updatedAt") DateTime? updatedAt,
             @JsonKey(name: "completedAt") DateTime? completedAt)
@@ -457,8 +473,10 @@ extension WorkOrderModelPatterns on WorkOrderModel {
             @JsonKey(name: "paymentMethod") String? paymentMethod,
             @JsonKey(name: "paidAmount") int paidAmount,
             @JsonKey(name: "totalPrice") int totalPrice,
-            @JsonKey(name: "services") List<WorkOrderServiceModel> serviceModels,
-            @JsonKey(name: "products") List<WorkOrderProductModel> productModels,
+            @JsonKey(name: "services")
+            List<WorkOrderServiceModel> serviceModels,
+            @JsonKey(name: "products")
+            List<WorkOrderProductModel> productModels,
             @JsonKey(name: "createdAt") DateTime? createdAt,
             @JsonKey(name: "updatedAt") DateTime? updatedAt,
             @JsonKey(name: "completedAt") DateTime? completedAt)?
@@ -506,15 +524,18 @@ class _WorkOrderModel extends WorkOrderModel {
       @JsonKey(name: "paymentMethod") this.paymentMethod,
       @JsonKey(name: "paidAmount") this.paidAmount = 0,
       @JsonKey(name: "totalPrice") required this.totalPrice,
-      @JsonKey(name: "services") final List<WorkOrderServiceModel> serviceModels = const [],
-      @JsonKey(name: "products") final List<WorkOrderProductModel> productModels = const [],
+      @JsonKey(name: "services")
+      final List<WorkOrderServiceModel> serviceModels = const [],
+      @JsonKey(name: "products")
+      final List<WorkOrderProductModel> productModels = const [],
       @JsonKey(name: "createdAt") this.createdAt,
       @JsonKey(name: "updatedAt") this.updatedAt,
       @JsonKey(name: "completedAt") this.completedAt})
       : _serviceModels = serviceModels,
         _productModels = productModels,
         super._();
-  factory _WorkOrderModel.fromJson(Map<String, dynamic> json) => _$WorkOrderModelFromJson(json);
+  factory _WorkOrderModel.fromJson(Map<String, dynamic> json) =>
+      _$WorkOrderModelFromJson(json);
 
   @override
   @JsonKey(name: "id")
@@ -600,10 +621,12 @@ class _WorkOrderModel extends WorkOrderModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.workOrderCode, workOrderCode) ||
                 other.workOrderCode == workOrderCode) &&
-            (identical(other.customerId, customerId) || other.customerId == customerId) &&
+            (identical(other.customerId, customerId) ||
+                other.customerId == customerId) &&
             (identical(other.vehicleDataId, vehicleDataId) ||
                 other.vehicleDataId == vehicleDataId) &&
-            (identical(other.queueNumber, queueNumber) || other.queueNumber == queueNumber) &&
+            (identical(other.queueNumber, queueNumber) ||
+                other.queueNumber == queueNumber) &&
             (identical(other.estimatedTime, estimatedTime) ||
                 other.estimatedTime == estimatedTime) &&
             (identical(other.status, status) || other.status == status) &&
@@ -611,13 +634,20 @@ class _WorkOrderModel extends WorkOrderModel {
                 other.paymentStatus == paymentStatus) &&
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
-            (identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount) &&
-            (identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice) &&
-            const DeepCollectionEquality().equals(other._serviceModels, _serviceModels) &&
-            const DeepCollectionEquality().equals(other._productModels, _productModels) &&
-            (identical(other.createdAt, createdAt) || other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt) &&
-            (identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+            (identical(other.paidAmount, paidAmount) ||
+                other.paidAmount == paidAmount) &&
+            (identical(other.totalPrice, totalPrice) ||
+                other.totalPrice == totalPrice) &&
+            const DeepCollectionEquality()
+                .equals(other._serviceModels, _serviceModels) &&
+            const DeepCollectionEquality()
+                .equals(other._productModels, _productModels) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.completedAt, completedAt) ||
+                other.completedAt == completedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -648,8 +678,10 @@ class _WorkOrderModel extends WorkOrderModel {
 }
 
 /// @nodoc
-abstract mixin class _$WorkOrderModelCopyWith<$Res> implements $WorkOrderModelCopyWith<$Res> {
-  factory _$WorkOrderModelCopyWith(_WorkOrderModel value, $Res Function(_WorkOrderModel) _then) =
+abstract mixin class _$WorkOrderModelCopyWith<$Res>
+    implements $WorkOrderModelCopyWith<$Res> {
+  factory _$WorkOrderModelCopyWith(
+          _WorkOrderModel value, $Res Function(_WorkOrderModel) _then) =
       __$WorkOrderModelCopyWithImpl;
   @override
   @useResult
@@ -673,7 +705,8 @@ abstract mixin class _$WorkOrderModelCopyWith<$Res> implements $WorkOrderModelCo
 }
 
 /// @nodoc
-class __$WorkOrderModelCopyWithImpl<$Res> implements _$WorkOrderModelCopyWith<$Res> {
+class __$WorkOrderModelCopyWithImpl<$Res>
+    implements _$WorkOrderModelCopyWith<$Res> {
   __$WorkOrderModelCopyWithImpl(this._self, this._then);
 
   final _WorkOrderModel _self;
@@ -800,12 +833,14 @@ mixin _$WorkOrderResponseModel {
             (identical(other.success, success) || other.success == success) &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.data, data) || other.data == data) &&
-            (identical(other.errorCode, errorCode) || other.errorCode == errorCode));
+            (identical(other.errorCode, errorCode) ||
+                other.errorCode == errorCode));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, success, message, data, errorCode);
+  int get hashCode =>
+      Object.hash(runtimeType, success, message, data, errorCode);
 
   @override
   String toString() {
@@ -815,8 +850,8 @@ mixin _$WorkOrderResponseModel {
 
 /// @nodoc
 abstract mixin class $WorkOrderResponseModelCopyWith<$Res> {
-  factory $WorkOrderResponseModelCopyWith(
-          WorkOrderResponseModel value, $Res Function(WorkOrderResponseModel) _then) =
+  factory $WorkOrderResponseModelCopyWith(WorkOrderResponseModel value,
+          $Res Function(WorkOrderResponseModel) _then) =
       _$WorkOrderResponseModelCopyWithImpl;
   @useResult
   $Res call(
@@ -829,7 +864,8 @@ abstract mixin class $WorkOrderResponseModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$WorkOrderResponseModelCopyWithImpl<$Res> implements $WorkOrderResponseModelCopyWith<$Res> {
+class _$WorkOrderResponseModelCopyWithImpl<$Res>
+    implements $WorkOrderResponseModelCopyWith<$Res> {
   _$WorkOrderResponseModelCopyWithImpl(this._self, this._then);
 
   final WorkOrderResponseModel _self;
@@ -980,7 +1016,8 @@ extension WorkOrderResponseModelPatterns on WorkOrderResponseModel {
     final _that = this;
     switch (_that) {
       case _WorkOrderResponseModel() when $default != null:
-        return $default(_that.success, _that.message, _that.data, _that.errorCode);
+        return $default(
+            _that.success, _that.message, _that.data, _that.errorCode);
       case _:
         return orElse();
     }
@@ -1011,7 +1048,8 @@ extension WorkOrderResponseModelPatterns on WorkOrderResponseModel {
     final _that = this;
     switch (_that) {
       case _WorkOrderResponseModel():
-        return $default(_that.success, _that.message, _that.data, _that.errorCode);
+        return $default(
+            _that.success, _that.message, _that.data, _that.errorCode);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -1041,7 +1079,8 @@ extension WorkOrderResponseModelPatterns on WorkOrderResponseModel {
     final _that = this;
     switch (_that) {
       case _WorkOrderResponseModel() when $default != null:
-        return $default(_that.success, _that.message, _that.data, _that.errorCode);
+        return $default(
+            _that.success, _that.message, _that.data, _that.errorCode);
       case _:
         return null;
     }
@@ -1078,7 +1117,8 @@ class _WorkOrderResponseModel implements WorkOrderResponseModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
   _$WorkOrderResponseModelCopyWith<_WorkOrderResponseModel> get copyWith =>
-      __$WorkOrderResponseModelCopyWithImpl<_WorkOrderResponseModel>(this, _$identity);
+      __$WorkOrderResponseModelCopyWithImpl<_WorkOrderResponseModel>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1095,12 +1135,14 @@ class _WorkOrderResponseModel implements WorkOrderResponseModel {
             (identical(other.success, success) || other.success == success) &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.data, data) || other.data == data) &&
-            (identical(other.errorCode, errorCode) || other.errorCode == errorCode));
+            (identical(other.errorCode, errorCode) ||
+                other.errorCode == errorCode));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, success, message, data, errorCode);
+  int get hashCode =>
+      Object.hash(runtimeType, success, message, data, errorCode);
 
   @override
   String toString() {
@@ -1111,8 +1153,8 @@ class _WorkOrderResponseModel implements WorkOrderResponseModel {
 /// @nodoc
 abstract mixin class _$WorkOrderResponseModelCopyWith<$Res>
     implements $WorkOrderResponseModelCopyWith<$Res> {
-  factory _$WorkOrderResponseModelCopyWith(
-          _WorkOrderResponseModel value, $Res Function(_WorkOrderResponseModel) _then) =
+  factory _$WorkOrderResponseModelCopyWith(_WorkOrderResponseModel value,
+          $Res Function(_WorkOrderResponseModel) _then) =
       __$WorkOrderResponseModelCopyWithImpl;
   @override
   @useResult
@@ -1177,7 +1219,7 @@ class __$WorkOrderResponseModelCopyWithImpl<$Res>
 
 /// @nodoc
 mixin _$WorkOrderDataModel {
-  @JsonKey(name: "workOrders")
+  @JsonKey(name: "data")
   List<WorkOrderModel> get workOrders;
   @JsonKey(name: "total")
   int get total;
@@ -1187,7 +1229,8 @@ mixin _$WorkOrderDataModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
   $WorkOrderDataModelCopyWith<WorkOrderDataModel> get copyWith =>
-      _$WorkOrderDataModelCopyWithImpl<WorkOrderDataModel>(this as WorkOrderDataModel, _$identity);
+      _$WorkOrderDataModelCopyWithImpl<WorkOrderDataModel>(
+          this as WorkOrderDataModel, _$identity);
 
   /// Serializes this WorkOrderDataModel to a JSON map.
   Map<String, dynamic> toJson();
@@ -1197,14 +1240,15 @@ mixin _$WorkOrderDataModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is WorkOrderDataModel &&
-            const DeepCollectionEquality().equals(other.workOrders, workOrders) &&
+            const DeepCollectionEquality()
+                .equals(other.workOrders, workOrders) &&
             (identical(other.total, total) || other.total == total));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(workOrders), total);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(workOrders), total);
 
   @override
   String toString() {
@@ -1219,12 +1263,13 @@ abstract mixin class $WorkOrderDataModelCopyWith<$Res> {
       _$WorkOrderDataModelCopyWithImpl;
   @useResult
   $Res call(
-      {@JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+      {@JsonKey(name: "data") List<WorkOrderModel> workOrders,
       @JsonKey(name: "total") int total});
 }
 
 /// @nodoc
-class _$WorkOrderDataModelCopyWithImpl<$Res> implements $WorkOrderDataModelCopyWith<$Res> {
+class _$WorkOrderDataModelCopyWithImpl<$Res>
+    implements $WorkOrderDataModelCopyWith<$Res> {
   _$WorkOrderDataModelCopyWithImpl(this._self, this._then);
 
   final WorkOrderDataModel _self;
@@ -1344,7 +1389,7 @@ extension WorkOrderDataModelPatterns on WorkOrderDataModel {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(@JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+    TResult Function(@JsonKey(name: "data") List<WorkOrderModel> workOrders,
             @JsonKey(name: "total") int total)?
         $default, {
     required TResult orElse(),
@@ -1373,7 +1418,7 @@ extension WorkOrderDataModelPatterns on WorkOrderDataModel {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(@JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+    TResult Function(@JsonKey(name: "data") List<WorkOrderModel> workOrders,
             @JsonKey(name: "total") int total)
         $default,
   ) {
@@ -1400,7 +1445,7 @@ extension WorkOrderDataModelPatterns on WorkOrderDataModel {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(@JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+    TResult? Function(@JsonKey(name: "data") List<WorkOrderModel> workOrders,
             @JsonKey(name: "total") int total)?
         $default,
   ) {
@@ -1418,7 +1463,7 @@ extension WorkOrderDataModelPatterns on WorkOrderDataModel {
 @JsonSerializable()
 class _WorkOrderDataModel implements WorkOrderDataModel {
   const _WorkOrderDataModel(
-      {@JsonKey(name: "workOrders") required final List<WorkOrderModel> workOrders,
+      {@JsonKey(name: "data") required final List<WorkOrderModel> workOrders,
       @JsonKey(name: "total") required this.total})
       : _workOrders = workOrders;
   factory _WorkOrderDataModel.fromJson(Map<String, dynamic> json) =>
@@ -1426,7 +1471,7 @@ class _WorkOrderDataModel implements WorkOrderDataModel {
 
   final List<WorkOrderModel> _workOrders;
   @override
-  @JsonKey(name: "workOrders")
+  @JsonKey(name: "data")
   List<WorkOrderModel> get workOrders {
     if (_workOrders is EqualUnmodifiableListView) return _workOrders;
     // ignore: implicit_dynamic_type
@@ -1457,14 +1502,15 @@ class _WorkOrderDataModel implements WorkOrderDataModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _WorkOrderDataModel &&
-            const DeepCollectionEquality().equals(other._workOrders, _workOrders) &&
+            const DeepCollectionEquality()
+                .equals(other._workOrders, _workOrders) &&
             (identical(other.total, total) || other.total == total));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_workOrders), total);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_workOrders), total);
 
   @override
   String toString() {
@@ -1481,12 +1527,13 @@ abstract mixin class _$WorkOrderDataModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "workOrders") List<WorkOrderModel> workOrders,
+      {@JsonKey(name: "data") List<WorkOrderModel> workOrders,
       @JsonKey(name: "total") int total});
 }
 
 /// @nodoc
-class __$WorkOrderDataModelCopyWithImpl<$Res> implements _$WorkOrderDataModelCopyWith<$Res> {
+class __$WorkOrderDataModelCopyWithImpl<$Res>
+    implements _$WorkOrderDataModelCopyWith<$Res> {
   __$WorkOrderDataModelCopyWithImpl(this._self, this._then);
 
   final _WorkOrderDataModel _self;

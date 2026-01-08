@@ -1,19 +1,20 @@
 import 'package:bloc/bloc.dart';
+import 'package:flashlight_pos/features/dashboard/domain/entities/dashboard_stats.dart';
 import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
+import 'package:flashlight_pos/shared/models/ui_state_model.dart';
 
 import '../../../../core/usecase/usecase.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/domain/usecases/get_customers.dart';
+import '../../../product/domain/entities/product.dart';
+import '../../../service/domain/entities/service_entity.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
 import '../../../vehicle/domain/usecases/vehicle_usecases.dart';
 import '../../../work_order/domain/entities/work_order.dart';
+import '../../../work_order/domain/entities/work_order_product.dart';
+import '../../../work_order/domain/entities/work_order_service.dart';
 import '../../../work_order/domain/usecases/update_work_order_status.dart';
 import '../../domain/usecases/get_dashboard_stats.dart';
-
-import '../../../service/domain/entities/service_entity.dart';
-import '../../../product/domain/entities/product.dart';
-import '../../../work_order/domain/entities/work_order_service.dart';
-import '../../../work_order/domain/entities/work_order_product.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
@@ -39,22 +40,20 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<RemoveWorkOrderItemEvent>(_onRemoveWorkOrderItem);
   }
 
-  Future<void> _onLoadDashboardStats(
-      LoadDashboardStats event, Emitter<DashboardState> emit) async {
+  Future<void> _onLoadDashboardStats(LoadDashboardStats event, Emitter<DashboardState> emit) async {
     emit(DashboardLoading());
     await _loadDashboardData(emit);
   }
 
-  Future<void> _onRefreshDashboard(
-      RefreshDashboard event, Emitter<DashboardState> emit) async {
+  Future<void> _onRefreshDashboard(RefreshDashboard event, Emitter<DashboardState> emit) async {
     // Refresh without showing full loading state
     await _loadDashboardData(emit);
   }
 
   Future<void> _loadDashboardData(Emitter<DashboardState> emit) async {
     try {
-      // Get dashboard stats from API
-      final statsResult = await getDashboardStats(NoParams());
+      // Get dashboard stats from API (returns UIStateModel<DashboardStats>)
+      final statsResult = await getDashboardStats(const DashboardParams(isPrototype: true));
 
       // Get work orders, customers, and vehicles for detailed view
       final ordersResult = await getWorkOrders(NoParams());
@@ -64,7 +63,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       // Handle failures
       if (statsResult.isLeft()) {
         final failure = statsResult.fold((l) => l, (r) => null);
-        emit(DashboardError('Failed to load dashboard stats: ${failure?.message ?? "Unknown error"}'));
+        emit(DashboardError(
+            'Failed to load dashboard stats: ${failure?.message ?? "Unknown error"}'));
         return;
       }
 
@@ -74,52 +74,71 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         return;
       }
 
-      // Extract data
-      final stats = statsResult.fold((l) => null, (r) => r)!;
-      final orders = ordersResult.fold((l) => [], (r) => r);
-      final customers = customersResult.fold((l) => <Customer>[], (r) => r.data);
-      final vehicles = vehiclesResult.fold((l) => [], (r) => r);
+      // Extract UIStateModel from Either
+      final statsUIState = statsResult.fold((l) => null, (r) => r)!;
 
-      // Build Customer Map
-      final customerMap = <String, Customer>{};
-      for (var c in customers) {
-        customerMap[c.id] = c;
+      // Handle UIStateModel states using switch pattern matching
+      switch (statsUIState) {
+        case UIStateModelSuccess<DashboardStats>(:final data):
+          final stats = data;
+
+          // Extract data from other sources
+          final orders = ordersResult.fold((l) => [], (r) => r);
+          final customers = customersResult.fold((l) => <Customer>[], (r) => r.data);
+          final vehicles = vehiclesResult.fold((l) => [], (r) => r);
+
+          // Build Customer Map
+          final customerMap = <String, Customer>{};
+          for (var c in customers) {
+            customerMap[c.id] = c;
+          }
+
+          // Build Vehicle Map
+          final vehicleMap = <String, Vehicle>{};
+          for (var v in vehicles) {
+            vehicleMap[v.id] = v;
+          }
+
+          // Build status counts with "Semua" (All)
+          final statusCounts = <String, int>{
+            'Semua': stats.totalOrders,
+            ...stats.statusCounts,
+          };
+
+          // Sort orders by date descending (newest first)
+          final sortedOrders = List<WorkOrder>.from(orders)
+            ..sort(
+                (a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
+
+          emit(DashboardLoaded(
+            totalOrders: stats.totalOrders,
+            totalRevenue: stats.totalRevenue,
+            recentOrders: sortedOrders,
+            filteredOrders: sortedOrders,
+            customers: customerMap,
+            vehicles: vehicleMap,
+            statusCounts: statusCounts,
+            selectedStatus: 'Semua',
+          ));
+
+        case UIStateModelEmpty<DashboardStats>(:final message):
+          emit(DashboardError(message));
+
+        case UIStateModelLoading<DashboardStats>():
+          emit(DashboardLoading());
+
+        case UIStateModelError<DashboardStats>(:final message):
+          emit(DashboardError(message));
+
+        case UIStateModelIdle<DashboardStats>():
+          emit(DashboardInitial());
       }
-
-      // Build Vehicle Map
-      final vehicleMap = <String, Vehicle>{};
-      for (var v in vehicles) {
-        vehicleMap[v.id] = v;
-      }
-
-      // Build status counts with "Semua" (All)
-      final statusCounts = <String, int>{
-        'Semua': stats.totalOrders,
-        ...stats.statusCounts,
-      };
-
-      // Sort orders by date descending (newest first)
-      final sortedOrders = List<WorkOrder>.from(orders)
-        ..sort((a, b) => (b.createdAt ?? DateTime.now())
-            .compareTo(a.createdAt ?? DateTime.now()));
-
-      emit(DashboardLoaded(
-        totalOrders: stats.totalOrders,
-        totalRevenue: stats.totalRevenue,
-        recentOrders: sortedOrders,
-        filteredOrders: sortedOrders,
-        customers: customerMap,
-        vehicles: vehicleMap,
-        statusCounts: statusCounts,
-        selectedStatus: 'Semua',
-      ));
     } catch (e) {
       emit(DashboardError('Failed to load dashboard data: ${e.toString()}'));
     }
   }
 
-  void _onFilterWorkOrders(
-      FilterWorkOrders event, Emitter<DashboardState> emit) {
+  void _onFilterWorkOrders(FilterWorkOrders event, Emitter<DashboardState> emit) {
     if (state is DashboardLoaded) {
       final currentState = state as DashboardLoaded;
       final allOrders = currentState.recentOrders;
@@ -131,9 +150,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       // 1. Filter by Status
       if (filterStatus != 'Semua') {
-        filtered = filtered
-            .where((o) => o.status.toLowerCase() == filterStatus.toLowerCase())
-            .toList();
+        filtered =
+            filtered.where((o) => o.status.toLowerCase() == filterStatus.toLowerCase()).toList();
       }
 
       // 2. Filter by Search Query
@@ -200,9 +218,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         products: workOrder.products,
         createdAt: workOrder.createdAt,
         updatedAt: DateTime.now(),
-        completedAt: event.newStatus == 'completed'
-            ? DateTime.now()
-            : workOrder.completedAt,
+        completedAt: event.newStatus == 'completed' ? DateTime.now() : workOrder.completedAt,
       );
 
       // Update the work order in the list (in-memory for dummy data)
@@ -219,16 +235,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       // Sort again
       final sortedOrders = List<WorkOrder>.from(updatedOrders)
-        ..sort((a, b) => (b.createdAt ?? DateTime.now())
-            .compareTo(a.createdAt ?? DateTime.now()));
+        ..sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
 
       // Apply current filters
       List<WorkOrder> filtered = sortedOrders;
       if (currentState.selectedStatus != 'Semua') {
         filtered = filtered
-            .where((o) =>
-                o.status.toLowerCase() ==
-                currentState.selectedStatus.toLowerCase())
+            .where((o) => o.status.toLowerCase() == currentState.selectedStatus.toLowerCase())
             .toList();
       }
       if (currentState.searchQuery.isNotEmpty) {
@@ -272,8 +285,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     // await Future.delayed(const Duration(milliseconds: 500));
 
     try {
-      final workOrder = currentState.recentOrders
-          .firstWhere((wo) => wo.id == event.workOrderId);
+      final workOrder = currentState.recentOrders.firstWhere((wo) => wo.id == event.workOrderId);
 
       List<WorkOrderService> newServices = List.from(workOrder.services);
       List<WorkOrderProduct> newProducts = List.from(workOrder.products);
@@ -374,8 +386,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       // Sort
       final sortedOrders = List<WorkOrder>.from(updatedOrders)
-        ..sort((a, b) => (b.createdAt ?? DateTime.now())
-            .compareTo(a.createdAt ?? DateTime.now()));
+        ..sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
 
       emit(currentState.copyWith(
         recentOrders: sortedOrders,
@@ -396,24 +407,20 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     // No loading state for smoother removal
 
     try {
-      final workOrder = currentState.recentOrders
-          .firstWhere((wo) => wo.id == event.workOrderId);
+      final workOrder = currentState.recentOrders.firstWhere((wo) => wo.id == event.workOrderId);
 
       List<WorkOrderService> newServices = List.from(workOrder.services);
       List<WorkOrderProduct> newProducts = List.from(workOrder.products);
       int removedPrice = 0;
 
       if (event.type == 'Service') {
-        final itemToRemove =
-            newServices.firstWhere((s) => s.id == event.itemId);
+        final itemToRemove = newServices.firstWhere((s) => s.id == event.itemId);
         removedPrice = itemToRemove
             .priceAtOrder; // Simplification: assuming quantity 1 or removal removes whole entry
         newServices.removeWhere((s) => s.id == event.itemId);
       } else {
-        final itemToRemove =
-            newProducts.firstWhere((p) => p.id == event.itemId);
-        removedPrice = itemToRemove.priceAtOrder *
-            itemToRemove.quantity; // Remove subtotal?
+        final itemToRemove = newProducts.firstWhere((p) => p.id == event.itemId);
+        removedPrice = itemToRemove.priceAtOrder * itemToRemove.quantity; // Remove subtotal?
         // Note: For now assuming we remove the whole line item.
         // Ideally we should check subtotal field but priceAtOrder * quantity is safer if subtotal logic varies.
         // Actually, let's use the subtotal field if available, or calc it.
@@ -456,8 +463,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       // Sort
       final sortedOrders = List<WorkOrder>.from(updatedOrders)
-        ..sort((a, b) => (b.createdAt ?? DateTime.now())
-            .compareTo(a.createdAt ?? DateTime.now()));
+        ..sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
 
       emit(currentState.copyWith(
         recentOrders: sortedOrders,

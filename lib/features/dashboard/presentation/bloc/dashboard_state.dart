@@ -7,6 +7,16 @@ import '../../../work_order/domain/entities/work_order.dart';
 abstract class DashboardState extends Equatable {
   const DashboardState();
 
+  bool get isLoading => this is DashboardLoading;
+  bool get isSuccess => this is DashboardLoaded;
+  bool get isError => this is DashboardError;
+  bool get isUpdating => this is DashboardUpdating;
+  bool get isInitial => this is DashboardInitial;
+
+  DashboardLoaded get loaded => this as DashboardLoaded;
+  DashboardError? get error => isError ? this as DashboardError : null;
+  DashboardUpdating get updating => this as DashboardUpdating;
+
   @override
   List<Object> get props => [];
 }

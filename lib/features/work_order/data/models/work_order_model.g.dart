@@ -6,7 +6,8 @@ part of 'work_order_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_WorkOrderModel _$WorkOrderModelFromJson(Map<String, dynamic> json) => _WorkOrderModel(
+_WorkOrderModel _$WorkOrderModelFromJson(Map<String, dynamic> json) =>
+    _WorkOrderModel(
       id: json['id'] as String,
       workOrderCode: json['workOrderCode'] as String,
       customerId: json['customerId'] as String,
@@ -19,20 +20,28 @@ _WorkOrderModel _$WorkOrderModelFromJson(Map<String, dynamic> json) => _WorkOrde
       paidAmount: (json['paidAmount'] as num?)?.toInt() ?? 0,
       totalPrice: (json['totalPrice'] as num).toInt(),
       serviceModels: (json['services'] as List<dynamic>?)
-              ?.map((e) => WorkOrderServiceModel.fromJson(e as Map<String, dynamic>))
+              ?.map((e) =>
+                  WorkOrderServiceModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       productModels: (json['products'] as List<dynamic>?)
-              ?.map((e) => WorkOrderProductModel.fromJson(e as Map<String, dynamic>))
+              ?.map((e) =>
+                  WorkOrderProductModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null ? null : DateTime.parse(json['updatedAt'] as String),
-      completedAt:
-          json['completedAt'] == null ? null : DateTime.parse(json['completedAt'] as String),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      completedAt: json['completedAt'] == null
+          ? null
+          : DateTime.parse(json['completedAt'] as String),
     );
 
-Map<String, dynamic> _$WorkOrderModelToJson(_WorkOrderModel instance) => <String, dynamic>{
+Map<String, dynamic> _$WorkOrderModelToJson(_WorkOrderModel instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'workOrderCode': instance.workOrderCode,
       'customerId': instance.customerId,
@@ -51,7 +60,8 @@ Map<String, dynamic> _$WorkOrderModelToJson(_WorkOrderModel instance) => <String
       'completedAt': instance.completedAt?.toIso8601String(),
     };
 
-_WorkOrderResponseModel _$WorkOrderResponseModelFromJson(Map<String, dynamic> json) =>
+_WorkOrderResponseModel _$WorkOrderResponseModelFromJson(
+        Map<String, dynamic> json) =>
     _WorkOrderResponseModel(
       success: json['success'] as bool,
       message: json['message'] as String,
@@ -59,7 +69,8 @@ _WorkOrderResponseModel _$WorkOrderResponseModelFromJson(Map<String, dynamic> js
       errorCode: (json['error_code'] as num).toInt(),
     );
 
-Map<String, dynamic> _$WorkOrderResponseModelToJson(_WorkOrderResponseModel instance) =>
+Map<String, dynamic> _$WorkOrderResponseModelToJson(
+        _WorkOrderResponseModel instance) =>
     <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
@@ -67,14 +78,16 @@ Map<String, dynamic> _$WorkOrderResponseModelToJson(_WorkOrderResponseModel inst
       'error_code': instance.errorCode,
     };
 
-_WorkOrderDataModel _$WorkOrderDataModelFromJson(Map<String, dynamic> json) => _WorkOrderDataModel(
-      workOrders: (json['workOrders'] as List<dynamic>)
+_WorkOrderDataModel _$WorkOrderDataModelFromJson(Map<String, dynamic> json) =>
+    _WorkOrderDataModel(
+      workOrders: (json['data'] as List<dynamic>)
           .map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       total: (json['total'] as num).toInt(),
     );
 
-Map<String, dynamic> _$WorkOrderDataModelToJson(_WorkOrderDataModel instance) => <String, dynamic>{
-      'workOrders': instance.workOrders,
+Map<String, dynamic> _$WorkOrderDataModelToJson(_WorkOrderDataModel instance) =>
+    <String, dynamic>{
+      'data': instance.workOrders,
       'total': instance.total,
     };
