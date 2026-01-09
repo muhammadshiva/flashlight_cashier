@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flashlight_pos/features/dashboard/domain/entities/dashboard_stats.dart';
 import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
-import 'package:flashlight_pos/shared/models/ui_state_model.dart';
 
 import '../../../../core/usecase/usecase.dart';
 import '../../../customer/domain/entities/customer.dart';
@@ -52,40 +50,48 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   Future<void> _loadDashboardData(Emitter<DashboardState> emit) async {
     try {
-      // Get dashboard stats from API (returns UIStateModel<DashboardStats>)
-      final statsResult = await getDashboardStats(const DashboardParams(isPrototype: true));
+      // Get dashboard stats from API (returns Either<Failure, DashboardStats>)
+      final statsResult = await getDashboardStats(
+        const DashboardParams(isPrototype: true),
+      );
 
       // Get work orders, customers, and vehicles for detailed view
       final ordersResult = await getWorkOrders(NoParams());
       final customersResult = await getCustomers(const GetCustomersParams());
       final vehiclesResult = await getVehicles(NoParams());
 
-      // Handle failures
-      if (statsResult.isLeft()) {
-        final failure = statsResult.fold((l) => l, (r) => null);
-        emit(DashboardError(
-            'Failed to load dashboard stats: ${failure?.message ?? "Unknown error"}'));
-        return;
-      }
+      // Handle dashboard stats result using fold pattern
+      statsResult.fold(
+        // On failure - emit error state
+        (failure) {
+          emit(DashboardError(
+            'Failed to load dashboard stats: ${failure.message}',
+          ));
+        },
+        // On success - process the data
+        (stats) {
+          // Handle work orders failure separately
+          if (ordersResult.isLeft()) {
+            final failure = ordersResult.fold((l) => l, (r) => null);
+            emit(DashboardError(
+              'Failed to load work orders: ${failure?.message ?? "Unknown error"}',
+            ));
+            return;
+          }
 
-      if (ordersResult.isLeft()) {
-        final failure = ordersResult.fold((l) => l, (r) => null);
-        emit(DashboardError('Failed to load work orders: ${failure?.message ?? "Unknown error"}'));
-        return;
-      }
-
-      // Extract UIStateModel from Either
-      final statsUIState = statsResult.fold((l) => null, (r) => r)!;
-
-      // Handle UIStateModel states using switch pattern matching
-      switch (statsUIState) {
-        case UIStateModelSuccess<DashboardStats>(:final data):
-          final stats = data;
-
-          // Extract data from other sources
-          final orders = ordersResult.fold((l) => [], (r) => r);
-          final customers = customersResult.fold((l) => <Customer>[], (r) => r.data);
-          final vehicles = vehiclesResult.fold((l) => [], (r) => r);
+          // Extract data from other sources (with fallback for failures)
+          final orders = ordersResult.fold(
+            (l) => <WorkOrder>[],
+            (r) => r,
+          );
+          final customers = customersResult.fold(
+            (l) => <Customer>[],
+            (r) => r.data,
+          );
+          final vehicles = vehiclesResult.fold(
+            (l) => <Vehicle>[],
+            (r) => r,
+          );
 
           // Build Customer Map
           final customerMap = <String, Customer>{};
@@ -107,8 +113,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
           // Sort orders by date descending (newest first)
           final sortedOrders = List<WorkOrder>.from(orders)
-            ..sort(
-                (a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
+            ..sort((a, b) =>
+                (b.createdAt ?? DateTime.now()).compareTo(
+                  a.createdAt ?? DateTime.now(),
+                ));
 
           emit(DashboardLoaded(
             totalOrders: stats.totalOrders,
@@ -120,19 +128,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             statusCounts: statusCounts,
             selectedStatus: 'Semua',
           ));
-
-        case UIStateModelEmpty<DashboardStats>(:final message):
-          emit(DashboardError(message));
-
-        case UIStateModelLoading<DashboardStats>():
-          emit(DashboardLoading());
-
-        case UIStateModelError<DashboardStats>(:final message):
-          emit(DashboardError(message));
-
-        case UIStateModelIdle<DashboardStats>():
-          emit(DashboardInitial());
-      }
+        },
+      );
     } catch (e) {
       emit(DashboardError('Failed to load dashboard data: ${e.toString()}'));
     }
