@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
 
 import '../../../../core/error/failures.dart';
 import '../models/work_order_model.dart';
@@ -9,7 +10,7 @@ abstract class WorkOrderRemoteDataSource {
   Future<WorkOrderModel> createWorkOrder(WorkOrderModel workOrder);
 
   /// Gets all work orders from the API.
-  Future<List<WorkOrderModel>> getWorkOrders();
+  Future<List<WorkOrderModel>> getWorkOrders({required GetWorkOrdersParams params});
 
   /// Updates an existing work order via the API.
   Future<WorkOrderModel> updateWorkOrder(WorkOrderModel workOrder);
@@ -39,8 +40,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          return WorkOrderModel.fromJson(
-              result['data'] as Map<String, dynamic>);
+          return WorkOrderModel.fromJson(result['data'] as Map<String, dynamic>);
         }
         // If no data key but has id, assume result itself is the work order
         if (result.containsKey('id')) {
@@ -58,8 +58,14 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
   }
 
   @override
-  Future<List<WorkOrderModel>> getWorkOrders() async {
+  Future<List<WorkOrderModel>> getWorkOrders({required GetWorkOrdersParams params}) async {
     try {
+      if (params.isPrototype) {
+        // Return prototype dummy data
+        await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
+        return WorkOrderResponseModel.getPrototypeDataWorkOrders;
+      }
+
       final response = await dio.get('/work-orders');
 
       // Handle API envelope: { success, message, data: { workOrders: [...], total }, error_code }
@@ -70,17 +76,14 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
 
           // Handle both array response and object with workOrders field
           if (data is List) {
-            return data
-                .map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
-                .toList();
+            return data.map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>)).toList();
           }
 
           if (data is Map<String, dynamic>) {
             final workOrdersList = data['workOrders'] ?? data['data'];
             if (workOrdersList is List) {
               return workOrdersList
-                  .map(
-                      (e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
+                  .map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
                   .toList();
             }
           }
@@ -93,9 +96,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
 
       // If response is directly a list (fallback for different API formats)
       if (result is List) {
-        return result
-            .map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>))
-            .toList();
+        return result.map((e) => WorkOrderModel.fromJson(e as Map<String, dynamic>)).toList();
       }
 
       throw const ServerFailure('Invalid response format');
@@ -118,8 +119,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          return WorkOrderModel.fromJson(
-              result['data'] as Map<String, dynamic>);
+          return WorkOrderModel.fromJson(result['data'] as Map<String, dynamic>);
         }
         // If no data key but has id, assume result itself is the work order
         if (result.containsKey('id')) {
@@ -148,15 +148,13 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          return WorkOrderModel.fromJson(
-              result['data'] as Map<String, dynamic>);
+          return WorkOrderModel.fromJson(result['data'] as Map<String, dynamic>);
         }
         // If no data key but has id, assume result itself is the work order
         if (result.containsKey('id')) {
           return WorkOrderModel.fromJson(result);
         }
-        throw ServerFailure(
-            result['message'] ?? 'Failed to update work order status');
+        throw ServerFailure(result['message'] ?? 'Failed to update work order status');
       }
 
       throw const ServerFailure('Invalid response format');
@@ -176,8 +174,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          return WorkOrderModel.fromJson(
-              result['data'] as Map<String, dynamic>);
+          return WorkOrderModel.fromJson(result['data'] as Map<String, dynamic>);
         }
         // If no data key but has id, assume result itself is the work order
         if (result.containsKey('id')) {

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../../core/usecase/usecase.dart';
+
 import '../../domain/entities/vehicle.dart';
 import '../../domain/usecases/vehicle_usecases.dart';
 
@@ -21,7 +21,7 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   }) : super(VehicleInitial()) {
     on<LoadVehicles>((event, emit) async {
       emit(VehicleLoading());
-      final result = await getVehicles(NoParams());
+      final result = await getVehicles(const GetVehicleParams(isPrototype: true));
       result.fold(
         (failure) => emit(VehicleError(failure.message)),
         (vehicles) {

@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:flashlight_pos/features/vehicle/domain/usecases/vehicle_usecases.dart';
+
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/vehicle.dart';
 import '../../domain/repositories/vehicle_repository.dart';
@@ -11,9 +13,9 @@ class VehicleRepositoryImpl implements VehicleRepository {
   VehicleRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<Vehicle>>> getVehicles() async {
+  Future<Either<Failure, List<Vehicle>>> getVehicles({required GetVehicleParams params}) async {
     try {
-      final result = await remoteDataSource.getVehicles();
+      final result = await remoteDataSource.getVehicles(params: params);
       return Right(result.map((e) => e.toEntity()).toList());
     } on Failure catch (e) {
       return Left(e);

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
 
 import '../../../../core/error/failures.dart';
 import '../entities/work_order.dart';
@@ -9,7 +10,7 @@ abstract class WorkOrderRepository {
   Future<Either<Failure, WorkOrder>> createWorkOrder(WorkOrder workOrder);
 
   /// Gets all work orders.
-  Future<Either<Failure, List<WorkOrder>>> getWorkOrders();
+  Future<Either<Failure, List<WorkOrder>>> getWorkOrders({required GetWorkOrdersParams params});
 
   /// Updates an existing work order.
   Future<Either<Failure, WorkOrder>> updateWorkOrder(WorkOrder workOrder);

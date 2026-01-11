@@ -1,12 +1,9 @@
-// ignore_for_file: invalid_annotation_target
-
-import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../domain/entities/work_order_service.dart';
-import '../../../service/data/models/service_model.dart';
 import 'dart:convert';
 
-part 'work_order_service_model.freezed.dart';
-part 'work_order_service_model.g.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../domain/entities/work_order_service.dart';
+import '../../../service/data/models/service_model.dart';
 
 WorkOrderServiceModel workOrderServiceModelFromJson(String str) =>
     WorkOrderServiceModel.fromJson(json.decode(str));
@@ -14,22 +11,67 @@ WorkOrderServiceModel workOrderServiceModelFromJson(String str) =>
 String workOrderServiceModelToJson(WorkOrderServiceModel data) =>
     json.encode(data.toJson());
 
-@freezed
-abstract class WorkOrderServiceModel with _$WorkOrderServiceModel {
-  const WorkOrderServiceModel._();
+class WorkOrderServiceModel extends Equatable {
+  final String id;
+  final String workOrderId;
+  final String serviceId;
+  final int quantity;
+  final int priceAtOrder;
+  final int subtotal;
+  final ServiceModel? serviceModel;
 
-  const factory WorkOrderServiceModel({
-    @JsonKey(name: "id") required String id,
-    @JsonKey(name: "workOrderId") required String workOrderId,
-    @JsonKey(name: "serviceId") required String serviceId,
-    @JsonKey(name: "quantity") required int quantity,
-    @JsonKey(name: "priceAtOrder") required int priceAtOrder,
-    @JsonKey(name: "subtotal") required int subtotal,
-    @JsonKey(name: "service") ServiceModel? serviceModel,
-  }) = _WorkOrderServiceModel;
+  const WorkOrderServiceModel({
+    required this.id,
+    required this.workOrderId,
+    required this.serviceId,
+    required this.quantity,
+    required this.priceAtOrder,
+    required this.subtotal,
+    this.serviceModel,
+  });
 
   factory WorkOrderServiceModel.fromJson(Map<String, dynamic> json) =>
-      _$WorkOrderServiceModelFromJson(json);
+      WorkOrderServiceModel(
+        id: json["id"] as String,
+        workOrderId: json["workOrderId"] as String,
+        serviceId: json["serviceId"] as String,
+        quantity: json["quantity"] as int,
+        priceAtOrder: json["priceAtOrder"] as int,
+        subtotal: json["subtotal"] as int,
+        serviceModel: json["service"] != null
+            ? ServiceModel.fromJson(json["service"] as Map<String, dynamic>)
+            : null,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "workOrderId": workOrderId,
+        "serviceId": serviceId,
+        "quantity": quantity,
+        "priceAtOrder": priceAtOrder,
+        "subtotal": subtotal,
+        if (serviceModel != null) "service": serviceModel!.toJson(),
+      };
+
+  WorkOrderServiceModel copyWith({
+    String? id,
+    String? workOrderId,
+    String? serviceId,
+    int? quantity,
+    int? priceAtOrder,
+    int? subtotal,
+    ServiceModel? serviceModel,
+  }) {
+    return WorkOrderServiceModel(
+      id: id ?? this.id,
+      workOrderId: workOrderId ?? this.workOrderId,
+      serviceId: serviceId ?? this.serviceId,
+      quantity: quantity ?? this.quantity,
+      priceAtOrder: priceAtOrder ?? this.priceAtOrder,
+      subtotal: subtotal ?? this.subtotal,
+      serviceModel: serviceModel ?? this.serviceModel,
+    );
+  }
 
   WorkOrderService toEntity() => WorkOrderService(
         id: id,
@@ -40,4 +82,15 @@ abstract class WorkOrderServiceModel with _$WorkOrderServiceModel {
         subtotal: subtotal,
         service: serviceModel?.toEntity(),
       );
+
+  @override
+  List<Object?> get props => [
+        id,
+        workOrderId,
+        serviceId,
+        quantity,
+        priceAtOrder,
+        subtotal,
+        serviceModel,
+      ];
 }

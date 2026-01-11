@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
 
-import '../../../../core/usecase/usecase.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/domain/usecases/get_customers.dart';
 import '../../../product/domain/entities/product.dart';
@@ -51,14 +50,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _loadDashboardData(Emitter<DashboardState> emit) async {
     try {
       // Get dashboard stats from API (returns Either<Failure, DashboardStats>)
-      final statsResult = await getDashboardStats(
-        const DashboardParams(isPrototype: true),
-      );
+      final statsResult = await getDashboardStats(const DashboardParams(isPrototype: true));
 
       // Get work orders, customers, and vehicles for detailed view
-      final ordersResult = await getWorkOrders(NoParams());
-      final customersResult = await getCustomers(const GetCustomersParams());
-      final vehiclesResult = await getVehicles(NoParams());
+      final ordersResult = await getWorkOrders(const GetWorkOrdersParams(isPrototype: true));
+      final customersResult = await getCustomers(const GetCustomersParams(isPrototype: true));
+      final vehiclesResult = await getVehicles(const GetVehicleParams(isPrototype: true));
 
       // Handle dashboard stats result using fold pattern
       statsResult.fold(
@@ -113,8 +110,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
           // Sort orders by date descending (newest first)
           final sortedOrders = List<WorkOrder>.from(orders)
-            ..sort((a, b) =>
-                (b.createdAt ?? DateTime.now()).compareTo(
+            ..sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(
                   a.createdAt ?? DateTime.now(),
                 ));
 

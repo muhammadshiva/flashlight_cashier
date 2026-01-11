@@ -1,14 +1,12 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/usecase/usecase.dart';
+
 import '../../../../injection_container.dart';
+import '../../../work_order/domain/usecases/update_work_order_status.dart';
 import '../../../work_order/domain/usecases/work_order_usecases.dart';
 import '../../domain/entities/work_order.dart';
-
-import 'package:equatable/equatable.dart';
-
-import '../../../work_order/domain/usecases/update_work_order_status.dart';
 
 abstract class WorkOrderListEvent extends Equatable {
   const WorkOrderListEvent();
@@ -62,7 +60,7 @@ class WorkOrderListBloc extends Bloc<WorkOrderListEvent, WorkOrderListState> {
   }) : super(WorkOrderListInitial()) {
     on<LoadWorkOrders>((event, emit) async {
       emit(WorkOrderListLoading());
-      final result = await getWorkOrders(NoParams()); // Fix NoParams usage
+      final result = await getWorkOrders(const GetWorkOrdersParams());
       result.fold(
         (failure) => emit(WorkOrderListError(failure.message)),
         (orders) => emit(WorkOrderListLoaded(orders)),
@@ -103,9 +101,8 @@ class WorkOrderListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          WorkOrderListBloc(getWorkOrders: sl(), updateWorkOrderStatus: sl())
-            ..add(LoadWorkOrders()),
+      create: (_) => WorkOrderListBloc(getWorkOrders: sl(), updateWorkOrderStatus: sl())
+        ..add(LoadWorkOrders()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Work Orders'),
@@ -151,13 +148,10 @@ class WorkOrderListPage extends StatelessWidget {
                               },
                               itemBuilder: (context) => [
                                 const PopupMenuItem(
-                                    value: 'in_progress',
-                                    child: Text('Mark In Progress')),
+                                    value: 'in_progress', child: Text('Mark In Progress')),
                                 const PopupMenuItem(
-                                    value: 'completed',
-                                    child: Text('Mark Completed')),
-                                const PopupMenuItem(
-                                    value: 'cancelled', child: Text('Cancel')),
+                                    value: 'completed', child: Text('Mark Completed')),
+                                const PopupMenuItem(value: 'cancelled', child: Text('Cancel')),
                               ],
                             )
                           : const Icon(Icons.check_circle, color: Colors.green),

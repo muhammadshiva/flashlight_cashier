@@ -1,12 +1,9 @@
-// ignore_for_file: invalid_annotation_target
-
-import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../domain/entities/work_order_product.dart';
-import '../../../product/data/models/product_model.dart';
 import 'dart:convert';
 
-part 'work_order_product_model.freezed.dart';
-part 'work_order_product_model.g.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../domain/entities/work_order_product.dart';
+import '../../../product/data/models/product_model.dart';
 
 WorkOrderProductModel workOrderProductModelFromJson(String str) =>
     WorkOrderProductModel.fromJson(json.decode(str));
@@ -14,22 +11,67 @@ WorkOrderProductModel workOrderProductModelFromJson(String str) =>
 String workOrderProductModelToJson(WorkOrderProductModel data) =>
     json.encode(data.toJson());
 
-@freezed
-abstract class WorkOrderProductModel with _$WorkOrderProductModel {
-  const WorkOrderProductModel._();
+class WorkOrderProductModel extends Equatable {
+  final String id;
+  final String workOrderId;
+  final String productId;
+  final int quantity;
+  final int priceAtOrder;
+  final int subtotal;
+  final ProductModel? productModel;
 
-  const factory WorkOrderProductModel({
-    @JsonKey(name: "id") required String id,
-    @JsonKey(name: "workOrderId") required String workOrderId,
-    @JsonKey(name: "productId") required String productId,
-    @JsonKey(name: "quantity") required int quantity,
-    @JsonKey(name: "priceAtOrder") required int priceAtOrder,
-    @JsonKey(name: "subtotal") required int subtotal,
-    @JsonKey(name: "product") ProductModel? productModel,
-  }) = _WorkOrderProductModel;
+  const WorkOrderProductModel({
+    required this.id,
+    required this.workOrderId,
+    required this.productId,
+    required this.quantity,
+    required this.priceAtOrder,
+    required this.subtotal,
+    this.productModel,
+  });
 
   factory WorkOrderProductModel.fromJson(Map<String, dynamic> json) =>
-      _$WorkOrderProductModelFromJson(json);
+      WorkOrderProductModel(
+        id: json["id"] as String,
+        workOrderId: json["workOrderId"] as String,
+        productId: json["productId"] as String,
+        quantity: json["quantity"] as int,
+        priceAtOrder: json["priceAtOrder"] as int,
+        subtotal: json["subtotal"] as int,
+        productModel: json["product"] != null
+            ? ProductModel.fromJson(json["product"] as Map<String, dynamic>)
+            : null,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "workOrderId": workOrderId,
+        "productId": productId,
+        "quantity": quantity,
+        "priceAtOrder": priceAtOrder,
+        "subtotal": subtotal,
+        if (productModel != null) "product": productModel!.toJson(),
+      };
+
+  WorkOrderProductModel copyWith({
+    String? id,
+    String? workOrderId,
+    String? productId,
+    int? quantity,
+    int? priceAtOrder,
+    int? subtotal,
+    ProductModel? productModel,
+  }) {
+    return WorkOrderProductModel(
+      id: id ?? this.id,
+      workOrderId: workOrderId ?? this.workOrderId,
+      productId: productId ?? this.productId,
+      quantity: quantity ?? this.quantity,
+      priceAtOrder: priceAtOrder ?? this.priceAtOrder,
+      subtotal: subtotal ?? this.subtotal,
+      productModel: productModel ?? this.productModel,
+    );
+  }
 
   WorkOrderProduct toEntity() => WorkOrderProduct(
         id: id,
@@ -40,4 +82,15 @@ abstract class WorkOrderProductModel with _$WorkOrderProductModel {
         subtotal: subtotal,
         product: productModel?.toEntity(),
       );
+
+  @override
+  List<Object?> get props => [
+        id,
+        workOrderId,
+        productId,
+        quantity,
+        priceAtOrder,
+        subtotal,
+        productModel,
+      ];
 }

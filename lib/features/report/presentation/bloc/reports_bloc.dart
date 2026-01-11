@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/usecase/usecase.dart';
 import '../../../service/domain/usecases/service_usecases.dart';
 import '../../../work_order/domain/usecases/work_order_usecases.dart';
 import 'reports_event.dart';
@@ -22,7 +21,7 @@ class ReportsBloc extends Bloc<ReportsEvent, ReportsState> {
   Future<void> _onLoadReports(LoadReports event, Emitter<ReportsState> emit) async {
     emit(ReportsLoading());
     try {
-      final workOrdersResult = await getWorkOrders(NoParams());
+      final workOrdersResult = await getWorkOrders(const GetWorkOrdersParams());
       final servicesResult = await getServices(const GetServicesParams());
 
       workOrdersResult.fold(

@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
+
 import '../../../../core/error/failures.dart';
-import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/pagination/paginated_response_model.dart';
+import '../../../../core/pagination/pagination_params.dart';
 import '../models/customer_model.dart';
 
 /// Abstract interface for customer remote data operations.
@@ -11,6 +12,7 @@ abstract class CustomerRemoteDataSource {
   Future<PaginatedResponseModel<CustomerModel>> getCustomers({
     PaginationParams? pagination,
     String? query,
+    bool? isPrototype,
   });
 
   /// Gets a single customer by [id] from the API.
@@ -36,8 +38,19 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   Future<PaginatedResponseModel<CustomerModel>> getCustomers({
     PaginationParams? pagination,
     String? query,
+    bool? isPrototype,
   }) async {
     try {
+      if (isPrototype ?? false) {
+        // Return prototype dummy data with pagination
+        await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
+
+        return CustomerModel.getPaginatedPrototypeData(
+          page: pagination?.page ?? 1,
+          limit: pagination?.limit ?? 10,
+          query: query,
+        );
+      }
       // Build query parameters
       final queryParams = <String, dynamic>{};
       if (pagination != null) {
@@ -65,9 +78,8 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
           final limit = pagination?.limit ?? 10;
           final totalPages = (total / limit).ceil();
 
-          final customers = customersList
-              .map((e) => CustomerModel.fromJson(e as Map<String, dynamic>))
-              .toList();
+          final customers =
+              customersList.map((e) => CustomerModel.fromJson(e as Map<String, dynamic>)).toList();
 
           return PaginatedResponseModel<CustomerModel>(
             data: customers,

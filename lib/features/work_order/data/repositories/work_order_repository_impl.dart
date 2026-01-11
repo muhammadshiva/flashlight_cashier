@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/work_order.dart';
@@ -63,9 +64,10 @@ class WorkOrderRepositoryImpl implements WorkOrderRepository {
   }
 
   @override
-  Future<Either<Failure, List<WorkOrder>>> getWorkOrders() async {
+  Future<Either<Failure, List<WorkOrder>>> getWorkOrders(
+      {required GetWorkOrdersParams params}) async {
     try {
-      final result = await remoteDataSource.getWorkOrders();
+      final result = await remoteDataSource.getWorkOrders(params: params);
       return Right(result.map((e) => e.toEntity()).toList());
     } on Failure catch (e) {
       return Left(e);

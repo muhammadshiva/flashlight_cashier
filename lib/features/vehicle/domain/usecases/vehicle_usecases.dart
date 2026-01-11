@@ -1,16 +1,26 @@
 import 'package:dartz/dartz.dart';
+
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../entities/vehicle.dart';
 import '../repositories/vehicle_repository.dart';
 
-class GetVehicles implements UseCase<List<Vehicle>, NoParams> {
+class GetVehicles implements UseCase<List<Vehicle>, GetVehicleParams> {
   final VehicleRepository repository;
   GetVehicles(this.repository);
   @override
-  Future<Either<Failure, List<Vehicle>>> call(NoParams params) async {
-    return await repository.getVehicles();
+  Future<Either<Failure, List<Vehicle>>> call(GetVehicleParams params) async {
+    return await repository.getVehicles(params: params);
   }
+}
+
+class GetVehicleParams {
+  /// When true, returns prototype/mock data for testing.
+  final bool isPrototype;
+
+  const GetVehicleParams({
+    this.isPrototype = false,
+  });
 }
 
 class CreateVehicle implements UseCase<Vehicle, Vehicle> {

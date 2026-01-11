@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:flashlight_pos/features/vehicle/domain/usecases/vehicle_usecases.dart';
+
 import '../../../../core/error/failures.dart';
 import '../models/vehicle_model.dart';
 
 /// Abstract interface for vehicle remote data operations.
 abstract class VehicleRemoteDataSource {
   /// Gets all vehicles from the API.
-  Future<List<VehicleModel>> getVehicles();
+  Future<List<VehicleModel>> getVehicles({required GetVehicleParams params});
 
   /// Creates a new vehicle via the API.
   Future<VehicleModel> createVehicle(VehicleModel vehicle);
@@ -24,8 +26,13 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
   VehicleRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<List<VehicleModel>> getVehicles() async {
+  Future<List<VehicleModel>> getVehicles({required GetVehicleParams params}) async {
     try {
+      if (params.isPrototype) {
+        // Return prototype dummy data
+        await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
+        return VehicleModel.getPrototypeDataVehicles;
+      }
       final response = await dio.get('/vehicles');
 
       // Handle API envelope: { success, message, data: { vehicles: [...], total }, error_code }
@@ -34,18 +41,14 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
         if (result['success'] == true && result['data'] != null) {
           final data = result['data'];
           final vehiclesList = data['vehicles'] as List;
-          return vehiclesList
-              .map((e) => VehicleModel.fromJson(e as Map<String, dynamic>))
-              .toList();
+          return vehiclesList.map((e) => VehicleModel.fromJson(e as Map<String, dynamic>)).toList();
         }
         throw ServerFailure(result['message'] ?? 'Failed to fetch vehicles');
       }
 
       // If response is directly a list (fallback for different API formats)
       if (result is List) {
-        return result
-            .map((e) => VehicleModel.fromJson(e as Map<String, dynamic>))
-            .toList();
+        return result.map((e) => VehicleModel.fromJson(e as Map<String, dynamic>)).toList();
       }
 
       throw const ServerFailure('Invalid response format');

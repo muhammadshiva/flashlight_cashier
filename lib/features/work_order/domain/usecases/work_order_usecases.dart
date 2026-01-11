@@ -16,11 +16,21 @@ class CreateWorkOrder implements UseCase<WorkOrder, WorkOrder> {
 }
 
 /// Use case for getting all work orders.
-class GetWorkOrders implements UseCase<List<WorkOrder>, NoParams> {
+class GetWorkOrders implements UseCase<List<WorkOrder>, GetWorkOrdersParams> {
   final WorkOrderRepository repository;
   GetWorkOrders(this.repository);
   @override
-  Future<Either<Failure, List<WorkOrder>>> call(NoParams params) async {
-    return await repository.getWorkOrders();
+  Future<Either<Failure, List<WorkOrder>>> call(GetWorkOrdersParams params) async {
+    return await repository.getWorkOrders(params: params);
   }
+}
+
+/// Parameters for [GetDashboardStats] use case.
+class GetWorkOrdersParams {
+  /// When true, returns prototype/mock data for testing.
+  final bool isPrototype;
+
+  const GetWorkOrdersParams({
+    this.isPrototype = false,
+  });
 }
