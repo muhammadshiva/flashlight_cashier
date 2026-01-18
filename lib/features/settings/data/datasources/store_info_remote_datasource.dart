@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flashlight_pos/core/constants/api_constans.dart';
 import 'package:flashlight_pos/features/settings/data/models/get_store_info_params.dart';
 import 'package:flashlight_pos/features/settings/data/models/store_info_model.dart';
 
@@ -25,7 +26,7 @@ class StoreInfoRemoteDataSourceImpl implements StoreInfoRemoteDataSource {
 
     // Real API call (when backend is ready)
     try {
-      final response = await dio.get('/store/info');
+      final response = await dio.get(ApiConst.storeInfo);
 
       if (response.statusCode == 200) {
         final data = response.data['data'];

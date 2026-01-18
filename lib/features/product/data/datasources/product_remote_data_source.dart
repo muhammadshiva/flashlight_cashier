@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/pagination/paginated_response_model.dart';
+import '../../../../core/pagination/pagination_params.dart';
 import '../models/product_model.dart';
 
 /// Abstract interface for product remote data operations.
@@ -40,7 +42,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       if (pagination != null) queryParams.addAll(pagination.toQueryParams());
 
       final response = await dio.get(
-        '/products',
+        ApiConst.products,
         queryParameters: queryParams,
       );
 
@@ -57,9 +59,8 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
           final limit = pagination?.limit ?? 10;
           final totalPages = (total / limit).ceil();
 
-          final products = productsList
-              .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
-              .toList();
+          final products =
+              productsList.map((e) => ProductModel.fromJson(e as Map<String, dynamic>)).toList();
 
           return PaginatedResponseModel<ProductModel>(
             data: products,
@@ -84,7 +85,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   Future<ProductModel> createProduct(ProductModel product) async {
     try {
       final response = await dio.post(
-        '/products',
+        ApiConst.products,
         data: {
           'name': product.name,
           'description': product.description,
@@ -120,7 +121,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   Future<ProductModel> updateProduct(ProductModel product) async {
     try {
       final response = await dio.put(
-        '/products/${product.id}',
+        '${ApiConst.products}/${product.id}',
         data: {
           'name': product.name,
           'description': product.description,
@@ -155,7 +156,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<void> deleteProduct(String id) async {
     try {
-      final response = await dio.delete('/products/$id');
+      final response = await dio.delete('${ApiConst.products}/$id');
 
       // Handle API envelope: { success, message, data: null, error_code }
       final result = response.data;

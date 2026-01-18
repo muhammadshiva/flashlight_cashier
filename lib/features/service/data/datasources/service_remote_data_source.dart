@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/pagination/paginated_response_model.dart';
+import '../../../../core/pagination/pagination_params.dart';
 import '../models/service_model.dart';
 
 /// Abstract interface for service remote data operations.
@@ -42,7 +43,7 @@ class ServiceRemoteDataSourceImpl implements ServiceRemoteDataSource {
       if (pagination != null) queryParams.addAll(pagination.toQueryParams());
 
       final response = await dio.get(
-        '/services',
+        ApiConst.services,
         queryParameters: queryParams,
       );
 
@@ -59,9 +60,8 @@ class ServiceRemoteDataSourceImpl implements ServiceRemoteDataSource {
           final limit = pagination?.limit ?? 10;
           final totalPages = (total / limit).ceil();
 
-          final services = servicesList
-              .map((e) => ServiceModel.fromJson(e as Map<String, dynamic>))
-              .toList();
+          final services =
+              servicesList.map((e) => ServiceModel.fromJson(e as Map<String, dynamic>)).toList();
 
           return PaginatedResponseModel<ServiceModel>(
             data: services,
@@ -86,7 +86,7 @@ class ServiceRemoteDataSourceImpl implements ServiceRemoteDataSource {
   Future<ServiceModel> createService(ServiceModel service) async {
     try {
       final response = await dio.post(
-        '/services',
+        ApiConst.services,
         data: {
           'name': service.name,
           'description': service.description,
@@ -121,7 +121,7 @@ class ServiceRemoteDataSourceImpl implements ServiceRemoteDataSource {
   Future<ServiceModel> updateService(String id, ServiceModel service) async {
     try {
       final response = await dio.put(
-        '/services/$id',
+        '${ApiConst.services}/$id',
         data: {
           'name': service.name,
           'description': service.description,
@@ -155,7 +155,7 @@ class ServiceRemoteDataSourceImpl implements ServiceRemoteDataSource {
   @override
   Future<void> deleteService(String id) async {
     try {
-      final response = await dio.delete('/services/$id');
+      final response = await dio.delete('${ApiConst.services}/$id');
 
       // Handle API envelope: { success, message, data: null, error_code }
       final result = response.data;

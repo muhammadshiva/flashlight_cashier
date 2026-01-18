@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flashlight_pos/features/vehicle/domain/usecases/vehicle_usecases.dart';
 
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
 import '../models/vehicle_model.dart';
 
@@ -33,7 +34,7 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
         await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
         return VehicleModel.getPrototypeDataVehicles;
       }
-      final response = await dio.get('/vehicles');
+      final response = await dio.get(ApiConst.vehicles);
 
       // Handle API envelope: { success, message, data: { vehicles: [...], total }, error_code }
       final result = response.data;
@@ -63,7 +64,7 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
   Future<VehicleModel> createVehicle(VehicleModel vehicle) async {
     try {
       final response = await dio.post(
-        '/vehicles',
+        ApiConst.vehicles,
         data: {
           'customerId': vehicle.customerId,
           'model': vehicle.vehicleBrand,
@@ -97,7 +98,7 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
   Future<VehicleModel> updateVehicle(VehicleModel vehicle) async {
     try {
       final response = await dio.put(
-        '/vehicles/${vehicle.id}',
+        '${ApiConst.vehicles}/${vehicle.id}',
         data: {
           'model': vehicle.vehicleBrand,
           'licensePlate': vehicle.licensePlate,
@@ -129,7 +130,7 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
   @override
   Future<void> deleteVehicle(String id) async {
     try {
-      final response = await dio.delete('/vehicles/$id');
+      final response = await dio.delete('${ApiConst.vehicles}/$id');
 
       // Handle API envelope: { success, message, data: null, error_code }
       final result = response.data;

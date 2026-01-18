@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
 import '../models/report_model.dart';
 
@@ -37,7 +39,7 @@ class ReportRemoteDataSourceImpl implements ReportRemoteDataSource {
       };
 
       final response = await dio.post(
-        '/reports/generate',
+        ApiConst.reportGenerate,
         data: requestBody,
       );
 

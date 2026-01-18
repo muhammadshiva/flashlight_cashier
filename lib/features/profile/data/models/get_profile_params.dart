@@ -25,6 +25,7 @@ class UpdateProfileParams extends Equatable {
   final String? storeWebsite;
   final String taxId;
   final String businessLicense;
+  final bool? isPrototype;
 
   const UpdateProfileParams({
     required this.id,
@@ -36,7 +37,22 @@ class UpdateProfileParams extends Equatable {
     this.storeWebsite,
     required this.taxId,
     required this.businessLicense,
+    this.isPrototype = false,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'storeName': storeName,
+      'storeAddress': storeAddress,
+      'storePhone': storePhone,
+      'storeEmail': storeEmail,
+      'storeLogo': storeLogo,
+      'storeWebsite': storeWebsite,
+      'taxId': taxId,
+      'businessLicense': businessLicense,
+    };
+  }
 
   @override
   List<Object?> get props => [
@@ -49,5 +65,6 @@ class UpdateProfileParams extends Equatable {
         storeWebsite,
         taxId,
         businessLicense,
+        isPrototype,
       ];
 }

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/pagination/paginated_response_model.dart';
 import '../../../../core/pagination/pagination_params.dart';
@@ -61,7 +62,7 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
       }
 
       final response = await dio.get(
-        '/customers',
+        ApiConst.customers,
         queryParameters: queryParams,
       );
 
@@ -103,7 +104,7 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   @override
   Future<CustomerModel> getCustomer(String id) async {
     try {
-      final response = await dio.get('/customers/$id');
+      final response = await dio.get('${ApiConst.customers}/$id');
 
       // Handle API envelope: { success, message, data: {...}, error_code }
       final result = response.data;
@@ -126,7 +127,7 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   Future<CustomerModel> createCustomer(CustomerModel customer) async {
     try {
       final response = await dio.post(
-        '/customers',
+        ApiConst.customers,
         data: {
           'name': customer.name,
           'phoneNumber': customer.phoneNumber,
@@ -159,7 +160,7 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   Future<CustomerModel> updateCustomer(CustomerModel customer) async {
     try {
       final response = await dio.put(
-        '/customers/${customer.id}',
+        '${ApiConst.customers}/${customer.id}',
         data: {
           'name': customer.name,
           'phoneNumber': customer.phoneNumber,
@@ -191,7 +192,7 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   @override
   Future<void> deleteCustomer(String id) async {
     try {
-      final response = await dio.delete('/customers/$id');
+      final response = await dio.delete('${ApiConst.customers}/$id');
 
       // Handle API envelope: { success, message, data: null, error_code }
       final result = response.data;

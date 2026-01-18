@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
 
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
 import '../models/work_order_model.dart';
 
@@ -32,7 +33,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
   Future<WorkOrderModel> createWorkOrder(WorkOrderModel workOrder) async {
     try {
       final response = await dio.post(
-        '/work-orders',
+        ApiConst.workOrders,
         data: workOrder.toJson(),
       );
 
@@ -66,7 +67,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
         return WorkOrderResponseModel.getPrototypeDataWorkOrders;
       }
 
-      final response = await dio.get('/work-orders');
+      final response = await dio.get(ApiConst.workOrders);
 
       // Handle API envelope: { success, message, data: { workOrders: [...], total }, error_code }
       final result = response.data;
@@ -111,7 +112,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
   Future<WorkOrderModel> updateWorkOrder(WorkOrderModel workOrder) async {
     try {
       final response = await dio.put(
-        '/work-orders/${workOrder.id}',
+        '${ApiConst.workOrders}/${workOrder.id}',
         data: workOrder.toJson(),
       );
 
@@ -140,7 +141,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
   Future<WorkOrderModel> updateWorkOrderStatus(String id, String status) async {
     try {
       final response = await dio.put(
-        '/work-orders/$id/status',
+        ApiConst.updateWorkOrderStatus(id),
         data: {'status': status},
       );
 
@@ -168,7 +169,7 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
   @override
   Future<WorkOrderModel> getWorkOrderById(String id) async {
     try {
-      final response = await dio.get('/work-orders/$id');
+      final response = await dio.get('${ApiConst.workOrders}/$id');
 
       // Handle API envelope: { success, message, data: {...}, error_code }
       final result = response.data;

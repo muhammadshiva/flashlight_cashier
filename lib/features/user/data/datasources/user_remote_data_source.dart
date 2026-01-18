@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
-import '../models/user_model.dart';
 import '../../domain/entities/user.dart';
+import '../models/user_model.dart';
 
 abstract class UserRemoteDataSource {
   Future<List<UserModel>> getUsers();
@@ -20,7 +22,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<List<UserModel>> getUsers() async {
     try {
       // Assuming standard wrapper for list
-      final response = await dio.get('/users');
+      final response = await dio.get(ApiConst.users);
       // If response.data is { success: true, data: { users: [...] } }
       final data = response.data;
       if (data['success'] == true && data['data'] != null) {
@@ -44,7 +46,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         'role': user.role,
         'password': password,
       };
-      final response = await dio.post('/users', data: body);
+      final response = await dio.post(ApiConst.users, data: body);
       // Assuming response.data is { success: true, data: {...} } or just data
       final data = response.data;
       if (data is Map<String, dynamic> && data.containsKey('data')) {
@@ -67,7 +69,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         'role': user.role,
         'status': user.status,
       };
-      final response = await dio.put('/users/${user.id}', data: body);
+      final response = await dio.put('${ApiConst.users}/${user.id}', data: body);
       final data = response.data;
       if (data is Map<String, dynamic> && data.containsKey('data')) {
         return UserModel.fromJson(data['data']);
@@ -81,7 +83,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<void> deleteUser(String id) async {
     try {
-      await dio.delete('/users/$id');
+      await dio.delete('${ApiConst.users}/$id');
     } on DioException catch (e) {
       throw ServerFailure(e.message ?? 'Unknown Error');
     }
@@ -90,8 +92,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<void> resetPassword(String id, String newPassword) async {
     try {
-      await dio
-          .put('/users/$id/reset-password', data: {'newPassword': newPassword});
+      await dio.put(ApiConst.resetPassword(id), data: {'newPassword': newPassword});
     } on DioException catch (e) {
       throw ServerFailure(e.message ?? 'Unknown Error');
     }

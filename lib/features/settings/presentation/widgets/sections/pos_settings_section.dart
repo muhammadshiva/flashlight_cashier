@@ -287,9 +287,7 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
             child: Icon(
               Icons.auto_awesome,
               size: 20,
-              color: state.autoCalculateTax
-                  ? AppColors.orangePrimary
-                  : AppColors.greyFoundation300,
+              color: state.autoCalculateTax ? AppColors.orangePrimary : AppColors.greyFoundation300,
             ),
           ),
           12.horizontalSpace,
@@ -349,9 +347,7 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
             child: Icon(
               Icons.print,
               size: 20,
-              color: state.autoPrintReceipt
-                  ? AppColors.orangePrimary
-                  : AppColors.greyFoundation300,
+              color: state.autoPrintReceipt ? AppColors.orangePrimary : AppColors.greyFoundation300,
             ),
           ),
           12.horizontalSpace,
@@ -397,7 +393,7 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
         _buildLabelText('Currency'),
         8.verticalSpace,
         DropdownButtonFormField<String>(
-          value: state.currencyCode,
+          initialValue: state.currencyCode,
           decoration: InputDecoration(
             prefixIcon: const Icon(
               Icons.attach_money,
@@ -444,7 +440,7 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
         _buildLabelText('Decimal Places'),
         8.verticalSpace,
         DropdownButtonFormField<int>(
-          value: state.decimalPlaces,
+          initialValue: state.decimalPlaces,
           decoration: InputDecoration(
             prefixIcon: const Icon(
               Icons.filter_9_plus,
@@ -478,55 +474,6 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
               context.read<POSSettingsCubit>().updateDecimalPlaces(value);
             }
           },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoRow({
-    required String label,
-    required String value,
-    required IconData icon,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.greyFoundation50,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            icon,
-            size: 16,
-            color: AppColors.greyFoundation300,
-          ),
-        ),
-        12.horizontalSpace,
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.greyFoundation300,
-                ),
-              ),
-              4.verticalSpace,
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.blackFoundation600,
-                ),
-              ),
-            ],
-          ),
         ),
       ],
     );

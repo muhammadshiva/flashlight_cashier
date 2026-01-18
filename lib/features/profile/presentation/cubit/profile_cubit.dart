@@ -53,6 +53,7 @@ class ProfileCubit extends Cubit<UIStateModel<StoreInfo>> {
       storeWebsite: storeWebsite,
       taxId: taxId,
       businessLicense: businessLicense,
+      isPrototype: true,
     );
 
     final result = await updateProfile(params);

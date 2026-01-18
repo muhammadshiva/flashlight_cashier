@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
 import '../models/membership_model.dart';
 import '../models/membership_status_model.dart';
@@ -30,7 +32,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
   @override
   Future<List<MembershipModel>> getMemberships() async {
     try {
-      final response = await dio.get('/memberships');
+      final response = await dio.get(ApiConst.memberships);
 
       // Handle API envelope: { success, message, data: { memberships: [...], total }, error_code }
       final result = response.data;
@@ -47,9 +49,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
 
       // If response is directly a list (fallback for different API formats)
       if (result is List) {
-        return result
-            .map((e) => MembershipModel.fromJson(e as Map<String, dynamic>))
-            .toList();
+        return result.map((e) => MembershipModel.fromJson(e as Map<String, dynamic>)).toList();
       }
 
       throw const ServerFailure('Invalid response format');
@@ -64,7 +64,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
   Future<MembershipModel> createMembership(MembershipModel membership) async {
     try {
       final response = await dio.post(
-        '/membership',
+        ApiConst.membership,
         data: {
           'customerId': membership.customerId,
           'membershipType': membership.membershipType,
@@ -96,7 +96,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
   @override
   Future<void> deleteMembership(String id) async {
     try {
-      final response = await dio.delete('/membership/$id');
+      final response = await dio.delete('${ApiConst.membership}/$id');
 
       // Handle API envelope: { success, message, data: null, error_code }
       final result = response.data;
@@ -117,7 +117,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
   Future<MembershipStatusModel> checkMembershipStatus(String phoneNumber) async {
     try {
       final response = await dio.post(
-        '/membership/check',
+        ApiConst.membershipCheck,
         data: {'phoneNumber': phoneNumber},
       );
 
@@ -142,7 +142,7 @@ class MembershipRemoteDataSourceImpl implements MembershipRemoteDataSource {
   Future<MembershipModel> updateMembership(String id, MembershipModel membership) async {
     try {
       final response = await dio.put(
-        '/membership/$id',
+        '${ApiConst.membership}/$id',
         data: {
           'membershipType': membership.membershipType,
           'membershipLevel': membership.membershipLevel,

@@ -1,10 +1,17 @@
-import 'package:flashlight_pos/features/profile/data/datasources/profile_remote_datasource.dart';
-import 'package:flashlight_pos/features/profile/data/models/get_profile_params.dart';
-import 'package:flashlight_pos/features/settings/data/models/store_info_model.dart';
+import 'package:dio/dio.dart';
+
+import '../../../../core/constants/api_constans.dart';
+import '../../../../core/error/failures.dart';
+import '../../../../features/settings/data/models/store_info_model.dart';
+import '../../data/datasources/profile_remote_datasource.dart';
+import '../../data/models/get_profile_params.dart';
 
 /// Implementasi Remote Data Source untuk Profile
 /// Menangani API call dan dummy data berdasarkan parameter isPrototype
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
+  final Dio dio;
+
+  ProfileRemoteDataSourceImpl({required this.dio});
   @override
   Future<StoreInfoModel> getProfile(GetProfileParams params) async {
     // Jika isPrototype true, return dummy data
@@ -27,26 +34,35 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     // Jika isPrototype true, return updated dummy data
     // Note: UpdateProfileParams tidak punya isPrototype, jadi kita asumsikan
     // update selalu mengembalikan data yang diupdate
+    if (params.isPrototype ?? false) {
+      await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
+      return StoreInfoModel.dummy();
+    }
 
-    // TODO: Implementasi API call sebenarnya
-    // final response = await dioClient.put('/profile', data: params.toJson());
-    // return StoreInfoModel.fromJson(response.data);
+    try {
+      final response = await dio.put(
+        ApiConst.profile,
+        data: params.toJson(),
+      );
 
-    // Untuk sekarang, return dummy data yang diupdate
-    await Future.delayed(const Duration(milliseconds: 500));
+      // Handle API envelope: { success, message, data: {...}, error_code }
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return StoreInfoModel.fromJson(result['data'] as Map<String, dynamic>);
+        }
+        // If no data key but has id, assume result itself is the store info
+        if (result.containsKey('id')) {
+          return StoreInfoModel.fromJson(result);
+        }
+        throw ServerFailure(result['message'] ?? 'Failed to update profile');
+      }
 
-    return StoreInfoModel(
-      id: params.id,
-      storeName: params.storeName,
-      storeAddress: params.storeAddress,
-      storePhone: params.storePhone,
-      storeEmail: params.storeEmail,
-      storeLogo: params.storeLogo,
-      storeWebsite: params.storeWebsite,
-      taxId: params.taxId,
-      businessLicense: params.businessLicense,
-      createdAt: DateTime.now().subtract(const Duration(days: 30)),
-      updatedAt: DateTime.now(),
-    );
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
+    }
   }
 }

@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+
+import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
 import '../models/auth_model.dart';
 
@@ -24,7 +26,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthModel> login(String username, String password) async {
     try {
       final response = await dio.post(
-        '/auth/login',
+        ApiConst.login,
         data: {
           'username': username,
           'password': password,
@@ -44,7 +46,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthModel> refreshToken(String refreshToken) async {
     try {
       final response = await dio.post(
-        '/auth/refresh-token',
+        ApiConst.refreshToken,
         data: {
           'refreshToken': refreshToken,
         },
@@ -62,7 +64,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<User> getProfile() async {
     try {
-      final response = await dio.get('/auth/profile');
+      final response = await dio.get(ApiConst.profile);
 
       // Response envelope: { success, message, data: { id, username, ... }, error_code }
       final result = response.data;

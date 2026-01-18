@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import '../../../core/network/dio_client.dart';
 import '../../../features/profile/data/datasources/profile_remote_datasource.dart';
 import '../../../features/profile/data/datasources/profile_remote_datasource_impl.dart';
 import '../../../features/profile/data/repositories/profile_repository_impl.dart';
@@ -45,7 +46,7 @@ class ProfileInjector {
     // Data Sources - Register as Lazy Singleton
     // ============================================
     _sl.registerLazySingleton<ProfileRemoteDataSource>(
-      () => ProfileRemoteDataSourceImpl(),
+      () => ProfileRemoteDataSourceImpl(dio: _sl<DioClient>().dio),
     );
   }
 }
