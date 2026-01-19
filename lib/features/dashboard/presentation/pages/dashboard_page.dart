@@ -4,6 +4,9 @@ import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bl
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_state.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/widgets/cashier_dashboard_layout.dart';
+import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
+import 'package:flashlight_pos/shared/widgets/custom_snackbar.dart';
+import 'package:flashlight_pos/shared/widgets/loading_overlay_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,8 +37,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Only listen when state changes to error (not on every rebuild)
     return BlocConsumer<DashboardBloc, DashboardState>(
-      // Only listen when state changes to error (not on every rebuild)
       listenWhen: (previous, current) {
         // Only show snackbar when transitioning TO error state
         // or when the error message changes
@@ -48,70 +51,29 @@ class _DashboardPageState extends State<DashboardPage> {
           // Log technical error
           debugPrint('Dashboard Error: ${state.message}');
 
-          final messenger = ScaffoldMessenger.of(context);
-
-          // Clear any existing snackbars before showing new one
-          messenger.clearSnackBars();
-
-          messenger.showSnackBar(
-            SnackBar(
-              content: const Text('Gagal memuat data dashboard. Silakan coba lagi.'),
-              backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating, // Make it less intrusive
-              margin: const EdgeInsets.all(16),
-              duration: const Duration(seconds: 3),
-              action: SnackBarAction(
-                label: 'Retry',
-                textColor: Colors.white,
-                onPressed: () {
-                  context.read<DashboardBloc>().add(LoadDashboardStats());
-                },
-              ),
-            ),
+          CustomSnackbar.show(
+            context,
+            message: 'Gagal memuat data dashboard. Silakan coba lagi.',
+            onRetry: () {
+              context.read<DashboardBloc>().add(LoadDashboardStats());
+            },
           );
-
-          // Failsafe: Explicitly hide snackbar after 3 seconds
-          // This ensures it disappears even if the framework/scaffold state is complex
-          Future.delayed(const Duration(seconds: 3), () {
-            try {
-              messenger.hideCurrentSnackBar();
-            } catch (_) {
-              // Ignore errors if widget is disposed
-            }
-          });
         }
       },
       builder: (context, state) {
-        if (state is DashboardLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is DashboardUpdating) {
-          // Show previous data with loading overlay
-          return Stack(
-            children: [
-              _buildDashboardContent(context, state.currentState),
-              Container(
-                color: Colors.black12,
-                child: const Center(
-                  child: Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(24.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 16),
-                          Text('Memperbarui status...'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+        if (state is DashboardLoading) return const CustomLoading();
+
+        // Show previous data with loading overlay
+        if (state is DashboardUpdating) {
+          return LoadingOverlayWidget(
+            isVisible: true,
+            message: 'Memperbarui status...',
+            child: _buildDashboardContent(context, state.currentState),
           );
-        } else if (state is DashboardLoaded) {
-          return _buildDashboardContent(context, state);
         }
+
+        if (state is DashboardLoaded) return _buildDashboardContent(context, state);
+
         // Fallback for other states (e.g. initial) - Show empty dashboard layout
         return _buildDashboardContent(
           context,
