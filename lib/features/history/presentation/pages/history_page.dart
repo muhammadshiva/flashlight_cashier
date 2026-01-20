@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -63,9 +64,7 @@ class _HistoryPageState extends State<HistoryPage> {
         if (state is HistoryLoading) {
           return const Scaffold(
             backgroundColor: Color(0xFFF8FAFC),
-            body: Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
-            ),
+            body: CustomLoading(),
           );
         } else if (state is HistoryLoaded) {
           return Scaffold(
@@ -87,7 +86,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         border: Border.all(color: const Color(0xFFE2E8F0)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
+                            color: Colors.black.withValues(alpha: 0.02),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -284,7 +283,7 @@ class _StatsSection extends StatelessWidget {
           border: Border.all(color: const Color(0xFFE2E8F0)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
