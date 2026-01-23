@@ -21,6 +21,7 @@ class ProductRepositoryImpl implements ProductRepository {
   }) async {
     try {
       if (isProtype) {
+        await Future.delayed(const Duration(seconds: 1));
         final dummyProducts = Product.mockData();
         return Right(PaginatedResponse(
           data: dummyProducts,

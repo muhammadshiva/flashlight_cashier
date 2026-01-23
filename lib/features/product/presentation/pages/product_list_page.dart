@@ -1,4 +1,5 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
+import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -57,8 +58,8 @@ class _ProductContentView extends StatelessWidget {
                         }
                       },
                       builder: (context, state) {
-                        if (state is ProductLoading) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (state is ProductLoading || state is ProductInitial) {
+                          return const CustomLoading();
                         } else if (state is ProductLoaded) {
                           if (state.products.isEmpty) {
                             return const Center(
