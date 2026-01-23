@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import '../../../../core/pagination/pagination_params.dart';
 
+import '../../../../core/pagination/pagination_params.dart';
 import '../../domain/usecases/create_customer.dart';
 import '../../domain/usecases/delete_customer.dart';
 import '../../domain/usecases/get_customers.dart';
@@ -22,8 +22,9 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   }) : super(CustomerInitial()) {
     on<LoadCustomers>((event, emit) async {
       emit(CustomerLoading());
-      final result = await getCustomers(GetCustomersParams(
-        pagination: const PaginationParams(page: 1, limit: 10),
+      final result = await getCustomers(const GetCustomersParams(
+        pagination: PaginationParams(page: 1, limit: 10),
+        isPrototype: true,
       ));
       result.fold(
         (failure) => emit(CustomerError(failure.message)),

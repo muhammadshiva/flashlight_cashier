@@ -18,6 +18,7 @@ class GetCustomers implements UseCase<PaginatedResponse<Customer>, GetCustomersP
     return await repository.getCustomers(
       pagination: params.pagination,
       query: params.query,
+      isProtype: params.isPrototype ?? false,
     );
   }
 }

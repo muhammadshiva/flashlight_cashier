@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
-import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/pagination/paginated_response.dart';
+import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/utils/repository_helper.dart';
 import '../../domain/entities/customer.dart';
 import '../../domain/repositories/customer_repository.dart';
@@ -39,7 +39,18 @@ class CustomerRepositoryImpl implements CustomerRepository {
   Future<Either<Failure, PaginatedResponse<Customer>>> getCustomers({
     PaginationParams? pagination,
     String? query,
+    bool isProtype = false,
   }) async {
+    if (isProtype) {
+      final dummyCustomers = Customer.mockData();
+      return Right(PaginatedResponse(
+        data: dummyCustomers,
+        total: dummyCustomers.length,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      ));
+    }
     // Check network connectivity
     if (await networkInfo.isConnected) {
       // Online: Fetch from remote
