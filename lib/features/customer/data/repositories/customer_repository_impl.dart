@@ -42,6 +42,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
     bool isProtype = false,
   }) async {
     if (isProtype) {
+      await Future.delayed(const Duration(seconds: 1));
       final dummyCustomers = Customer.mockData();
       return Right(PaginatedResponse(
         data: dummyCustomers,
