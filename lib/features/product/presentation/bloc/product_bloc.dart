@@ -22,7 +22,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }) : super(ProductInitial()) {
     on<LoadProducts>((event, emit) async {
       emit(ProductLoading());
-      final result = await getProducts(const GetProductsParams());
+      final result = await getProducts(const GetProductsParams(isProtype: true));
       result.fold(
         (failure) => emit(ProductError(failure.message)),
         (paginatedProducts) {

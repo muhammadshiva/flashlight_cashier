@@ -22,6 +22,21 @@ class Product extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [id, name, description, price, imageUrl, type, stock, isAvailable];
+  List<Object?> get props => [id, name, description, price, imageUrl, type, stock, isAvailable];
+
+  static List<Product> mockData() {
+    return List.generate(
+      100,
+      (index) => Product(
+        id: 'dummy_$index',
+        name: 'Dummy Product ${index + 1}',
+        description: 'This is a description for dummy product ${index + 1}',
+        price: (index + 1) * 10000,
+        imageUrl: 'https://via.placeholder.com/150',
+        type: 'Dummy Type',
+        stock: (index + 1) * 5,
+        isAvailable: true,
+      ),
+    );
+  }
 }

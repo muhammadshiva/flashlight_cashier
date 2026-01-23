@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
+
 import '../../../../core/error/failures.dart';
-import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/pagination/paginated_response.dart';
+import '../../../../core/pagination/pagination_params.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../datasources/product_remote_data_source.dart';
@@ -16,8 +17,20 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<Either<Failure, PaginatedResponse<Product>>> getProducts({
     String? type,
     PaginationParams? pagination,
+    bool isProtype = false,
   }) async {
     try {
+      if (isProtype) {
+        final dummyProducts = Product.mockData();
+        return Right(PaginatedResponse(
+          data: dummyProducts,
+          total: dummyProducts.length,
+          page: 1,
+          limit: 10,
+          totalPages: 1,
+        ));
+      }
+
       final result = await remoteDataSource.getProducts(
         type: type,
         pagination: pagination,

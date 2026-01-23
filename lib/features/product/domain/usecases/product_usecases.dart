@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../../../core/error/failures.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/pagination/paginated_response.dart';
+import '../../../../core/pagination/pagination_params.dart';
+import '../../../../core/usecase/usecase.dart';
 import '../entities/product.dart';
 import '../repositories/product_repository.dart';
 
@@ -15,6 +16,7 @@ class GetProducts implements UseCase<PaginatedResponse<Product>, GetProductsPara
     return await repository.getProducts(
       type: params.type,
       pagination: params.pagination,
+      isProtype: params.isProtype,
     );
   }
 }
@@ -22,11 +24,12 @@ class GetProducts implements UseCase<PaginatedResponse<Product>, GetProductsPara
 class GetProductsParams extends Equatable {
   final String? type;
   final PaginationParams? pagination;
+  final bool isProtype;
 
-  const GetProductsParams({this.type, this.pagination});
+  const GetProductsParams({this.type, this.pagination, this.isProtype = false});
 
   @override
-  List<Object?> get props => [type, pagination];
+  List<Object?> get props => [type, pagination, isProtype];
 }
 
 class CreateProduct implements UseCase<Product, Product> {
