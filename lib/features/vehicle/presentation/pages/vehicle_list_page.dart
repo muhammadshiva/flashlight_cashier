@@ -1,10 +1,12 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
+import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../injection_container.dart';
-import '../bloc/vehicle_bloc.dart';
 import '../../domain/entities/vehicle.dart';
+import '../bloc/vehicle_bloc.dart';
 
 class VehicleListPage extends StatelessWidget {
   const VehicleListPage({super.key});
@@ -57,8 +59,7 @@ class _VehicleContentView extends StatelessWidget {
                       },
                       builder: (context, state) {
                         if (state is VehicleLoading) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return const CustomLoading();
                         } else if (state is VehicleLoaded) {
                           if (state.vehicles.isEmpty) {
                             return const Center(
@@ -122,16 +123,13 @@ class _StatsAndFilterSection extends StatelessWidget {
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        context
-                            .read<VehicleBloc>()
-                            .add(SearchVehiclesEvent(value));
+                        context.read<VehicleBloc>().add(SearchVehiclesEvent(value));
                       },
                       decoration: const InputDecoration(
                         hintText: 'Search plate, brand, category...',
                         border: InputBorder.none,
                         isDense: true,
-                        hintStyle:
-                            TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                        hintStyle: TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
                       ),
                     ),
                   ),
@@ -146,10 +144,8 @@ class _StatsAndFilterSection extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.orangePrimary,
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 elevation: 0,
               ),
             ),
@@ -230,8 +226,7 @@ class _VehicleTable extends StatelessWidget {
       children: [
         TableCell(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: Row(
               children: [
                 Container(
@@ -241,8 +236,7 @@ class _VehicleTable extends StatelessWidget {
                     color: AppColors.orangePrimary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.directions_car,
-                      color: AppColors.orangePrimary, size: 24),
+                  child: const Icon(Icons.directions_car, color: AppColors.orangePrimary, size: 24),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -270,18 +264,13 @@ class _VehicleTable extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: const Icon(Icons.edit_outlined,
-                    size: 20, color: Color(0xFF64748B)),
-                onPressed: () => context.push('/vehicles/${vehicle.id}/edit',
-                    extra: vehicle),
+                icon: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF64748B)),
+                onPressed: () => context.push('/vehicles/${vehicle.id}/edit', extra: vehicle),
               ),
               IconButton(
-                icon: const Icon(Icons.delete_outline,
-                    size: 20, color: Color(0xFFEF4444)),
+                icon: const Icon(Icons.delete_outline, size: 20, color: Color(0xFFEF4444)),
                 onPressed: () {
-                  context
-                      .read<VehicleBloc>()
-                      .add(DeleteVehicleEvent(vehicle.id));
+                  context.read<VehicleBloc>().add(DeleteVehicleEvent(vehicle.id));
                 },
               ),
             ],
@@ -366,28 +355,23 @@ class _PaginationSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Text('View',
-                      style: TextStyle(color: Color(0xFF64748B))),
+                  const Text('View', style: TextStyle(color: Color(0xFF64748B))),
                   const SizedBox(width: 8),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: const Color(0xFFE2E8F0)),
                     ),
                     child: Row(
                       children: [
-                        Text('$itemsPerPage',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Text('$itemsPerPage', style: const TextStyle(fontWeight: FontWeight.bold)),
                         const Icon(Icons.keyboard_arrow_down, size: 16),
                       ],
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Text('entry per page',
-                      style: TextStyle(color: Color(0xFF64748B))),
+                  const Text('entry per page', style: TextStyle(color: Color(0xFF64748B))),
                 ],
               ),
               Row(
@@ -397,34 +381,26 @@ class _PaginationSection extends StatelessWidget {
                   const SizedBox(width: 24),
                   IconButton(
                       onPressed: currentPage > 1
-                          ? () => context
-                              .read<VehicleBloc>()
-                              .add(ChangePageEvent(currentPage - 1))
+                          ? () => context.read<VehicleBloc>().add(ChangePageEvent(currentPage - 1))
                           : null,
                       icon: Icon(Icons.chevron_left,
-                          color: currentPage > 1
-                              ? const Color(0xFF64748B)
-                              : const Color(0xFFCBD5E1))),
+                          color:
+                              currentPage > 1 ? const Color(0xFF64748B) : const Color(0xFFCBD5E1))),
                   ...List.generate(totalPages, (index) {
                     final page = index + 1;
                     if (totalPages > 7 &&
                         (page > 2 &&
                             page < totalPages - 1 &&
-                            (page < currentPage - 1 ||
-                                page > currentPage + 1))) {
+                            (page < currentPage - 1 || page > currentPage + 1))) {
                       return page == currentPage - 2 || page == currentPage + 2
-                          ? const Text('...',
-                              style: TextStyle(color: Color(0xFF64748B)))
+                          ? const Text('...', style: TextStyle(color: Color(0xFF64748B)))
                           : const SizedBox.shrink();
                     }
-                    return _buildPageNumber(context, page,
-                        isActive: page == currentPage);
+                    return _buildPageNumber(context, page, isActive: page == currentPage);
                   }),
                   IconButton(
                       onPressed: currentPage < totalPages
-                          ? () => context
-                              .read<VehicleBloc>()
-                              .add(ChangePageEvent(currentPage + 1))
+                          ? () => context.read<VehicleBloc>().add(ChangePageEvent(currentPage + 1))
                           : null,
                       icon: Icon(Icons.chevron_right,
                           color: currentPage < totalPages
@@ -439,8 +415,7 @@ class _PaginationSection extends StatelessWidget {
     );
   }
 
-  Widget _buildPageNumber(BuildContext context, int number,
-      {required bool isActive}) {
+  Widget _buildPageNumber(BuildContext context, int number, {required bool isActive}) {
     return InkWell(
       onTap: () => context.read<VehicleBloc>().add(ChangePageEvent(number)),
       child: Container(
