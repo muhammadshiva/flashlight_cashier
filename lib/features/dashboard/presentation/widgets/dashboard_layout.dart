@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'dashboard_top_navigation.dart';
 
 class DashboardLayout extends StatelessWidget {
@@ -9,6 +10,7 @@ class DashboardLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
         child: Column(
