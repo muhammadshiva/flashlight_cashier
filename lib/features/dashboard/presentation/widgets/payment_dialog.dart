@@ -4,6 +4,7 @@ import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
+import 'package:flashlight_pos/shared/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -29,8 +30,9 @@ class _PaymentDialogState extends State<PaymentDialog> {
   double _change = 0;
   int _autoCloseTimer = 5;
   Timer? _timer;
+  final ValueNotifier<bool> _isToastActiveNotifier = ValueNotifier(false);
 
-  // Tax Mock (e.g. 11%)
+  // Tax Mock (e.g. 11%)`
   double get _taxAmount => widget.order.totalPrice * 0.11;
 
   double get _grandTotal => widget.order.totalPrice + _taxAmount;
@@ -39,6 +41,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
   @override
   void dispose() {
     _timer?.cancel();
+    _isToastActiveNotifier.dispose();
     _refNoController.dispose();
     super.dispose();
   }
@@ -49,8 +52,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
     setState(() {
       if (value == 'DEL') {
         if (_inputAmountStr.isNotEmpty) {
-          _inputAmountStr =
-              _inputAmountStr.substring(0, _inputAmountStr.length - 1);
+          _inputAmountStr = _inputAmountStr.substring(0, _inputAmountStr.length - 1);
         }
       } else if (value == 'CLEAR') {
         // Assuming X icon is clear
@@ -85,13 +87,24 @@ class _PaymentDialogState extends State<PaymentDialog> {
   }
 
   void _processPayment() {
+    if (_isToastActiveNotifier.value) return;
+
     // For Cash
     if (_selectedMethodIndex == 0) {
       final inputAmount = double.tryParse(_inputAmountStr) ?? 0;
       if (inputAmount < _grandTotal) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Insufficient amount')),
+        CustomSnackbar.showToast(
+          context,
+          message: 'Insufficient amount',
+          backgroundColor: AppColors.error5,
         );
+
+        _isToastActiveNotifier.value = true;
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) {
+            _isToastActiveNotifier.value = false;
+          }
+        });
         return;
       }
       setState(() {
@@ -172,14 +185,11 @@ class _PaymentDialogState extends State<PaymentDialog> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: const BoxDecoration(
-                      border:
-                          Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+                      border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
                     ),
                     child: const Text(
                       'Detail Payment',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E293B)),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
                     ),
                   ),
                   Padding(
@@ -195,26 +205,19 @@ class _PaymentDialogState extends State<PaymentDialog> {
                             label: 'Payment Method',
                             value: _selectedMethodIndex == 0
                                 ? 'Cash'
-                                : (_selectedMethodIndex == 1
-                                    ? 'Card'
-                                    : 'QR Code'),
+                                : (_selectedMethodIndex == 1 ? 'Card' : 'QR Code'),
                             valueColor: AppColors.orangePrimary,
                             icon: _selectedMethodIndex == 0
                                 ? Icons.money
-                                : (_selectedMethodIndex == 1
-                                    ? Icons.credit_card
-                                    : Icons.qr_code)),
+                                : (_selectedMethodIndex == 1 ? Icons.credit_card : Icons.qr_code)),
                         const SizedBox(height: 12),
-                        if (_selectedMethodIndex != 0 &&
-                            _refNoController.text.isNotEmpty) ...[
-                          _DetailRow(
-                              label: 'Ref No.', value: _refNoController.text),
+                        if (_selectedMethodIndex != 0 && _refNoController.text.isNotEmpty) ...[
+                          _DetailRow(label: 'Ref No.', value: _refNoController.text),
                           const SizedBox(height: 12),
                         ],
                         _DetailRow(
                             label: 'Customer Pays',
-                            value: (double.tryParse(_inputAmountStr) ?? 0)
-                                .toCurrencyFormat(),
+                            value: (double.tryParse(_inputAmountStr) ?? 0).toCurrencyFormat(),
                             isBold: true),
                       ],
                     ),
@@ -228,16 +231,12 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         const Text(
                           'Change',
                           style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF64748B),
-                              fontWeight: FontWeight.w500),
+                              fontSize: 16, color: Color(0xFF64748B), fontWeight: FontWeight.w500),
                         ),
                         Text(
                           _change.toCurrencyFormat(),
                           style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E293B)),
+                              fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
                         ),
                       ],
                     ),
@@ -260,8 +259,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                       foregroundColor: const Color(0xFF1E293B),
                       side: const BorderSide(color: Color(0xFFE2E8F0)),
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ),
@@ -273,8 +271,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                       backgroundColor: AppColors.orangePrimary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       elevation: 0,
                     ),
                     child: const Text('Confirm Payment',
@@ -337,8 +334,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                     backgroundColor: const Color(0xFFF1F5F9),
                     padding: EdgeInsets.zero,
                     minimumSize: const Size(36, 36),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8))),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
               ),
             ],
           ),
@@ -366,24 +362,19 @@ class _PaymentDialogState extends State<PaymentDialog> {
                               children: [
                                 Text(
                                   widget.customer?.name ?? 'Guest Customer',
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   'Order #${widget.order.workOrderCode}',
-                                  style: const TextStyle(
-                                      color: Color(0xFF64748B), fontSize: 13),
+                                  style: const TextStyle(color: Color(0xFF64748B), fontSize: 13),
                                 ),
                               ],
                             ),
                             Text(
-                              DateFormat('EEE, d MMM\nh:mm a')
-                                  .format(DateTime.now()),
+                              DateFormat('EEE, d MMM\nh:mm a').format(DateTime.now()),
                               textAlign: TextAlign.right,
-                              style: const TextStyle(
-                                  color: Color(0xFF64748B), fontSize: 13),
+                              style: const TextStyle(color: Color(0xFF64748B), fontSize: 13),
                             ),
                           ],
                         ),
@@ -399,21 +390,19 @@ class _PaymentDialogState extends State<PaymentDialog> {
                                 child: TextField(
                                   decoration: InputDecoration(
                                     hintText: 'Input Member Code',
-                                    hintStyle: const TextStyle(
-                                        color: Color(0xFF94A3B8), fontSize: 14),
+                                    hintStyle:
+                                        const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
                                     filled: true,
                                     fillColor: Colors.white,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 0),
+                                    contentPadding:
+                                        const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(
-                                          color: Color(0xFFE2E8F0)),
+                                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(
-                                          color: Color(0xFFE2E8F0)),
+                                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                                     ),
                                   ),
                                 ),
@@ -427,11 +416,9 @@ class _PaymentDialogState extends State<PaymentDialog> {
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.orangePrimary,
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24),
+                                    padding: const EdgeInsets.symmetric(horizontal: 24),
                                     shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
+                                        borderRadius: BorderRadius.circular(8))),
                                 child: const Text('Search'),
                               ),
                             )
@@ -443,8 +430,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         padding: EdgeInsets.symmetric(horizontal: 24),
                         child: Text(
                           'Order Details',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const Divider(height: 32, indent: 24, endIndent: 24),
@@ -453,18 +439,16 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         child: ListView(
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           children: [
-                            ...widget.order.services
-                                .map((s) => _OrderItemListRow(
-                                      name: s.service?.name ?? 'Service',
-                                      price: s.priceAtOrder,
-                                      qty: s.quantity,
-                                    )),
-                            ...widget.order.products
-                                .map((p) => _OrderItemListRow(
-                                      name: p.product?.name ?? 'Product',
-                                      price: p.priceAtOrder,
-                                      qty: p.quantity,
-                                    )),
+                            ...widget.order.services.map((s) => _OrderItemListRow(
+                                  name: s.service?.name ?? 'Service',
+                                  price: s.priceAtOrder,
+                                  qty: s.quantity,
+                                )),
+                            ...widget.order.products.map((p) => _OrderItemListRow(
+                                  name: p.product?.name ?? 'Product',
+                                  price: p.priceAtOrder,
+                                  qty: p.quantity,
+                                )),
                           ],
                         ),
                       ),
@@ -472,14 +456,12 @@ class _PaymentDialogState extends State<PaymentDialog> {
                       Container(
                         padding: const EdgeInsets.all(24),
                         decoration: const BoxDecoration(
-                          border:
-                              Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+                          border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
                         ),
                         child: Column(
                           children: [
                             _SummaryRow(
-                                label: 'Sub Total',
-                                value: widget.order.totalPrice.toDouble()),
+                                label: 'Sub Total', value: widget.order.totalPrice.toDouble()),
                             const SizedBox(height: 8),
                             _SummaryRow(label: 'Tax 11%', value: _taxAmount),
                             const Divider(height: 32),
@@ -487,22 +469,17 @@ class _PaymentDialogState extends State<PaymentDialog> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text('Total Payment',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                 Text(
                                   _grandTotal.toCurrencyFormat(),
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
                             if (isCash) ...[
                               const SizedBox(height: 8),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text('Change',
                                       style: TextStyle(
@@ -510,9 +487,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                                           color: Color(0xFF64748B),
                                           fontWeight: FontWeight.w500)),
                                   Text(
-                                    (_inputAmount > _grandTotal
-                                            ? _inputAmount - _grandTotal
-                                            : 0)
+                                    (_inputAmount > _grandTotal ? _inputAmount - _grandTotal : 0)
                                         .toCurrencyFormat(),
                                     style: const TextStyle(
                                         fontSize: 16,
@@ -535,8 +510,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                 flex: 5,
                 child: Container(
                   color: const Color(0xFFF8FAFC),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
                   child: Column(
                     children: [
                       // Tab Bar
@@ -553,28 +527,19 @@ class _PaymentDialogState extends State<PaymentDialog> {
                                 label: 'Cash',
                                 icon: Icons.money,
                                 isSelected: _selectedMethodIndex == 0,
-                                onTap: () =>
-                                    setState(() => _selectedMethodIndex = 0)),
-                            Container(
-                                width: 1,
-                                height: 20,
-                                color: const Color(0xFFE2E8F0)),
+                                onTap: () => setState(() => _selectedMethodIndex = 0)),
+                            Container(width: 1, height: 20, color: const Color(0xFFE2E8F0)),
                             _PaymentTab(
                                 label: 'Card',
                                 icon: Icons.credit_card,
                                 isSelected: _selectedMethodIndex == 1,
-                                onTap: () =>
-                                    setState(() => _selectedMethodIndex = 1)),
-                            Container(
-                                width: 1,
-                                height: 20,
-                                color: const Color(0xFFE2E8F0)),
+                                onTap: () => setState(() => _selectedMethodIndex = 1)),
+                            Container(width: 1, height: 20, color: const Color(0xFFE2E8F0)),
                             _PaymentTab(
                                 label: 'QR Code',
                                 icon: Icons.qr_code,
                                 isSelected: _selectedMethodIndex == 2,
-                                onTap: () =>
-                                    setState(() => _selectedMethodIndex = 2)),
+                                onTap: () => setState(() => _selectedMethodIndex = 2)),
                           ],
                         ),
                       ),
@@ -605,8 +570,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
         children: [
           const Spacer(flex: 1),
           const Text('Input Money',
-              style: TextStyle(
-                  color: Color(0xFF64748B), fontWeight: FontWeight.w500)),
+              style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w500)),
           const SizedBox(height: 4),
           const Text(
             'Enter cash amount received',
@@ -619,9 +583,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                 ? 'Rp 0'
                 : 'Rp ${int.tryParse(_inputAmountStr)?.toCurrencyFormat().replaceAll("Rp ", "") ?? _inputAmountStr}',
             style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B)),
+                fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
           ),
           const SizedBox(height: 24),
           // Quick Amounts
@@ -678,17 +640,21 @@ class _PaymentDialogState extends State<PaymentDialog> {
           const Spacer(flex: 2),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _processPayment,
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.orangePrimary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  elevation: 0),
-              child: const Text('Pay Now',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isToastActiveNotifier,
+              builder: (context, isToastActive, child) {
+                return ElevatedButton(
+                  onPressed: isToastActive ? null : _processPayment,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.orangePrimary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 0),
+                  child: const Text('Pay Now',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                );
+              },
             ),
           ),
         ],
@@ -698,9 +664,8 @@ class _PaymentDialogState extends State<PaymentDialog> {
 
   Widget _buildExternalPaymentContent() {
     final bool isCard = _selectedMethodIndex == 1;
-    final String instruction = isCard
-        ? 'Process payment on EDC Machine'
-        : 'Scan QR Code on EDC / Customer App';
+    final String instruction =
+        isCard ? 'Process payment on EDC Machine' : 'Scan QR Code on EDC / Customer App';
     final IconData icon = isCard ? Icons.credit_card : Icons.qr_code_scanner;
 
     return Expanded(
@@ -711,8 +676,8 @@ class _PaymentDialogState extends State<PaymentDialog> {
           // Icon and Instruction
           Container(
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF1F5F9),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, size: 48, color: const Color(0xFF64748B)),
@@ -722,9 +687,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
             instruction,
             textAlign: TextAlign.center,
             style: const TextStyle(
-                color: Color(0xFF64748B),
-                fontSize: 16,
-                fontWeight: FontWeight.w500),
+                color: Color(0xFF64748B), fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
           const Text(
@@ -736,9 +699,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
           Text(
             _grandTotal.toCurrencyFormat(),
             style: const TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B)),
+                fontSize: 40, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
           ),
 
           const SizedBox(height: 48),
@@ -749,10 +710,8 @@ class _PaymentDialogState extends State<PaymentDialog> {
             children: [
               const Text(
                 'Reference Number (Optional)',
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF1E293B)),
+                style:
+                    TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF1E293B)),
               ),
               const SizedBox(height: 8),
               TextField(
@@ -772,11 +731,9 @@ class _PaymentDialogState extends State<PaymentDialog> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide:
-                        const BorderSide(color: AppColors.orangePrimary),
+                    borderSide: const BorderSide(color: AppColors.orangePrimary),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 ),
               ),
             ],
@@ -787,18 +744,21 @@ class _PaymentDialogState extends State<PaymentDialog> {
           // Confirm Button
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _processPayment,
-              style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      AppColors.greenLight100, // Use green for confirmation
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  elevation: 0),
-              child: const Text('Confirm Payment',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isToastActiveNotifier,
+              builder: (context, isToastActive, child) {
+                return ElevatedButton(
+                  onPressed: isToastActive ? null : _processPayment,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.greenLight100, // Use green for confirmation
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 0),
+                  child: const Text('Confirm Payment',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                );
+              },
             ),
           ),
         ],
@@ -815,11 +775,7 @@ class _DetailRow extends StatelessWidget {
   final IconData? icon;
 
   const _DetailRow(
-      {required this.label,
-      required this.value,
-      this.isBold = false,
-      this.valueColor,
-      this.icon});
+      {required this.label, required this.value, this.isBold = false, this.valueColor, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -833,8 +789,7 @@ class _DetailRow extends StatelessWidget {
         Row(
           children: [
             if (icon != null) ...[
-              Icon(icon,
-                  size: 16, color: valueColor ?? const Color(0xFF1E293B)),
+              Icon(icon, size: 16, color: valueColor ?? const Color(0xFF1E293B)),
               const SizedBox(width: 4),
             ],
             Text(
@@ -856,8 +811,7 @@ class _OrderItemListRow extends StatelessWidget {
   final int price;
   final int qty;
 
-  const _OrderItemListRow(
-      {required this.name, required this.price, required this.qty});
+  const _OrderItemListRow({required this.name, required this.price, required this.qty});
 
   @override
   Widget build(BuildContext context) {
@@ -870,24 +824,19 @@ class _OrderItemListRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(name,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, color: Color(0xFF1E293B))),
+                  style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1E293B))),
               const SizedBox(height: 4),
               Text(price.toCurrencyFormat(),
-                  style:
-                      const TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                  style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('x$qty',
-                  style:
-                      const TextStyle(color: Color(0xFF64748B), fontSize: 13)),
+              Text('x$qty', style: const TextStyle(color: Color(0xFF64748B), fontSize: 13)),
               const SizedBox(height: 4),
               Text((price * qty).toCurrencyFormat(),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
             ],
           )
         ],
@@ -909,8 +858,7 @@ class _SummaryRow extends StatelessWidget {
       children: [
         Text(label, style: const TextStyle(color: Color(0xFF64748B))),
         Text(value.toCurrencyFormat(),
-            style: const TextStyle(
-                fontWeight: FontWeight.w600, color: Color(0xFF1E293B))),
+            style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1E293B))),
       ],
     );
   }
@@ -923,10 +871,7 @@ class _PaymentTab extends StatelessWidget {
   final VoidCallback onTap;
 
   const _PaymentTab(
-      {required this.label,
-      required this.icon,
-      required this.isSelected,
-      required this.onTap});
+      {required this.label, required this.icon, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -936,24 +881,18 @@ class _PaymentTab extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected
-                ? Colors.white
-                : Colors.transparent, // Or a highlight logic
+            color: isSelected ? Colors.white : Colors.transparent, // Or a highlight logic
             // For now simple switch
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon,
-                  size: 18,
-                  color: isSelected ? Colors.black : const Color(0xFF94A3B8)),
+              Icon(icon, size: 18, color: isSelected ? Colors.black : const Color(0xFF94A3B8)),
               const SizedBox(width: 8),
               Text(label,
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: isSelected
-                          ? AppColors.black
-                          : const Color(0xFF94A3B8))),
+                      color: isSelected ? AppColors.black : const Color(0xFF94A3B8))),
             ],
           ),
         ),
@@ -974,15 +913,13 @@ class _QuickAmountChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 12, vertical: 8), // Reduced padding
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Reduced padding
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: const Color(0xFFE2E8F0)),
         ),
-        child: Text(
-            amount.toCurrencyFormat().replaceAll(",00", ""), // Basic formatting
+        child: Text(amount.toCurrencyFormat().replaceAll(",00", ""), // Basic formatting
             style: const TextStyle(
                 fontSize: 13, // Explicit smaller size
                 fontWeight: FontWeight.bold,

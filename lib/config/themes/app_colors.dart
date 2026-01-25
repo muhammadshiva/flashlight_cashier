@@ -57,6 +57,7 @@ class AppColors {
   static const grey1 = Color(0xff7D7D7D);
 
   //* Background
+  static const Color snackbarBackground = Color(0xFF323232);
   static const backgroundPrimary = Color(0xffFFFFFF);
 
   //* Black

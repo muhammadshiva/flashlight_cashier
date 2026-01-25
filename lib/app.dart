@@ -1,12 +1,15 @@
+import 'dart:io';
+
+import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/constans/app_const.dart';
 import 'config/pages/app_pages.dart';
-import 'config/themes/app_colors.dart';
 import 'configs/injector/injector_config.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
@@ -36,37 +39,58 @@ class App extends StatelessWidget {
             splitScreenMode: true,
             useInheritedMediaQuery: true,
             builder: (context, child) {
-              return MaterialApp.router(
-                title: F.title,
-                debugShowCheckedModeBanner: false,
-                themeMode: themeState.themeMode,
-                theme: ThemeData(
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: AppColors.backgroundGrey6,
-                    brightness: Brightness.light,
-                  ),
-                  useMaterial3: true,
-                ),
-                darkTheme: ThemeData(
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: AppColors.backgroundGrey6,
-                    brightness: Brightness.dark,
-                  ),
-                  useMaterial3: true,
-                ),
-                routerConfig: AppPages.router,
-                locale: const Locale('id', 'ID'),
-                supportedLocales: const [
-                  Locale('id', 'ID'),
-                ],
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                builder: (context, child) {
-                  return _AppWrapper(child: child);
+              return GestureDetector(
+                onTap: () {
+                  if (FocusManager.instance.primaryFocus?.hasFocus ?? false) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  }
                 },
+                child: SafeArea(
+                  left: false,
+                  top: false,
+                  right: false,
+                  bottom: Platform.isIOS ? false : true,
+                  child: AnnotatedRegion<SystemUiOverlayStyle>(
+                    value: const SystemUiOverlayStyle(
+                      statusBarColor: Colors.transparent,
+                      statusBarIconBrightness: Brightness.dark,
+                      systemNavigationBarColor: Colors.white,
+                      systemNavigationBarIconBrightness: Brightness.dark,
+                    ),
+                    child: MaterialApp.router(
+                      title: F.title,
+                      debugShowCheckedModeBanner: false,
+                      themeMode: themeState.themeMode,
+                      theme: ThemeData(
+                        colorScheme: ColorScheme.fromSeed(
+                          seedColor: AppColors.backgroundGrey6,
+                          brightness: Brightness.light,
+                        ),
+                        useMaterial3: true,
+                      ),
+                      darkTheme: ThemeData(
+                        colorScheme: ColorScheme.fromSeed(
+                          seedColor: AppColors.backgroundGrey6,
+                          brightness: Brightness.dark,
+                        ),
+                        useMaterial3: true,
+                      ),
+                      routerConfig: AppPages.router,
+                      locale: const Locale('id', 'ID'),
+                      supportedLocales: const [
+                        Locale('id', 'ID'),
+                      ],
+                      localizationsDelegates: const [
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                      ],
+                      builder: (context, child) {
+                        return _AppWrapper(child: child);
+                      },
+                    ),
+                  ),
+                ),
               );
             },
           );

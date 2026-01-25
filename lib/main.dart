@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -49,6 +48,16 @@ void main() async {
 
   // Initialize FCM service
   await FCMService().initialize();
+
+  // Set system UI overlay style
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Transparent status bar
+      statusBarIconBrightness: Brightness.dark, // Dark text for status bar
+      systemNavigationBarColor: Colors.white, // White navigation bar
+      systemNavigationBarIconBrightness: Brightness.dark, // Dark icons
+    ),
+  );
 
   runApp(const App());
 }
