@@ -11,12 +11,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'config/constans/app_const.dart';
 import 'config/pages/app_pages.dart';
 import 'configs/injector/injector_config.dart';
+import 'core/network/connectivity_cubit.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 import 'features/theme/presentation/bloc/theme_bloc.dart';
 import 'features/theme/presentation/bloc/theme_state.dart';
 import 'flavors.dart';
 import 'shared/widgets/draggable_button.dart';
+import 'shared/widgets/no_internet_screen.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -30,6 +32,7 @@ class App extends StatelessWidget {
         BlocProvider(
           create: (_) => sl<SettingsBloc>()..add(const LoadSettings()),
         ),
+        BlocProvider(create: (_) => sl<ConnectivityCubit>()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, themeState) {
@@ -86,7 +89,18 @@ class App extends StatelessWidget {
                         GlobalCupertinoLocalizations.delegate,
                       ],
                       builder: (context, child) {
-                        return _AppWrapper(child: child);
+                        return BlocBuilder<ConnectivityCubit, ConnectivityStatus>(
+                          builder: (context, state) {
+                            return Stack(
+                              textDirection: TextDirection.ltr,
+                              children: [
+                                _AppWrapper(child: child),
+                                if (state == ConnectivityStatus.disconnected)
+                                  const NoInternetScreen(),
+                              ],
+                            );
+                          },
+                        );
                       },
                     ),
                   ),

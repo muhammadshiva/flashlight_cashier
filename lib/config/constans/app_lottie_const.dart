@@ -7,11 +7,12 @@ class AppLottieConst {
     return _instance!;
   }
 
-  static const String lottieLoading = "assets/json/loading.json";
-  static const String lottieInfo = "assets/json/lottieInfo.json";
-  static const String lottieSuccess = "assets/json/lottieSuccess.json";
-  static const String lottieTanya = "assets/json/lottieTanya.json";
-  static const String lottieDelete = "assets/json/delete.json";
-  static const String lottieSwitch = "assets/json/toggle_switch.json";
-  static const String lottieArrow = "assets/json/lottie_arrow.json";
+  static const String loading = "assets/json/loading.json";
+  static const String info = "assets/json/lottieInfo.json";
+  static const String success = "assets/json/lottieSuccess.json";
+  static const String tanya = "assets/json/lottieTanya.json";
+  static const String delete = "assets/json/delete.json";
+  static const String toggleSwitch = "assets/json/toggle_switch.json";
+  static const String arrow = "assets/json/lottie_arrow.json";
+  static const String noInternet = "assets/json/anim_not_found.json";
 }

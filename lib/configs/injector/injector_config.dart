@@ -5,6 +5,7 @@ import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../core/cache/secure_local_storage.dart';
+import '../../core/network/connectivity_cubit.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/network/network_info.dart';
 import 'features/auth_injector.dart';
@@ -51,6 +52,7 @@ Future<void> configureDependencies() async {
   // Network
   sl.registerLazySingleton<DioClient>(() => DioClient(sl(), sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
+  sl.registerFactory<ConnectivityCubit>(() => ConnectivityCubit());
 
   // Utilities
   final talker = TalkerFlutter.init();

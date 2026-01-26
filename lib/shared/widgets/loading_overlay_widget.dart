@@ -32,7 +32,7 @@ class LoadingOverlayWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Lottie.asset(
-                        AppLottieConst.lottieLoading,
+                        AppLottieConst.loading,
                         width: 100.sp,
                       ),
                       16.verticalSpaceFromWidth,

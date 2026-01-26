@@ -18,7 +18,7 @@ class CustomLoading extends StatelessWidget {
     return Center(
       child: SizedBox(
         child: Lottie.asset(
-          lottiePath ?? AppLottieConst.lottieLoading,
+          lottiePath ?? AppLottieConst.loading,
           width: width ?? 500.sp,
         ),
       ),
