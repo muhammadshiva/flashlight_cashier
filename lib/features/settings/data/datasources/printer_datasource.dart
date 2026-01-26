@@ -33,9 +33,20 @@ class PrinterDataSourceImpl implements PrinterDataSource {
   @override
   Future<bool> connectToDevice(String macAddress) async {
     try {
+      print("PrinterDataSourceImpl: Attempting to connect to $macAddress");
+      // Force disconnect first to clear any stale connection states
+      try {
+        await PrintBluetoothThermal.disconnect;
+        print("PrinterDataSourceImpl: Disconnect command sent before connecting.");
+      } catch (e) {
+        print("PrinterDataSourceImpl: Warning - failed to disconnect before connecting: $e");
+      }
+
       final bool connected = await PrintBluetoothThermal.connect(macPrinterAddress: macAddress);
+      print("PrinterDataSourceImpl: Connection result for $macAddress: $connected");
       return connected;
     } catch (e) {
+      print("PrinterDataSourceImpl: Error connecting to $macAddress: $e");
       rethrow;
     }
   }

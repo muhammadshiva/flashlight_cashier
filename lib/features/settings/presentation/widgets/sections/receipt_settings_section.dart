@@ -1,3 +1,4 @@
+import 'package:flashlight_pos/config/constans/text_styles_const.dart';
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:flashlight_pos/shared/widgets/toggle_item.dart';
@@ -38,15 +39,13 @@ class ReceiptSettingsSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Display Options
-                  const Text(
+                  Text(
                     'Display Options',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
+                    style: TextStyleConst.poppinsBold16.copyWith(
                       color: AppColors.blackFoundation600,
                     ),
                   ),
-                  16.verticalSpace,
+                  16.verticalSpaceFromWidth,
 
                   ToggleItem(
                     label: 'Show Store Logo',
@@ -61,7 +60,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     },
                   ),
 
-                  24.verticalSpace,
+                  24.verticalSpaceFromWidth,
 
                   ToggleItem(
                     label: 'Show Tax Details',
@@ -76,7 +75,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     },
                   ),
 
-                  24.verticalSpace,
+                  24.verticalSpaceFromWidth,
 
                   ToggleItem(
                     label: 'Show Discount',
@@ -91,7 +90,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     },
                   ),
 
-                  24.verticalSpace,
+                  24.verticalSpaceFromWidth,
 
                   ToggleItem(
                     label: 'Show Payment Method',
@@ -106,7 +105,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     },
                   ),
 
-                  24.verticalSpace,
+                  24.verticalSpaceFromWidth,
 
                   ToggleItem(
                     label: 'Show Footer Message',
@@ -121,18 +120,16 @@ class ReceiptSettingsSection extends StatelessWidget {
                     },
                   ),
 
-                  32.verticalSpace,
+                  32.verticalSpaceFromWidth,
 
                   // Receipt Content
-                  const Text(
+                  Text(
                     'Receipt Content',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
+                    style: TextStyleConst.poppinsBold16.copyWith(
                       color: AppColors.blackFoundation600,
                     ),
                   ),
-                  16.verticalSpace,
+                  16.verticalSpaceFromWidth,
 
                   _buildTextFieldItem(
                     context,
@@ -148,7 +145,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                     },
                   ),
 
-                  24.verticalSpace,
+                  24.verticalSpaceFromWidth,
 
                   _buildTextFieldItem(
                     context,
@@ -165,7 +162,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                           );
                     },
                   ),
-                  24.verticalSpace,
+                  24.verticalSpaceFromWidth,
                 ],
               ),
             ),
@@ -180,21 +177,17 @@ class ReceiptSettingsSection extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         'Receipt Preview',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                        style: TextStyleConst.poppinsBold16.copyWith(
                           color: AppColors.blackFoundation600,
                         ),
                       ),
                       const Spacer(),
-                      const Text(
+                      Text(
                         'Live Preview',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: TextStyleConst.poppinsSemiBold12.copyWith(
                           color: AppColors.success600,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       8.horizontalSpace,
@@ -208,7 +201,7 @@ class ReceiptSettingsSection extends StatelessWidget {
                       ),
                     ],
                   ),
-                  16.verticalSpace,
+                  16.verticalSpaceFromWidth,
 
                   // Receipt Preview Card
                   _buildReceiptPreview(
@@ -238,21 +231,19 @@ class ReceiptSettingsSection extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+          style: TextStyleConst.poppinsSemiBold14.copyWith(
             color: AppColors.blackFoundation600,
           ),
         ),
-        4.verticalSpace,
+        4.verticalSpaceFromWidth,
         Text(
           description,
-          style: const TextStyle(
+          style: TextStyleConst.poppinsRegular12.copyWith(
             fontSize: 13,
             color: AppColors.textGray2,
           ),
         ),
-        12.verticalSpace,
+        12.verticalSpaceFromWidth,
         TextField(
           controller: TextEditingController(text: value)
             ..selection = TextSelection.fromPosition(
@@ -260,8 +251,7 @@ class ReceiptSettingsSection extends StatelessWidget {
             ),
           onChanged: onChanged,
           maxLines: maxLines,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyleConst.poppinsRegular14.copyWith(
             color: AppColors.blackFoundation600,
           ),
           decoration: InputDecoration(
@@ -324,99 +314,103 @@ class ReceiptSettingsSection extends StatelessWidget {
                     size: 32,
                   ),
                 ),
-                16.verticalSpace,
+                16.verticalSpaceFromWidth,
               ],
 
               // Store Info
               Text(
                 appSettings.storeName,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                style: TextStyleConst.poppinsBold16.copyWith(
                   color: AppColors.blackFoundation600,
                 ),
                 textAlign: TextAlign.center,
               ),
-              4.verticalSpace,
+              4.verticalSpaceFromWidth,
               Text(
                 appSettings.storeAddress,
-                style: const TextStyle(
+                style: TextStyleConst.poppinsRegular12.copyWith(
                   fontSize: 11,
-                  color: AppColors.textGray2,
+                  color: AppColors.textGray3,
                 ),
                 textAlign: TextAlign.center,
               ),
-              2.verticalSpace,
+              2.verticalSpaceFromWidth,
               Text(
                 appSettings.storePhone,
-                style: const TextStyle(
+                style: TextStyleConst.poppinsRegular12.copyWith(
                   fontSize: 11,
-                  color: AppColors.textGray2,
+                  color: AppColors.textGray3,
                 ),
                 textAlign: TextAlign.center,
               ),
 
-              16.verticalSpace,
+              16.verticalSpaceFromWidth,
 
               // Header
               Text(
                 receiptSettings.receiptHeader,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
+                style: TextStyleConst.poppinsBold14.copyWith(
                   color: AppColors.blackFoundation600,
                   letterSpacing: 1.5,
                 ),
               ),
 
-              12.verticalSpace,
+              12.verticalSpaceFromWidth,
 
               // Divider
               const Divider(color: AppColors.borderGray, thickness: 1),
 
-              12.verticalSpace,
+              12.verticalSpaceFromWidth,
 
               // Transaction Info
-              _buildReceiptRow('Date:', '2026-01-01 21:30'),
-              _buildReceiptRow('Invoice:', '#INV-2026-0001'),
-              _buildReceiptRow('Cashier:', 'Admin'),
+              _buildReceiptRow('Date', '2026-01-01 21:30'),
+              _buildReceiptRow('Invoice', '#INV-2026-0001'),
+              _buildReceiptRow('Cashier', 'Admin'),
 
-              12.verticalSpace,
+              12.verticalSpaceFromWidth,
+              const Divider(color: AppColors.borderGray, thickness: 1, height: 1),
+              12.verticalSpaceFromWidth,
+
+              _buildReceiptRow('Customer', 'Budi Santoso'),
+              _buildReceiptRow('Vehicle', 'Honda Vario 160'),
+              _buildReceiptRow('Plate No', 'B 1234 XYZ'),
+
+              12.verticalSpaceFromWidth,
               const Divider(color: AppColors.borderGray, thickness: 1),
-              12.verticalSpace,
+              12.verticalSpaceFromWidth,
 
               // Items
               _buildReceiptItemHeader(),
-              8.verticalSpace,
+              8.verticalSpaceFromWidth,
               _buildReceiptItem('Oil Change', 1, 150000),
               _buildReceiptItem('Tire Replacement', 2, 200000),
 
-              12.verticalSpace,
+              12.verticalSpaceFromWidth,
               const Divider(color: AppColors.borderGray, thickness: 1, height: 1),
-              12.verticalSpace,
+              12.verticalSpaceFromWidth,
 
               // Subtotal
-              _buildReceiptRow('Subtotal:', 'Rp 550,000', bold: false),
+              _buildReceiptRow('Subtotal', 'Rp 550,000', bold: false),
 
               // Discount (if enabled)
               if (receiptSettings.showDiscount) ...[
-                8.verticalSpace,
-                _buildReceiptRow('Discount (10%):', '- Rp 55,000', bold: false),
+                8.verticalSpaceFromWidth,
+                _buildReceiptRow('Discount (10%)', '- Rp 55,000', bold: false),
               ],
 
               // Tax (if enabled)
               if (receiptSettings.showTaxDetails) ...[
-                8.verticalSpace,
-                _buildReceiptRow('Tax (${appSettings.taxRate}%):', 'Rp 54,450', bold: false),
+                8.verticalSpaceFromWidth,
+                _buildReceiptRow('Tax (${appSettings.taxRate}%)', 'Rp 54,450', bold: false),
               ],
 
-              12.verticalSpace,
+              12.verticalSpaceFromWidth,
               const Divider(color: AppColors.borderGray, thickness: 2, height: 1),
-              12.verticalSpace,
+              12.verticalSpaceFromWidth,
 
               // Total
               _buildReceiptRow(
-                'TOTAL:',
+                'TOTAL',
                 receiptSettings.showDiscount && receiptSettings.showTaxDetails
                     ? 'Rp 549,450'
                     : receiptSettings.showDiscount
@@ -430,37 +424,37 @@ class ReceiptSettingsSection extends StatelessWidget {
 
               // Payment Method (if enabled)
               if (receiptSettings.showPaymentMethod) ...[
-                12.verticalSpace,
+                12.verticalSpaceFromWidth,
                 const Divider(color: AppColors.borderGray, thickness: 1, height: 1),
-                12.verticalSpace,
-                _buildReceiptRow('Payment:', 'Cash', bold: false),
-                _buildReceiptRow('Paid:', 'Rp 600,000', bold: false),
-                _buildReceiptRow('Change:', 'Rp 50,550', bold: false),
+                12.verticalSpaceFromWidth,
+                _buildReceiptRow('Payment', 'Cash', bold: false),
+                _buildReceiptRow('Paid', 'Rp 600,000', bold: false),
+                _buildReceiptRow('Change', 'Rp 50,550', bold: false),
               ],
 
               // Footer Message (if enabled)
               if (receiptSettings.showFooterMessage &&
                   receiptSettings.footerMessage.isNotEmpty) ...[
-                20.verticalSpace,
+                20.verticalSpaceFromWidth,
                 const Divider(color: AppColors.borderGray, thickness: 1),
-                12.verticalSpace,
+                12.verticalSpaceFromWidth,
                 Text(
                   receiptSettings.footerMessage,
-                  style: const TextStyle(
+                  style: TextStyleConst.poppinsRegular12.copyWith(
                     fontSize: 11,
-                    color: AppColors.textGray2,
+                    color: AppColors.textGray3,
                     fontStyle: FontStyle.italic,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ],
 
-              16.verticalSpace,
+              16.verticalSpaceFromWidth,
               Text(
                 'Powered by Flashlight POS',
-                style: TextStyle(
+                style: TextStyleConst.poppinsRegular10.copyWith(
                   fontSize: 9,
-                  color: AppColors.textGray2.withValues(alpha: 0.5),
+                  color: AppColors.textGray3,
                 ),
               ),
             ],
@@ -477,24 +471,39 @@ class ReceiptSettingsSection extends StatelessWidget {
     bool larger = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: EdgeInsets.symmetric(vertical: 2.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: larger ? 13 : 11,
-              fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
-              color: AppColors.blackFoundation600,
+          Expanded(
+            flex: 4,
+            child: Text(
+              label,
+              style:
+                  (bold ? TextStyleConst.poppinsBold12 : TextStyleConst.poppinsMedium12).copyWith(
+                fontSize: larger ? 13 : 11,
+                color: AppColors.blackFoundation600,
+              ),
             ),
           ),
           Text(
-            value,
-            style: TextStyle(
+            ':',
+            style: (bold ? TextStyleConst.poppinsBold12 : TextStyleConst.poppinsMedium12).copyWith(
               fontSize: larger ? 13 : 11,
-              fontWeight: bold ? FontWeight.w700 : FontWeight.w400,
               color: AppColors.blackFoundation600,
+            ),
+          ),
+          const Spacer(),
+          Expanded(
+            flex: 5,
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style:
+                  (bold ? TextStyleConst.poppinsBold12 : TextStyleConst.poppinsRegular12).copyWith(
+                fontSize: larger ? 13 : 11,
+                color: AppColors.blackFoundation600,
+              ),
             ),
           ),
         ],
@@ -503,16 +512,15 @@ class ReceiptSettingsSection extends StatelessWidget {
   }
 
   Widget _buildReceiptItemHeader() {
-    return const Row(
+    return Row(
       children: [
         Expanded(
           flex: 3,
           child: Text(
             'Item',
-            style: TextStyle(
+            style: TextStyleConst.poppinsSemiBold12.copyWith(
               fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textGray2,
+              color: AppColors.textGray3,
             ),
           ),
         ),
@@ -520,23 +528,21 @@ class ReceiptSettingsSection extends StatelessWidget {
           width: 30,
           child: Text(
             'Qty',
-            style: TextStyle(
+            style: TextStyleConst.poppinsSemiBold12.copyWith(
               fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textGray2,
+              color: AppColors.textGray3,
             ),
             textAlign: TextAlign.center,
           ),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         SizedBox(
           width: 80,
           child: Text(
             'Amount',
-            style: TextStyle(
+            style: TextStyleConst.poppinsSemiBold12.copyWith(
               fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textGray2,
+              color: AppColors.textGray3,
             ),
             textAlign: TextAlign.right,
           ),
@@ -554,7 +560,7 @@ class ReceiptSettingsSection extends StatelessWidget {
             flex: 3,
             child: Text(
               name,
-              style: const TextStyle(
+              style: TextStyleConst.poppinsRegular12.copyWith(
                 fontSize: 11,
                 color: AppColors.blackFoundation600,
               ),
@@ -564,7 +570,7 @@ class ReceiptSettingsSection extends StatelessWidget {
             width: 30,
             child: Text(
               '$qty',
-              style: const TextStyle(
+              style: TextStyleConst.poppinsRegular12.copyWith(
                 fontSize: 11,
                 color: AppColors.blackFoundation600,
               ),
@@ -576,7 +582,7 @@ class ReceiptSettingsSection extends StatelessWidget {
             width: 80,
             child: Text(
               'Rp ${(price * qty).toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
-              style: const TextStyle(
+              style: TextStyleConst.poppinsRegular12.copyWith(
                 fontSize: 11,
                 color: AppColors.blackFoundation600,
               ),

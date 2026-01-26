@@ -414,10 +414,10 @@ class SearchPrinterButtonWidget extends StatelessWidget {
       child: OutlinedButton.icon(
         onPressed: isEnabled ? onSearch : null,
         icon: isScanningPrinters
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
+            ? SizedBox(
+                width: 16.w,
+                height: 16.w,
+                child: const CircularProgressIndicator(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangePrimary),
                 ),

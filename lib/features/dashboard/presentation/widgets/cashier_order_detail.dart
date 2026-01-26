@@ -1,10 +1,12 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_dialog.dart';
 import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CashierOrderDetail extends StatelessWidget {
   final WorkOrder? selectedOrder;
@@ -424,11 +426,15 @@ class _PaymentSection extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
+                final dashboardBloc = context.read<DashboardBloc>();
                 showDialog(
                   context: context,
-                  builder: (context) => PaymentDialog(
-                    order: order,
-                    customer: customer, // Need to pass customer
+                  builder: (context) => BlocProvider.value(
+                    value: dashboardBloc,
+                    child: PaymentDialog(
+                      order: order,
+                      customer: customer,
+                    ),
                   ),
                 );
               },

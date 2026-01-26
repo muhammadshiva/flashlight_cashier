@@ -1,12 +1,21 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_state.dart';
+import 'package:flashlight_pos/features/settings/domain/services/receipt_generator.dart';
+import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flashlight_pos/shared/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 class PaymentDialog extends StatefulWidget {
   final WorkOrder order;
@@ -121,6 +130,120 @@ class _PaymentDialogState extends State<PaymentDialog> {
     }
 
     _startAutoCloseTimer();
+  }
+
+  Future<void> _printReceipt(BuildContext context) async {
+    final settingsState = context.read<SettingsBloc>().state;
+    final printerSettings = settingsState.printerSettings;
+
+    log("Check Printer Settings: ${printerSettings.toString()}");
+    log("Check Printer Settings isConnected: ${printerSettings?.isConnected}");
+
+    // Check connection directly from plugin as SettingsBloc might be stale
+    final bool isConnected = await PrintBluetoothThermal.connectionStatus;
+
+    log("Check Actual Connection: $isConnected");
+
+    if (!isConnected) {
+      if (context.mounted) {
+        CustomSnackbar.showToast(
+          context,
+          message: 'Printer not connected. Please connect in Settings.',
+          backgroundColor: AppColors.error5,
+        );
+      }
+      return;
+    }
+
+    // Get Settings
+    final receiptSettings = settingsState.receiptSettings;
+    if (receiptSettings == null) {
+      CustomSnackbar.showToast(
+        context,
+        message: 'Receipt settings not loaded.',
+        backgroundColor: AppColors.error5,
+      );
+      return;
+    }
+
+    final appSettings = settingsState.appSettings;
+    if (appSettings == null) {
+      CustomSnackbar.showToast(
+        context,
+        message: 'App settings not loaded.',
+        backgroundColor: AppColors.error5,
+      );
+      return;
+    }
+
+    // Get Vehicle Data
+    Vehicle? vehicle;
+    final dashboardState = context.read<DashboardBloc>().state;
+    if (dashboardState is DashboardLoaded) {
+      if (widget.order.vehicleDataId.isNotEmpty) {
+        vehicle = dashboardState.vehicles[widget.order.vehicleDataId];
+        log("Found vehicle data: ${vehicle?.vehicleBrand} ${vehicle?.licensePlate}");
+      }
+    } else {
+      log("DashboardBloc is not loaded, cannot get vehicle data.");
+    }
+
+    // Create Updated WorkOrder with Payment Info
+    // widget.order is immutable and holds initial state. We need to pass the actual paid amount and logic.
+    String paymentMethod = 'CASH';
+    if (_selectedMethodIndex == 1) paymentMethod = 'CARD';
+    if (_selectedMethodIndex == 2) paymentMethod = 'QRIS';
+
+    int paidAmount = _inputAmount.toInt();
+    // If not cash, assume full payment
+    if (_selectedMethodIndex != 0) {
+      paidAmount = _grandTotal.toInt();
+    }
+
+    // We can't trust widget.order.paidAmount as it might be 0 or old.
+    // We must manually construct a temporary order object for the receipt.
+    // Since WorkOrder might not have copyWith or we want to be explicit:
+    final receiptOrder = WorkOrder(
+      id: widget.order.id,
+      workOrderCode: widget.order.workOrderCode,
+      customerId: widget.order.customerId,
+      vehicleDataId: widget.order.vehicleDataId,
+      queueNumber: widget.order.queueNumber,
+      estimatedTime: widget.order.estimatedTime,
+      status: widget.order.status,
+      paymentStatus: 'paid', // Assume paid if printing receipt after success
+      paymentMethod: paymentMethod,
+      paidAmount: paidAmount,
+      totalPrice: widget.order.totalPrice,
+      services: widget.order.services,
+      products: widget.order.products,
+      createdAt: widget.order.createdAt,
+      updatedAt: DateTime.now(),
+      completedAt: DateTime.now(),
+    );
+
+    // Generate Receipt
+    try {
+      final generator = ReceiptGenerator();
+      final bytes = await generator.generateReceiptBytes(
+        order: receiptOrder,
+        settings: receiptSettings,
+        appSettings: appSettings,
+        customer: widget.customer,
+        vehicle: vehicle,
+      );
+
+      // Print
+      await PrintBluetoothThermal.writeBytes(bytes);
+    } catch (e) {
+      if (context.mounted) {
+        CustomSnackbar.showToast(
+          context,
+          message: 'Failed to print: $e',
+          backgroundColor: AppColors.error5,
+        );
+      }
+    }
   }
 
   @override
@@ -251,9 +374,9 @@ class _PaymentDialogState extends State<PaymentDialog> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      // TODO: Print functionality
+                      _printReceipt(context);
                     },
-                    icon: const Icon(Icons.print_outlined, size: 20),
+                    icon: Icon(Icons.print_outlined, size: 20.sp),
                     label: const Text('Print Bill'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFF1E293B),
