@@ -739,22 +739,50 @@ class _PaymentDialogState extends State<PaymentDialog> {
                       style: const TextStyle(
                           fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.w),
                     // Quick Amounts
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _QuickAmountChip(amount: 10000, onTap: () => _setAmount(10000)),
-                        const SizedBox(width: 8),
-                        _QuickAmountChip(amount: 20000, onTap: () => _setAmount(20000)),
-                        const SizedBox(width: 8),
-                        _QuickAmountChip(amount: 50000, onTap: () => _setAmount(50000)),
-                        const SizedBox(width: 8),
-                        _QuickAmountChip(amount: 100000, onTap: () => _setAmount(100000)),
-                      ],
+                    Scrollbar(
+                      thumbVisibility: true,
+                      trackVisibility: true,
+                      thickness: 1.sp,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            _PaymentActionChip(
+                                isSelected: _inputAmountStr == _grandTotal.toInt().toString(),
+                                label: 'Uang Pas',
+                                onTap: () => _setAmount(_grandTotal.toInt())),
+                            SizedBox(width: 8.w),
+                            _PaymentActionChip(
+                                isSelected: _inputAmount == 10000,
+                                label: 10000.toCurrencyFormat().replaceAll(",00", ""),
+                                onTap: () => _setAmount(10000)),
+                            SizedBox(width: 8.w),
+                            _PaymentActionChip(
+                                isSelected: _inputAmount == 20000,
+                                label: 20000.toCurrencyFormat().replaceAll(",00", ""),
+                                onTap: () => _setAmount(20000)),
+                            SizedBox(width: 8.w),
+                            _PaymentActionChip(
+                                isSelected: _inputAmount == 50000,
+                                label: 50000.toCurrencyFormat().replaceAll(",00", ""),
+                                onTap: () => _setAmount(50000)),
+                            SizedBox(width: 8.w),
+                            _PaymentActionChip(
+                                isSelected: _inputAmount == 100000,
+                                label: 100000.toCurrencyFormat().replaceAll(",00", ""),
+                                onTap: () => _setAmount(100000)),
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 24),
-                    // Keypad
+
+                    SizedBox(height: 24.w),
+
+                    /// Keypad
                     Column(
                       children: [
                         Row(children: [
@@ -1047,7 +1075,7 @@ class _PaymentTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: 18, color: isSelected ? Colors.black : const Color(0xFF94A3B8)),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               Text(label,
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -1060,11 +1088,12 @@ class _PaymentTab extends StatelessWidget {
   }
 }
 
-class _QuickAmountChip extends StatelessWidget {
-  final int amount;
+class _PaymentActionChip extends StatelessWidget {
+  final String label;
   final VoidCallback onTap;
+  final bool isSelected;
 
-  const _QuickAmountChip({required this.amount, required this.onTap});
+  const _PaymentActionChip({required this.label, required this.onTap, this.isSelected = false});
 
   @override
   Widget build(BuildContext context) {
@@ -1072,17 +1101,17 @@ class _QuickAmountChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Reduced padding
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isSelected ? AppColors.orangePrimary : Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
+          border: Border.all(color: isSelected ? AppColors.orangePrimary : const Color(0xFFE2E8F0)),
         ),
-        child: Text(amount.toCurrencyFormat().replaceAll(",00", ""), // Basic formatting
-            style: const TextStyle(
-                fontSize: 13, // Explicit smaller size
+        child: Text(label,
+            style: TextStyle(
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF64748B))),
+                color: isSelected ? Colors.white : const Color(0xFF64748B))),
       ),
     );
   }
