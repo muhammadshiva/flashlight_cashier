@@ -2,7 +2,7 @@ import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_dialog.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_dialog/payment_dialog.dart';
 import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flutter/material.dart';
