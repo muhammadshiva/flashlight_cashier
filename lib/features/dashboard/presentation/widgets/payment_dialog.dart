@@ -641,7 +641,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         height: 44,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                           border: Border.all(color: const Color(0xFFE2E8F0)),
                         ),
                         child: Row(
@@ -1003,9 +1003,8 @@ class _PaymentTab extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.white : Colors.transparent, // Or a highlight logic
-            // For now simple switch
+          decoration: const BoxDecoration(
+            color: Colors.transparent,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
