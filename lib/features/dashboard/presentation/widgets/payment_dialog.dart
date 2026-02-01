@@ -471,159 +471,184 @@ class _PaymentDialogState extends State<PaymentDialog> {
                 flex: 7,
                 child: Container(
                   color: Colors.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Customer Info Header
-                      Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                          child: IntrinsicHeight(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.customer?.name ?? 'Guest Customer',
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                // Customer Info Header
+                                Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            widget.customer?.name ?? 'Guest Customer',
+                                            style: const TextStyle(
+                                                fontSize: 16, fontWeight: FontWeight.bold),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Order #${widget.order.workOrderCode}',
+                                            style: const TextStyle(
+                                                color: Color(0xFF64748B), fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        DateFormat('EEE, d MMM\nh:mm a').format(DateTime.now()),
+                                        textAlign: TextAlign.right,
+                                        style:
+                                            const TextStyle(color: Color(0xFF64748B), fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Order #${widget.order.workOrderCode}',
-                                  style: const TextStyle(color: Color(0xFF64748B), fontSize: 13),
+                                // Search Member Input
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: SizedBox(
+                                          height: 48,
+                                          child: TextField(
+                                            decoration: InputDecoration(
+                                              hintText: 'Input Member Code',
+                                              hintStyle: const TextStyle(
+                                                  color: Color(0xFF94A3B8), fontSize: 14),
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              contentPadding: const EdgeInsets.symmetric(
+                                                  horizontal: 16, vertical: 0),
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                                borderSide:
+                                                    const BorderSide(color: Color(0xFFE2E8F0)),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                                borderSide:
+                                                    const BorderSide(color: Color(0xFFE2E8F0)),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      SizedBox(
+                                        height: 48,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: AppColors.orangePrimary,
+                                              foregroundColor: Colors.white,
+                                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8))),
+                                          child: const Text('Search'),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                            Text(
-                              DateFormat('EEE, d MMM\nh:mm a').format(DateTime.now()),
-                              textAlign: TextAlign.right,
-                              style: const TextStyle(color: Color(0xFF64748B), fontSize: 13),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Search Member Input
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 48,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    hintText: 'Input Member Code',
-                                    hintStyle:
-                                        const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    contentPadding:
-                                        const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                                const SizedBox(height: 24),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 24),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: Text(
+                                      'Order Details',
+                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            SizedBox(
-                              height: 48,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.orangePrimary,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8))),
-                                child: const Text('Search'),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(
-                          'Order Details',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const Divider(height: 32, indent: 24, endIndent: 24),
-                      // List
-                      Expanded(
-                        child: ListView(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          children: [
-                            ...widget.order.services.map((s) => _OrderItemListRow(
-                                  name: s.service?.name ?? 'Service',
-                                  price: s.priceAtOrder,
-                                  qty: s.quantity,
-                                )),
-                            ...widget.order.products.map((p) => _OrderItemListRow(
-                                  name: p.product?.name ?? 'Product',
-                                  price: p.priceAtOrder,
-                                  qty: p.quantity,
-                                )),
-                          ],
-                        ),
-                      ),
-                      // Totals
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: const BoxDecoration(
-                          border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
-                        ),
-                        child: Column(
-                          children: [
-                            _SummaryRow(
-                                label: 'Sub Total', value: widget.order.totalPrice.toDouble()),
-                            const SizedBox(height: 8),
-                            _SummaryRow(label: 'Tax 11%', value: _taxAmount),
-                            const Divider(height: 32),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Total Payment',
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                Text(
-                                  _grandTotal.toCurrencyFormat(),
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                const Divider(height: 32, indent: 24, endIndent: 24),
+                                // List
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  child: Column(
+                                    children: [
+                                      ...widget.order.services.map((s) => _OrderItemListRow(
+                                            name: s.service?.name ?? 'Service',
+                                            price: s.priceAtOrder,
+                                            qty: s.quantity,
+                                          )),
+                                      ...widget.order.products.map((p) => _OrderItemListRow(
+                                            name: p.product?.name ?? 'Product',
+                                            price: p.priceAtOrder,
+                                            qty: p.quantity,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                                const Spacer(),
+                                // Totals
+                                Container(
+                                  padding: const EdgeInsets.all(24),
+                                  decoration: const BoxDecoration(
+                                    border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      _SummaryRow(
+                                          label: 'Sub Total',
+                                          value: widget.order.totalPrice.toDouble()),
+                                      const SizedBox(height: 8),
+                                      _SummaryRow(label: 'Tax 11%', value: _taxAmount),
+                                      const Divider(height: 32),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text('Total Payment',
+                                              style: TextStyle(
+                                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                                          Text(
+                                            _grandTotal.toCurrencyFormat(),
+                                            style: const TextStyle(
+                                                fontSize: 18, fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                      if (isCash) ...[
+                                        const SizedBox(height: 8),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text('Change',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Color(0xFF64748B),
+                                                    fontWeight: FontWeight.w500)),
+                                            Text(
+                                              (_inputAmount > _grandTotal
+                                                      ? _inputAmount - _grandTotal
+                                                      : 0)
+                                                  .toCurrencyFormat(),
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.orangePrimary),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                            if (isCash) ...[
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Change',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xFF64748B),
-                                          fontWeight: FontWeight.w500)),
-                                  Text(
-                                    (_inputAmount > _grandTotal ? _inputAmount - _grandTotal : 0)
-                                        .toCurrencyFormat(),
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.orangePrimary),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -689,98 +714,110 @@ class _PaymentDialogState extends State<PaymentDialog> {
 
   Widget _buildCashPaymentContent() {
     return Expanded(
-      child: Column(
-        children: [
-          const Spacer(flex: 1),
-          const Text('Input Money',
-              style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w500)),
-          const SizedBox(height: 4),
-          const Text(
-            'Enter cash amount received',
-            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
-          ),
-          const SizedBox(height: 12),
-          // Display Input
-          Text(
-            _inputAmountStr.isEmpty
-                ? 'Rp 0'
-                : 'Rp ${int.tryParse(_inputAmountStr)?.toCurrencyFormat().replaceAll("Rp ", "") ?? _inputAmountStr}',
-            style: const TextStyle(
-                fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
-          ),
-          const SizedBox(height: 24),
-          // Quick Amounts
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _QuickAmountChip(amount: 10000, onTap: () => _setAmount(10000)),
-              const SizedBox(width: 8),
-              _QuickAmountChip(amount: 20000, onTap: () => _setAmount(20000)),
-              const SizedBox(width: 8),
-              _QuickAmountChip(amount: 50000, onTap: () => _setAmount(50000)),
-              const SizedBox(width: 8),
-              _QuickAmountChip(amount: 100000, onTap: () => _setAmount(100000)),
-            ],
-          ),
-          const SizedBox(height: 24),
-          // Keypad
-          Column(
-            children: [
-              Row(children: [
-                _KeypadButton('1', onPressed: () => _onKeypadTap('1')),
-                _KeypadButton('2', onPressed: () => _onKeypadTap('2')),
-                _KeypadButton('3', onPressed: () => _onKeypadTap('3')),
-              ]),
-              Row(children: [
-                _KeypadButton('4', onPressed: () => _onKeypadTap('4')),
-                _KeypadButton('5', onPressed: () => _onKeypadTap('5')),
-                _KeypadButton('6', onPressed: () => _onKeypadTap('6')),
-              ]),
-              Row(children: [
-                _KeypadButton('7', onPressed: () => _onKeypadTap('7')),
-                _KeypadButton('8', onPressed: () => _onKeypadTap('8')),
-                _KeypadButton('9', onPressed: () => _onKeypadTap('9')),
-              ]),
-              Row(children: [
-                const Spacer(), // Empty slot
-                _KeypadButton('0', onPressed: () => _onKeypadTap('0')),
-                // Backspace Button
-                Expanded(
-                  child: SizedBox(
-                    height: 64,
-                    child: Center(
-                      child: IconButton(
-                        onPressed: () => _onKeypadTap('DEL'),
-                        icon: const Icon(Icons.backspace_outlined,
-                            color: Color(0xFF64748B), size: 24),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  children: [
+                    const Spacer(flex: 1),
+                    const Text('Input Money',
+                        style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w500)),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Enter cash amount received',
+                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                    ),
+                    const SizedBox(height: 12),
+                    // Display Input
+                    Text(
+                      _inputAmountStr.isEmpty
+                          ? 'Rp 0'
+                          : 'Rp ${int.tryParse(_inputAmountStr)?.toCurrencyFormat().replaceAll("Rp ", "") ?? _inputAmountStr}',
+                      style: const TextStyle(
+                          fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+                    ),
+                    const SizedBox(height: 24),
+                    // Quick Amounts
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _QuickAmountChip(amount: 10000, onTap: () => _setAmount(10000)),
+                        const SizedBox(width: 8),
+                        _QuickAmountChip(amount: 20000, onTap: () => _setAmount(20000)),
+                        const SizedBox(width: 8),
+                        _QuickAmountChip(amount: 50000, onTap: () => _setAmount(50000)),
+                        const SizedBox(width: 8),
+                        _QuickAmountChip(amount: 100000, onTap: () => _setAmount(100000)),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    // Keypad
+                    Column(
+                      children: [
+                        Row(children: [
+                          _KeypadButton('1', onPressed: () => _onKeypadTap('1')),
+                          _KeypadButton('2', onPressed: () => _onKeypadTap('2')),
+                          _KeypadButton('3', onPressed: () => _onKeypadTap('3')),
+                        ]),
+                        Row(children: [
+                          _KeypadButton('4', onPressed: () => _onKeypadTap('4')),
+                          _KeypadButton('5', onPressed: () => _onKeypadTap('5')),
+                          _KeypadButton('6', onPressed: () => _onKeypadTap('6')),
+                        ]),
+                        Row(children: [
+                          _KeypadButton('7', onPressed: () => _onKeypadTap('7')),
+                          _KeypadButton('8', onPressed: () => _onKeypadTap('8')),
+                          _KeypadButton('9', onPressed: () => _onKeypadTap('9')),
+                        ]),
+                        Row(children: [
+                          const Spacer(), // Empty slot
+                          _KeypadButton('0', onPressed: () => _onKeypadTap('0')),
+                          // Backspace Button
+                          Expanded(
+                            child: SizedBox(
+                              height: 64,
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () => _onKeypadTap('DEL'),
+                                  icon: const Icon(Icons.backspace_outlined,
+                                      color: Color(0xFF64748B), size: 24),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ],
+                    ),
+                    const Spacer(flex: 2),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ValueListenableBuilder<bool>(
+                        valueListenable: _isToastActiveNotifier,
+                        builder: (context, isToastActive, child) {
+                          return ElevatedButton(
+                            onPressed: isToastActive ? null : _processPayment,
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.orangePrimary,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape:
+                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                elevation: 0),
+                            child: const Text('Pay Now',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          );
+                        },
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ]),
-            ],
-          ),
-          const Spacer(flex: 2),
-          SizedBox(
-            width: double.infinity,
-            child: ValueListenableBuilder<bool>(
-              valueListenable: _isToastActiveNotifier,
-              builder: (context, isToastActive, child) {
-                return ElevatedButton(
-                  onPressed: isToastActive ? null : _processPayment,
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.orangePrimary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      elevation: 0),
-                  child: const Text('Pay Now',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                );
-              },
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
