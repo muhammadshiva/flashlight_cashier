@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
 import '../../../work_order/domain/entities/work_order.dart';
+import '../../domain/entities/dashboard_stats.dart';
 
 abstract class DashboardState extends Equatable {
   const DashboardState();
@@ -32,7 +33,7 @@ class DashboardLoaded extends DashboardState {
   final List<WorkOrder> filteredOrders;
   final Map<String, Customer> customers;
   final Map<String, Vehicle> vehicles;
-  final Map<String, int> statusCounts;
+  final List<StatusCount> statusCounts;
   final String selectedStatus;
   final String searchQuery;
 
@@ -43,7 +44,7 @@ class DashboardLoaded extends DashboardState {
     this.filteredOrders = const [],
     this.customers = const {},
     this.vehicles = const {},
-    this.statusCounts = const {},
+    this.statusCounts = const [],
     this.selectedStatus = 'Semua',
     this.searchQuery = '',
   });
@@ -68,7 +69,7 @@ class DashboardLoaded extends DashboardState {
     List<WorkOrder>? filteredOrders,
     Map<String, Customer>? customers,
     Map<String, Vehicle>? vehicles,
-    Map<String, int>? statusCounts,
+    List<StatusCount>? statusCounts,
     String? selectedStatus,
     String? searchQuery,
   }) {

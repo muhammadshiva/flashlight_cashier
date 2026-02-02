@@ -12,13 +12,13 @@ import '../repositories/dashboard_repository.dart';
 /// - Returns [Either<Failure, DashboardStats>] for proper error handling
 /// - Domain layer remains pure without UI concerns
 /// - BLoC handles UI state management (loading, success, error states)
-class GetDashboardStats implements UseCase<DashboardStats, DashboardParams> {
+class GetDashboardStats implements UseCase<DashboardData, DashboardParams> {
   final DashboardRepository repository;
 
   GetDashboardStats(this.repository);
 
   @override
-  Future<Either<Failure, DashboardStats>> call(DashboardParams params) async {
+  Future<Either<Failure, DashboardData>> call(DashboardParams params) async {
     return await repository.getDashboardStats(isPrototype: params.isPrototype);
   }
 }

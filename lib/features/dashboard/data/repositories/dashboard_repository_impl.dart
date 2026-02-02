@@ -15,7 +15,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
   DashboardRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, DashboardStats>> getDashboardStats({
+  Future<Either<Failure, DashboardData>> getDashboardStats({
     bool isPrototype = false,
   }) async {
     try {

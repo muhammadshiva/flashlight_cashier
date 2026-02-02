@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../bloc/dashboard_bloc.dart';
 import '../bloc/dashboard_event.dart';
 import '../bloc/dashboard_state.dart';
@@ -16,72 +17,73 @@ class StatusFilterBar extends StatelessWidget {
         final counts = state.statusCounts;
         final selected = state.selectedStatus;
 
+        // Helper to find count by status name from list
+        int getCount(String status) {
+          final found = counts.where((s) => s.name == status);
+          if (found.isNotEmpty) {
+            return found.first.count;
+          }
+          return 0;
+        }
+
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
               _FilterChip(
                 label: 'Semua',
-                count: counts['Semua'] ?? 0,
+                count: getCount('Semua'),
                 isActive: selected == 'Semua',
-                onTap: () => context
-                    .read<DashboardBloc>()
-                    .add(const FilterWorkOrders(status: 'Semua')),
+                onTap: () =>
+                    context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'Semua')),
               ),
               const SizedBox(width: 12),
               _FilterChip(
                 label: 'queued',
-                count: counts['queued'] ?? 0,
+                count: getCount('queued'),
                 isActive: selected.toLowerCase() == 'queued',
-                onTap: () => context
-                    .read<DashboardBloc>()
-                    .add(const FilterWorkOrders(status: 'queued')),
+                onTap: () =>
+                    context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'queued')),
               ),
               const SizedBox(width: 12),
               _FilterChip(
                 label: 'washing',
-                count: counts['washing'] ?? 0,
+                count: getCount('washing'),
                 isActive: selected.toLowerCase() == 'washing',
-                onTap: () => context
-                    .read<DashboardBloc>()
-                    .add(const FilterWorkOrders(status: 'washing')),
+                onTap: () =>
+                    context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'washing')),
               ),
               const SizedBox(width: 12),
               _FilterChip(
                 label: 'drying',
-                count: counts['drying'] ?? 0,
+                count: getCount('drying'),
                 isActive: selected.toLowerCase() == 'drying',
-                onTap: () => context
-                    .read<DashboardBloc>()
-                    .add(const FilterWorkOrders(status: 'drying')),
+                onTap: () =>
+                    context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'drying')),
               ),
               const SizedBox(width: 12),
               _FilterChip(
                 label: 'inspection',
-                count: counts['inspection'] ?? 0,
+                count: getCount('inspection'),
                 isActive: selected.toLowerCase() == 'inspection',
-                onTap: () => context
-                    .read<DashboardBloc>()
-                    .add(const FilterWorkOrders(status: 'inspection')),
+                onTap: () =>
+                    context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'inspection')),
               ),
               const SizedBox(width: 12),
               _FilterChip(
-                label:
-                    'completed', // 'Ready' in UI might map to 'completed' API status
-                count: counts['completed'] ?? 0,
+                label: 'completed', // 'Ready' in UI might map to 'completed' API status
+                count: getCount('completed'),
                 isActive: selected.toLowerCase() == 'completed',
-                onTap: () => context
-                    .read<DashboardBloc>()
-                    .add(const FilterWorkOrders(status: 'completed')),
+                onTap: () =>
+                    context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'completed')),
               ),
               const SizedBox(width: 12),
               _FilterChip(
                 label: 'paid',
-                count: counts['paid'] ?? 0,
+                count: getCount('paid'),
                 isActive: selected.toLowerCase() == 'paid',
-                onTap: () => context
-                    .read<DashboardBloc>()
-                    .add(const FilterWorkOrders(status: 'paid')),
+                onTap: () =>
+                    context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'paid')),
               ),
             ],
           ),
@@ -132,9 +134,7 @@ class _FilterChip extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: isActive
-                    ? const Color(0xFF334155)
-                    : const Color(0xFFF1F5F9),
+                color: isActive ? const Color(0xFF334155) : const Color(0xFFF1F5F9),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(

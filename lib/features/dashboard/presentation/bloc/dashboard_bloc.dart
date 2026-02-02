@@ -11,6 +11,7 @@ import '../../../work_order/domain/entities/work_order.dart';
 import '../../../work_order/domain/entities/work_order_product.dart';
 import '../../../work_order/domain/entities/work_order_service.dart';
 import '../../../work_order/domain/usecases/update_work_order_status.dart';
+import '../../domain/entities/dashboard_stats.dart';
 import '../../domain/usecases/get_dashboard_stats.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
@@ -102,11 +103,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             vehicleMap[v.id] = v;
           }
 
-          // Build status counts with "Semua" (All)
-          final statusCounts = <String, int>{
-            'Semua': stats.totalOrders,
-            ...stats.statusCounts,
-          };
+          // Calculate status counts, total orders, and total revenue from fetched orders
+          // Optimized using DashboardStats model factory
+          final calculatedStats = DashboardData.fromWorkOrders(orders);
 
           // Sort orders by date descending (newest first)
           final sortedOrders = List<WorkOrder>.from(orders)
@@ -115,13 +114,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 ));
 
           emit(DashboardLoaded(
-            totalOrders: stats.totalOrders,
-            totalRevenue: stats.totalRevenue,
+            totalOrders: calculatedStats.totalOrders,
+            totalRevenue: calculatedStats.totalRevenue,
             recentOrders: sortedOrders,
             filteredOrders: sortedOrders,
             customers: customerMap,
             vehicles: vehicleMap,
-            statusCounts: statusCounts,
+            statusCounts: calculatedStats.statusCounts,
             selectedStatus: 'Semua',
           ));
         },
@@ -219,12 +218,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         return wo.id == event.workOrderId ? updatedWorkOrder : wo;
       }).toList();
 
-      // Recalculate status counts
-      final statusCounts = <String, int>{'Semua': updatedOrders.length};
-      for (var order in updatedOrders) {
-        final status = order.status;
-        statusCounts[status] = (statusCounts[status] ?? 0) + 1;
-      }
+      // Recalculate stats
+      final newStats = DashboardData.fromWorkOrders(updatedOrders);
 
       // Sort again
       final sortedOrders = List<WorkOrder>.from(updatedOrders)
@@ -259,8 +254,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       emit(currentState.copyWith(
         recentOrders: sortedOrders,
-        filteredOrders: filtered, // Simplified for this update
-        statusCounts: statusCounts,
+        filteredOrders: filtered,
+        statusCounts: newStats.statusCounts,
       ));
     } catch (e) {
       // On failure, emit error and restore previous state
@@ -371,11 +366,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }).toList();
 
       // Recalculate status counts to be safe (though status didn't change)
-      final statusCounts = <String, int>{'Semua': updatedOrders.length};
-      for (var order in updatedOrders) {
-        final status = order.status;
-        statusCounts[status] = (statusCounts[status] ?? 0) + 1;
-      }
+      final newStats = DashboardData.fromWorkOrders(updatedOrders);
 
       // Sort
       final sortedOrders = List<WorkOrder>.from(updatedOrders)
@@ -384,7 +375,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit(currentState.copyWith(
         recentOrders: sortedOrders,
         filteredOrders: sortedOrders, // Simplified
-        statusCounts: statusCounts,
+        statusCounts: newStats.statusCounts,
       ));
     } catch (e) {
       emit(DashboardError('Failed to add item: $e'));
@@ -447,12 +438,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         return wo.id == event.workOrderId ? updatedWorkOrder : wo;
       }).toList();
 
-      // Recalculate status counts
-      final statusCounts = <String, int>{'Semua': updatedOrders.length};
-      for (var order in updatedOrders) {
-        final status = order.status;
-        statusCounts[status] = (statusCounts[status] ?? 0) + 1;
-      }
+      // Recalculate stats
+      final newStats = DashboardData.fromWorkOrders(updatedOrders);
 
       // Sort
       final sortedOrders = List<WorkOrder>.from(updatedOrders)
@@ -461,7 +448,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit(currentState.copyWith(
         recentOrders: sortedOrders,
         filteredOrders: sortedOrders,
-        statusCounts: statusCounts,
+        statusCounts: newStats.statusCounts,
       ));
     } catch (e) {
       emit(DashboardError('Failed to remove item: $e'));

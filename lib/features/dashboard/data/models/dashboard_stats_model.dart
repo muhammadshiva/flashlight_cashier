@@ -68,14 +68,17 @@ class DashboardStatsModel extends Equatable {
         "statusCounts": statusCounts,
       };
 
-  DashboardStats toEntity() => DashboardStats(
+  DashboardData toEntity() => DashboardData(
         totalOrders: totalWorkOrders ?? totalOrders ?? 0,
         totalRevenue: totalRevenue,
         pendingOrders: pendingOrders,
         inProgressOrders: inProgressOrders,
         completedOrders: completedOrders,
         cancelledOrders: cancelledOrders,
-        statusCounts: statusCounts ?? {},
+        statusCounts: (statusCounts ?? {})
+            .entries
+            .map((e) => StatusCount(name: e.key, count: e.value))
+            .toList(),
       );
 
   /// Prototype/dummy data for testing and development

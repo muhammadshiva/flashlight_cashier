@@ -10,9 +10,9 @@ import '../entities/dashboard_stats.dart';
 abstract class DashboardRepository {
   /// Fetches dashboard statistics.
   ///
-  /// Returns [DashboardStats] on success or [Failure] on error.
+  /// Returns [DashboardData] on success or [Failure] on error.
   /// The [isPrototype] flag enables prototype/mock data for testing.
-  Future<Either<Failure, DashboardStats>> getDashboardStats({
+  Future<Either<Failure, DashboardData>> getDashboardStats({
     bool isPrototype = false,
   });
 }
