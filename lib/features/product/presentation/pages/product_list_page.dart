@@ -2,11 +2,11 @@ import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../injection_container.dart';
 import '../../domain/entities/product.dart';
 import '../bloc/product_bloc.dart';
+import 'product_form_page.dart';
 
 class ProductListPage extends StatelessWidget {
   const ProductListPage({super.key});
@@ -138,7 +138,12 @@ class _StatsAndFilterSection extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             ElevatedButton.icon(
-              onPressed: () => context.push('/products/new'),
+              onPressed: () async {
+                final result = await ProductFormDialog.show(context);
+                if (result == true && context.mounted) {
+                  context.read<ProductBloc>().add(LoadProducts());
+                }
+              },
               icon: const Icon(Icons.add, size: 14),
               label: const Text('Add Product'),
               style: ElevatedButton.styleFrom(
@@ -323,7 +328,12 @@ class _ProductTable extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF64748B)),
-                onPressed: () => context.push('/products/${product.id}/edit', extra: product),
+                onPressed: () async {
+                  final result = await ProductFormDialog.show(context, product: product);
+                  if (result == true && context.mounted) {
+                    context.read<ProductBloc>().add(LoadProducts());
+                  }
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.delete_outline, size: 20, color: Color(0xFFEF4444)),

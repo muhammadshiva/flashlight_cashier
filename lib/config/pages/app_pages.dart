@@ -14,7 +14,6 @@ import '../../features/history/presentation/bloc/history_bloc.dart';
 import '../../features/history/presentation/bloc/history_event.dart';
 import '../../features/membership/presentation/pages/membership_form_page.dart';
 import '../../features/membership/presentation/pages/membership_list_page.dart';
-import '../../features/product/presentation/pages/product_form_page.dart';
 import '../../features/product/presentation/pages/product_list_page.dart';
 import '../../features/service/presentation/pages/service_form_page.dart';
 import '../../features/service/presentation/pages/service_list_page.dart';
@@ -26,7 +25,6 @@ import '../../features/user/presentation/pages/user_list_page.dart';
 import '../../features/user/presentation/pages/user_form_page.dart';
 import '../../features/user/domain/entities/user.dart';
 import '../../features/customer/domain/entities/customer.dart';
-import '../../features/product/domain/entities/product.dart';
 import '../../features/report/presentation/pages/reports_page.dart';
 import '../../core/widgets/session_timeout_listener.dart';
 import '../../injection_container.dart' as di;
@@ -137,19 +135,6 @@ class AppPages {
             pageBuilder: (context, state) => const NoTransitionPage(
               child: ProductListPage(),
             ),
-            routes: [
-              GoRoute(
-                path: AppRoutes.childNew,
-                builder: (context, state) => const ProductFormPage(),
-              ),
-              GoRoute(
-                path: AppRoutes.childIdEdit,
-                builder: (context, state) {
-                  final product = state.extra as Product?;
-                  return ProductFormPage(product: product);
-                },
-              ),
-            ],
           ),
           GoRoute(
             path: AppRoutes.users,
