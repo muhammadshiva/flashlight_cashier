@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../config/constans/text_styles_const.dart';
@@ -9,6 +8,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
 import '../../../work_order/domain/entities/work_order.dart';
+import '../../../work_order/presentation/widgets/work_order_detail_dialog.dart';
 
 class HistoryTable extends StatelessWidget {
   final List<WorkOrder> orders;
@@ -164,7 +164,10 @@ class HistoryTable extends StatelessWidget {
                           child: _ActionButton(
                             icon: Icons.visibility_outlined,
                             onTap: () {
-                              context.go('/work-orders/${order.id}');
+                              showWorkOrderDetailDialog(
+                                context,
+                                workOrderId: order.id,
+                              );
                             },
                             tooltip: 'Lihat Detail',
                           ),

@@ -25,12 +25,25 @@ class GetWorkOrders implements UseCase<List<WorkOrder>, GetWorkOrdersParams> {
   }
 }
 
-/// Parameters for [GetDashboardStats] use case.
+/// Parameters for [GetWorkOrders] use case.
 class GetWorkOrdersParams {
   /// When true, returns prototype/mock data for testing.
   final bool isPrototype;
 
   const GetWorkOrdersParams({
+    this.isPrototype = false,
+  });
+}
+
+/// Parameters for [GetWorkOrder] (by ID) use case.
+class GetWorkOrderByIdParams {
+  final String id;
+
+  /// When true, returns prototype/mock data for testing.
+  final bool isPrototype;
+
+  const GetWorkOrderByIdParams({
+    required this.id,
     this.isPrototype = false,
   });
 }

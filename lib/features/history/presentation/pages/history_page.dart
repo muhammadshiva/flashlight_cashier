@@ -64,6 +64,7 @@ class _HistoryPageState extends State<HistoryPage> {
         } else if (state is HistoryLoaded) {
           return Scaffold(
             backgroundColor: AppColors.slate50,
+            resizeToAvoidBottomInset: false,
             body: Padding(
               padding: EdgeInsets.all(32.w),
               child: Column(

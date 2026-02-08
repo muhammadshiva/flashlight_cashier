@@ -19,5 +19,5 @@ abstract class WorkOrderRepository {
   Future<Either<Failure, WorkOrder>> updateWorkOrderStatus(String id, String status);
 
   /// Gets a work order by id.
-  Future<Either<Failure, WorkOrder>> getWorkOrderById(String id);
+  Future<Either<Failure, WorkOrder>> getWorkOrderById(GetWorkOrderByIdParams params);
 }

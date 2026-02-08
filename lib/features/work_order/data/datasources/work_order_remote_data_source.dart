@@ -20,7 +20,7 @@ abstract class WorkOrderRemoteDataSource {
   Future<WorkOrderModel> updateWorkOrderStatus(String id, String status);
 
   /// Gets a work order by [id] from the API.
-  Future<WorkOrderModel> getWorkOrderById(String id);
+  Future<WorkOrderModel> getWorkOrderById(GetWorkOrderByIdParams params);
 }
 
 /// Implementation of [WorkOrderRemoteDataSource] using Dio.
@@ -167,9 +167,17 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
   }
 
   @override
-  Future<WorkOrderModel> getWorkOrderById(String id) async {
+  Future<WorkOrderModel> getWorkOrderById(GetWorkOrderByIdParams params) async {
+    if (params.isPrototype) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      final prototypeList = WorkOrderResponseModel.getPrototypeDataWorkOrders;
+      final match = prototypeList.where((wo) => wo.id == params.id);
+      if (match.isNotEmpty) return match.first;
+      throw ServerFailure('Work order ${params.id} not found');
+    }
+
     try {
-      final response = await dio.get('${ApiConst.workOrders}/$id');
+      final response = await dio.get('${ApiConst.workOrders}/${params.id}');
 
       // Handle API envelope: { success, message, data: {...}, error_code }
       final result = response.data;

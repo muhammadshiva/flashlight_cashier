@@ -21,7 +21,7 @@ import '../../features/service/presentation/pages/service_list_page.dart';
 import '../../features/vehicle/presentation/pages/vehicle_form_page.dart';
 import '../../features/vehicle/presentation/pages/vehicle_list_page.dart';
 import '../../features/work_order/presentation/pages/pos_page.dart';
-import '../../features/work_order/presentation/pages/work_order_detail_page.dart';
+
 import '../../features/user/presentation/pages/user_list_page.dart';
 import '../../features/user/presentation/pages/user_form_page.dart';
 import '../../features/user/domain/entities/user.dart';
@@ -76,14 +76,6 @@ class AppPages {
                 child: const HistoryPage(),
               ),
             ),
-            routes: [
-              GoRoute(
-                path: AppRoutes.childId,
-                builder: (context, state) => WorkOrderDetailPage(
-                  workOrderId: state.pathParameters['id']!,
-                ),
-              ),
-            ],
           ),
           GoRoute(
             path: AppRoutes.customers,
