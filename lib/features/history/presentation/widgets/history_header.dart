@@ -89,24 +89,45 @@ class HistoryHeader extends StatelessWidget {
               ),
             ),
             SizedBox(width: 16.w),
-            OutlinedButton.icon(
-              onPressed: () {
-                _showFilterDialog(context, state);
+            PopupMenuButton<String>(
+              offset: Offset(0, 50.w),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(color: Color(0xFFE2E8F0)),
+              ),
+              color: Colors.white,
+              elevation: 8,
+              onSelected: (value) {
+                context.read<HistoryBloc>().add(FilterHistory(status: value));
               },
-              icon: Icon(Icons.filter_list, size: 18.w),
-              label: Text(state.selectedStatus == 'Semua' ? 'Filter' : state.selectedStatus),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.slate500,
-                side: BorderSide(
+              itemBuilder: (context) => [
+                _buildPopupItem('Semua', Icons.list, state.selectedStatus),
+                _buildPopupItem('completed', Icons.check_circle_outline, state.selectedStatus, label: 'Selesai'),
+                _buildPopupItem('paid', Icons.payments_outlined, state.selectedStatus, label: 'Lunas'),
+              ],
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.w),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
                     color: state.selectedStatus == 'Semua'
                         ? AppColors.slate200
-                        : AppColors.orangePrimary),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20.w,
-                  vertical: 16.w,
+                        : AppColors.orangePrimary,
+                  ),
                 ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-                textStyle: TextStyleConst.poppinsMedium14,
+                child: Row(
+                  children: [
+                    Icon(Icons.filter_list, size: 18.w, color: AppColors.slate500),
+                    SizedBox(width: 8.w),
+                    Text(
+                      state.selectedStatus == 'Semua' ? 'Filter' : _getLabel(state.selectedStatus),
+                      style: TextStyleConst.poppinsMedium14.copyWith(
+                        color: AppColors.slate500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -115,37 +136,45 @@ class HistoryHeader extends StatelessWidget {
     );
   }
 
-  void _showFilterDialog(BuildContext context, HistoryLoaded state) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Filter Status'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildFilterOption(context, dialogContext, 'Semua', state),
-            _buildFilterOption(context, dialogContext, 'completed', state, label: 'Selesai'),
-            _buildFilterOption(context, dialogContext, 'paid', state, label: 'Lunas'),
+  PopupMenuItem<String> _buildPopupItem(
+      String value, IconData icon, String selectedStatus, {String? label}) {
+    final isSelected = selectedStatus == value;
+    final displayLabel = label ?? value;
+    return PopupMenuItem<String>(
+      value: value,
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: isSelected ? AppColors.orangePrimary : const Color(0xFF64748B),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            displayLabel,
+            style: TextStyle(
+              fontSize: 14,
+              color: isSelected ? AppColors.orangePrimary : const Color(0xFF1E293B),
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+            ),
+          ),
+          if (isSelected) ...[
+            const Spacer(),
+            const Icon(Icons.check, size: 18, color: AppColors.orangePrimary),
           ],
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildFilterOption(
-      BuildContext context, BuildContext dialogContext, String status, HistoryLoaded state,
-      {String? label}) {
-    final isSelected = state.selectedStatus == status;
-    return ListTile(
-      title: Text(label ?? status),
-      selected: isSelected,
-      selectedColor: AppColors.orangePrimary,
-      trailing: isSelected ? const Icon(Icons.check) : null,
-      onTap: () {
-        context.read<HistoryBloc>().add(FilterHistory(status: status));
-        Navigator.pop(dialogContext);
-      },
-    );
+  String _getLabel(String status) {
+    switch (status) {
+      case 'completed':
+        return 'Selesai';
+      case 'paid':
+        return 'Lunas';
+      default:
+        return status;
+    }
   }
 }
