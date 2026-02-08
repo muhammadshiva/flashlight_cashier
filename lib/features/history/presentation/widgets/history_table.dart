@@ -38,15 +38,16 @@ class HistoryTable extends StatelessWidget {
             4: FixedColumnWidth(100.w),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: const [
+          children: [
             TableRow(
               decoration: BoxDecoration(
                 color: AppColors.white,
-                border: Border(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                border: const Border(
                   bottom: BorderSide(color: AppColors.slate200),
                 ),
               ),
-              children: [
+              children: const [
                 _HeaderCell('WORK ORDER'),
                 _HeaderCell('PELANGGAN'),
                 _HeaderCell('TOTAL'),

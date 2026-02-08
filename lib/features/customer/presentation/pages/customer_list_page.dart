@@ -2,6 +2,7 @@ import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../injection_container.dart';
@@ -38,10 +39,11 @@ class _CustomerContentView extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: AppColors.slate200),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 20,
                     offset: const Offset(0, 4),
                   ),
@@ -176,15 +178,16 @@ class _CustomerTable extends StatelessWidget {
             3: FixedColumnWidth(100),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: const [
+          children: [
             TableRow(
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
                 color: Colors.white,
-                border: Border(
+                border: const Border(
                   bottom: BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
-              children: [
+              children: const [
                 _HeaderCell('NAME'),
                 _HeaderCell('PHONE'),
                 _HeaderCell('EMAIL'),

@@ -2,6 +2,7 @@ import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../injection_container.dart';
 import '../../domain/entities/product.dart';
@@ -26,17 +27,18 @@ class _ProductContentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(32, 16, 32, 32),
+      padding: EdgeInsets.fromLTRB(32.w, 16.w, 32.w, 32.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _StatsAndFilterSection(),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.w),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: AppColors.slate200),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -181,15 +183,16 @@ class _ProductTable extends StatelessWidget {
             5: FixedColumnWidth(100),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: const [
+          children: [
             TableRow(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                border: const Border(
                   bottom: BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
-              children: [
+              children: const [
                 _HeaderCell('PRODUCT NAME'),
                 _HeaderCell('SKU'),
                 _HeaderCell('PRICE'),
@@ -222,23 +225,6 @@ class _ProductTable extends StatelessWidget {
       ],
     );
   }
-
-  // TableRow _buildHeaderRow() {
-  //   return TableRow(
-  //     decoration: const BoxDecoration(
-  //       border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
-  //     ),
-  //     children: [
-  //       _HeaderCell(child: Checkbox(value: false, onChanged: (_) {})),
-  //       const _HeaderCell(text: 'PRODUCT NAME'),
-  //       const _HeaderCell(text: 'SKU'),
-  //       const _HeaderCell(text: 'PRICE'),
-  //       const _HeaderCell(text: 'STOCK'),
-  //       const _HeaderCell(text: 'STATUS'),
-  //       const _HeaderCell(text: ''),
-  //     ],
-  //   );
-  // }
 
   TableRow _buildProductRow(BuildContext context, Product product) {
     return TableRow(

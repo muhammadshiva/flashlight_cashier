@@ -2,6 +2,7 @@ import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../injection_container.dart';
@@ -36,10 +37,11 @@ class _VehicleContentView extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: AppColors.slate200),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 20,
                     offset: const Offset(0, 4),
                   ),
@@ -118,8 +120,8 @@ class _StatsAndFilterSection extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
-                  SizedBox(width: 12),
+                  const Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
@@ -176,15 +178,16 @@ class _VehicleTable extends StatelessWidget {
             5: FixedColumnWidth(100),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: const [
+          children: [
             TableRow(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                border: const Border(
                   bottom: BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
-              children: [
+              children: const [
                 _HeaderCell('LICENSE PLATE'),
                 _HeaderCell('BRAND'),
                 _HeaderCell('COLOR'),

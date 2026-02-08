@@ -71,7 +71,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   HistoryHeader(state: state),
-                  SizedBox(height: 32.w),
+                  SizedBox(height: 16.w),
                   HistoryStats(state: state),
                   SizedBox(height: 24.w),
                   Expanded(
@@ -90,7 +90,6 @@ class _HistoryPageState extends State<HistoryPage> {
                       ),
                       child: Column(
                         children: [
-                          Divider(height: 1.w, color: AppColors.slate100),
                           Expanded(
                             child: HistoryTable(
                               orders: state.displayedOrders,
