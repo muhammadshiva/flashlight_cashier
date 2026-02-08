@@ -26,7 +26,7 @@ class _ProductContentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(32.0),
+      padding: const EdgeInsets.fromLTRB(32, 16, 32, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -337,8 +337,58 @@ class _ProductTable extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.delete_outline, size: 20, color: Color(0xFFEF4444)),
-                onPressed: () {
-                  context.read<ProductBloc>().add(DeleteProductEvent(product.id));
+                onPressed: () async {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (dialogContext) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      title: const Row(
+                        children: [
+                          Icon(Icons.warning_amber_rounded, color: Color(0xFFEF4444), size: 24),
+                          SizedBox(width: 12),
+                          Text('Delete Product',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                      content: Text(
+                        'Are you sure you want to delete "${product.name}"? This action cannot be undone.',
+                        style: const TextStyle(fontSize: 14, color: Color(0xFF475569)),
+                      ),
+                      actions: [
+                        OutlinedButton(
+                          onPressed: () => Navigator.pop(dialogContext, true),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            side: const BorderSide(color: Color(0xFFEF4444)),
+                          ),
+                          child: const Text('Delete',
+                              style:
+                                  TextStyle(color: Color(0xFFEF4444), fontWeight: FontWeight.w600)),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(dialogContext, false),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.orangePrimary,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Cancel',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirmed == true && context.mounted) {
+                    context.read<ProductBloc>().add(DeleteProductEvent(product.id));
+                  }
                 },
               ),
             ],

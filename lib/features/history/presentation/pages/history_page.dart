@@ -66,7 +66,7 @@ class _HistoryPageState extends State<HistoryPage> {
             backgroundColor: AppColors.slate50,
             resizeToAvoidBottomInset: false,
             body: Padding(
-              padding: EdgeInsets.all(32.w),
+              padding: EdgeInsets.fromLTRB(32.w, 16.w, 32.w, 32.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
