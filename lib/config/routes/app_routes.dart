@@ -15,8 +15,6 @@ class AppRoutes {
 
   // Customers
   static const String customers = '/customers';
-  static const String customerNew = '/customers/new';
-  static String customerEdit(String id) => '/customers/$id/edit';
 
   // Memberships
   static const String memberships = '/memberships';
@@ -24,7 +22,6 @@ class AppRoutes {
 
   // Vehicles
   static const String vehicles = '/vehicles';
-  static const String vehicleNew = '/vehicles/new';
 
   // Services
   static const String services = '/services';

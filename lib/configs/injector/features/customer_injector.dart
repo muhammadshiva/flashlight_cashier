@@ -11,8 +11,6 @@ import '../../../features/customer/domain/usecases/create_customer.dart';
 import '../../../features/customer/domain/usecases/update_customer.dart';
 import '../../../features/customer/domain/usecases/delete_customer.dart';
 import '../../../features/customer/presentation/bloc/customer_bloc.dart';
-import '../../../features/customer/presentation/bloc/form/customer_form_bloc.dart';
-
 final _sl = GetIt.instance;
 
 /// Dependency injection configuration for the Customer feature.
@@ -36,11 +34,6 @@ class CustomerInjector {
         updateCustomer: _sl(),
         deleteCustomer: _sl(),
       ),
-    );
-
-    // Form BLoCs - for form validation (separate from business logic)
-    _sl.registerFactory<CustomerFormBloc>(
-      () => CustomerFormBloc(),
     );
 
     // ============================================

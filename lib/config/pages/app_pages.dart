@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/customer/presentation/pages/customer_form_page.dart';
 import '../../features/customer/presentation/pages/customer_list_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/dashboard/presentation/widgets/dashboard_layout.dart';
@@ -17,14 +16,12 @@ import '../../features/membership/presentation/pages/membership_list_page.dart';
 import '../../features/product/presentation/pages/product_list_page.dart';
 import '../../features/service/presentation/pages/service_form_page.dart';
 import '../../features/service/presentation/pages/service_list_page.dart';
-import '../../features/vehicle/presentation/pages/vehicle_form_page.dart';
 import '../../features/vehicle/presentation/pages/vehicle_list_page.dart';
 import '../../features/work_order/presentation/pages/pos_page.dart';
 
 import '../../features/user/presentation/pages/user_list_page.dart';
 import '../../features/user/presentation/pages/user_form_page.dart';
 import '../../features/user/domain/entities/user.dart';
-import '../../features/customer/domain/entities/customer.dart';
 import '../../features/report/presentation/pages/reports_page.dart';
 import '../../core/widgets/session_timeout_listener.dart';
 import '../../injection_container.dart' as di;
@@ -80,19 +77,6 @@ class AppPages {
             pageBuilder: (context, state) => const NoTransitionPage(
               child: CustomerListPage(),
             ),
-            routes: [
-              GoRoute(
-                path: AppRoutes.childNew,
-                builder: (context, state) => const CustomerFormPage(),
-              ),
-              GoRoute(
-                path: AppRoutes.childIdEdit,
-                builder: (context, state) {
-                  final customer = state.extra as Customer?;
-                  return CustomerFormPage(customer: customer);
-                },
-              ),
-            ],
           ),
           GoRoute(
             path: AppRoutes.memberships,
@@ -111,12 +95,6 @@ class AppPages {
             pageBuilder: (context, state) => const NoTransitionPage(
               child: VehicleListPage(),
             ),
-            routes: [
-              GoRoute(
-                path: AppRoutes.childNew,
-                builder: (context, state) => const VehicleFormPage(),
-              ),
-            ],
           ),
           GoRoute(
             path: AppRoutes.services,

@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/product.dart';
 import '../bloc/product_bloc.dart';
-import 'product_form_page.dart';
+import 'product_form_dialog.dart';
 
 class ProductListPage extends StatelessWidget {
   const ProductListPage({super.key});
