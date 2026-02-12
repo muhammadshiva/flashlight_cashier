@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_state.dart';
-import 'package:flashlight_pos/features/dashboard/presentation/widgets/cashier_dashboard_layout.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/widgets/cashier_dashboard_layout/cashier_dashboard_layout.dart';
 import 'package:flashlight_pos/shared/widgets/custom_loading.dart';
 import 'package:flashlight_pos/shared/widgets/custom_snackbar.dart';
 import 'package:flashlight_pos/shared/widgets/loading_overlay_widget.dart';

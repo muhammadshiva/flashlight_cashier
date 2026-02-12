@@ -1,9 +1,10 @@
+import 'package:flashlight_pos/config/themes/app_colors.dart';
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/widgets/dashboard_empty_state.dart';
 import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flutter/material.dart';
-import 'package:flashlight_pos/core/utils/currency_formatter.dart';
-import 'package:flashlight_pos/features/dashboard/presentation/widgets/dashboard_empty_state.dart';
 
 class CashierOrderList extends StatelessWidget {
   final List<WorkOrder> orders;
@@ -68,7 +69,7 @@ class _OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Premium Design Constants
     final borderRadius = BorderRadius.circular(16);
-    final cardColor = isSelected ? const Color(0xFFF8FAFC) : Colors.white;
+    final cardColor = isSelected ? AppColors.slate50 : Colors.white;
     const primaryColor = Color(0xFF0EA5E9); // Sky blue
     final borderColor = isSelected ? primaryColor : Colors.grey.shade200;
 
@@ -84,15 +85,13 @@ class _OrderCard extends StatelessWidget {
         boxShadow: [
           // Soft, layered shadows for depth
           BoxShadow(
-            color:
-                const Color(0xFF64748B).withOpacity(isSelected ? 0.08 : 0.03),
+            color: AppColors.slate500.withOpacity(isSelected ? 0.08 : 0.03),
             offset: const Offset(0, 4),
             blurRadius: 12,
             spreadRadius: 0,
           ),
           BoxShadow(
-            color:
-                const Color(0xFF64748B).withOpacity(isSelected ? 0.04 : 0.02),
+            color: AppColors.slate500.withOpacity(isSelected ? 0.04 : 0.02),
             offset: const Offset(0, 2),
             blurRadius: 4,
             spreadRadius: -1,
@@ -139,10 +138,9 @@ class _OrderCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF1F5F9),
+                              color: AppColors.slate100,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -174,16 +172,13 @@ class _OrderCard extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: isSelected
-                                  ? primaryColor.withOpacity(0.1)
-                                  : const Color(0xFFF1F5F9),
+                              color:
+                                  isSelected ? primaryColor.withOpacity(0.1) : AppColors.slate100,
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
                               Icons.directions_car_filled_rounded,
-                              color: isSelected
-                                  ? primaryColor
-                                  : Colors.blueGrey[400],
+                              color: isSelected ? primaryColor : Colors.blueGrey[400],
                               size: 20,
                             ),
                           ),
@@ -193,9 +188,7 @@ class _OrderCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  vehicle != null
-                                      ? vehicle!.licensePlate
-                                      : 'Unknown',
+                                  vehicle != null ? vehicle!.licensePlate : 'Unknown',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 17,
@@ -205,9 +198,7 @@ class _OrderCard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  vehicle != null
-                                      ? vehicle!.vehicleBrand
-                                      : 'No Detail',
+                                  vehicle != null ? vehicle!.vehicleBrand : 'No Detail',
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: Colors.blueGrey[500],
@@ -235,8 +226,7 @@ class _OrderCard extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.person,
-                                        size: 14, color: Colors.blueGrey[400]),
+                                    Icon(Icons.person, size: 14, color: Colors.blueGrey[400]),
                                     const SizedBox(width: 4),
                                     Flexible(
                                       child: Text(
@@ -272,12 +262,10 @@ class _OrderCard extends StatelessWidget {
                           ),
                           // Right: Price
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: isSelected
-                                  ? primaryColor.withOpacity(0.08)
-                                  : Colors.transparent,
+                              color:
+                                  isSelected ? primaryColor.withOpacity(0.08) : Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -285,9 +273,8 @@ class _OrderCard extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 16,
-                                color: isSelected
-                                    ? const Color(0xFF0369A1)
-                                    : const Color(0xFF0F172A),
+                                color:
+                                    isSelected ? const Color(0xFF0369A1) : const Color(0xFF0F172A),
                               ),
                             ),
                           ),
@@ -335,8 +322,8 @@ class _StatusBadgeSmall extends StatelessWidget {
         fg = const Color(0xFF854D0E); // Yellow 800
         break;
       default:
-        bg = const Color(0xFFF1F5F9); // Slate 100
-        fg = const Color(0xFF475569); // Slate 600
+        bg = AppColors.slate100; // Slate 100
+        fg = AppColors.slate600; // Slate 600
     }
 
     return Container(
@@ -345,9 +332,7 @@ class _StatusBadgeSmall extends StatelessWidget {
         color: bg,
         borderRadius: BorderRadius.circular(20), // Pill shape
         border: Border.all(
-            color: bg == const Color(0xFFF1F5F9)
-                ? Colors.blueGrey[200]!
-                : Colors.transparent),
+            color: bg == AppColors.slate100 ? Colors.blueGrey[200]! : Colors.transparent),
       ),
       child: Text(
         status.toUpperCase(),

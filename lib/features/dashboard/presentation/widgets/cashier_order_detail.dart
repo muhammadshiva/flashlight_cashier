@@ -73,7 +73,7 @@ class CashierOrderDetail extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF64748B),
+                        color: AppColors.slate500,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -138,9 +138,9 @@ class QuickActionChip extends StatelessWidget {
       label: Text(label),
       onPressed: onTap,
       backgroundColor: Colors.white,
-      side: const BorderSide(color: Color(0xFFE2E8F0)),
+      side: const BorderSide(color: AppColors.slate200),
       labelStyle: const TextStyle(
-        color: Color(0xFF475569),
+        color: AppColors.slate600,
         fontSize: 12,
         fontWeight: FontWeight.w500,
       ),
@@ -179,7 +179,7 @@ class _OrderHeader extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E293B),
+                      color: AppColors.slate800,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -188,7 +188,7 @@ class _OrderHeader extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1E293B),
+                          color: AppColors.slate800,
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -204,7 +204,7 @@ class _OrderHeader extends StatelessWidget {
                       Text(
                         order.estimatedTime,
                         style: const TextStyle(
-                          color: Color(0xFF64748B),
+                          color: AppColors.slate500,
                           fontSize: 14,
                         ),
                       ),
@@ -260,20 +260,20 @@ class _InfoTile extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFFF1F5F9),
+            color: AppColors.slate100,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, size: 20, color: const Color(0xFF64748B)),
+          child: Icon(icon, size: 20, color: AppColors.slate500),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF94A3B8))),
+              Text(label, style: const TextStyle(fontSize: 12, color: AppColors.slate400)),
               Text(value,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                      fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.slate700),
                   overflow: TextOverflow.ellipsis),
             ],
           ),
@@ -333,14 +333,14 @@ class _OrderItemRow extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF1E293B),
+                    color: AppColors.slate800,
                   ),
                 ),
                 Text(
                   '$quantity x ${price.toCurrencyFormat()}',
                   style: const TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF64748B),
+                    color: AppColors.slate500,
                   ),
                 ),
               ],
@@ -354,7 +354,7 @@ class _OrderItemRow extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.slate800,
                 ),
               ),
               const SizedBox(width: 8),
@@ -407,7 +407,7 @@ class _PaymentSection extends StatelessWidget {
                 'Total Amount',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Color(0xFF64748B),
+                  color: AppColors.slate500,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -416,7 +416,7 @@ class _PaymentSection extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.slate800,
                 ),
               ),
             ],
@@ -488,8 +488,8 @@ class _StatusBadgeLarge extends StatelessWidget {
         label = 'Cancelled';
         break;
       default:
-        bg = const Color(0xFFF1F5F9);
-        text = const Color(0xFF64748B);
+        bg = AppColors.slate100;
+        text = AppColors.slate500;
         label = 'Queued';
     }
 

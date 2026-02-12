@@ -1,10 +1,11 @@
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../work_order/domain/entities/work_order.dart';
+
+import '../../../../config/themes/app_colors.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
-import '../../../../config/themes/app_colors.dart';
-import 'package:flashlight_pos/core/utils/currency_formatter.dart';
+import '../../../work_order/domain/entities/work_order.dart';
 
 class WorkOrderCard extends StatelessWidget {
   final WorkOrder workOrder;
@@ -132,7 +133,7 @@ class WorkOrderCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.slate800,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -142,7 +143,7 @@ class WorkOrderCard extends StatelessWidget {
                           : '-',
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF64748B),
+                        color: AppColors.slate500,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -150,23 +151,21 @@ class WorkOrderCard extends StatelessWidget {
                     if (workOrder.estimatedTime.isNotEmpty) ...[
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF1F5F9),
+                          color: AppColors.slate100,
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.access_time,
-                                size: 12, color: Color(0xFF64748B)),
+                            const Icon(Icons.access_time, size: 12, color: AppColors.slate500),
                             const SizedBox(width: 4),
                             Text(
                               workOrder.estimatedTime,
                               style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF64748B),
+                                color: AppColors.slate500,
                               ),
                             ),
                           ],
@@ -188,17 +187,15 @@ class WorkOrderCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.person,
-                                  size: 16, color: Color(0xFF64748B)),
+                              const Icon(Icons.person, size: 16, color: AppColors.slate500),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  customer?.name ??
-                                      'Cust: ${_shortenId(workOrder.customerId)}',
+                                  customer?.name ?? 'Cust: ${_shortenId(workOrder.customerId)}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF1E293B),
+                                    color: AppColors.slate800,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
@@ -209,14 +206,13 @@ class WorkOrderCard extends StatelessWidget {
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              const Icon(Icons.phone,
-                                  size: 14, color: Color(0xFF64748B)),
+                              const Icon(Icons.phone, size: 14, color: AppColors.slate500),
                               const SizedBox(width: 8),
                               Text(
                                 customer?.phoneNumber ?? '-',
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  color: Color(0xFF64748B),
+                                  color: AppColors.slate500,
                                 ),
                               ),
                             ],
@@ -224,8 +220,7 @@ class WorkOrderCard extends StatelessWidget {
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              const Icon(Icons.directions_car,
-                                  size: 16, color: Color(0xFF64748B)),
+                              const Icon(Icons.directions_car, size: 16, color: AppColors.slate500),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
@@ -235,7 +230,7 @@ class WorkOrderCard extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF475569),
+                                    color: AppColors.slate600,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
@@ -252,7 +247,7 @@ class WorkOrderCard extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1E293B),
+                                  color: AppColors.slate800,
                                   letterSpacing: 1.2,
                                 ),
                               ),
@@ -273,8 +268,7 @@ class WorkOrderCard extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: _getActionButtonColor(),
                             foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 14),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -289,16 +283,16 @@ class WorkOrderCard extends StatelessWidget {
 
                 // Services
                 if (workOrder.services.isNotEmpty) ...[
-                  Row(
-                    children: const [
-                      Icon(Icons.build, size: 14, color: Color(0xFF94A3B8)),
+                  const Row(
+                    children: [
+                      Icon(Icons.build, size: 14, color: AppColors.slate400),
                       SizedBox(width: 6),
                       Text(
                         'Layanan:',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF94A3B8),
+                          color: AppColors.slate400,
                         ),
                       ),
                     ],
@@ -309,8 +303,7 @@ class WorkOrderCard extends StatelessWidget {
                     runSpacing: 8,
                     children: workOrder.services.map((service) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFEFF6FF),
                           borderRadius: BorderRadius.circular(6),
@@ -320,8 +313,7 @@ class WorkOrderCard extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          service.service?.name ??
-                              'Svc: ${_shortenId(service.serviceId)}',
+                          service.service?.name ?? 'Svc: ${_shortenId(service.serviceId)}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -336,16 +328,16 @@ class WorkOrderCard extends StatelessWidget {
 
                 // Products (F&B)
                 if (workOrder.products.isNotEmpty) ...[
-                  Row(
-                    children: const [
-                      Icon(Icons.fastfood, size: 14, color: Color(0xFF94A3B8)),
+                  const Row(
+                    children: [
+                      Icon(Icons.fastfood, size: 14, color: AppColors.slate400),
                       SizedBox(width: 6),
                       Text(
                         'F&B:',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF94A3B8),
+                          color: AppColors.slate400,
                         ),
                       ),
                     ],
@@ -356,8 +348,7 @@ class WorkOrderCard extends StatelessWidget {
                     runSpacing: 8,
                     children: workOrder.products.map((product) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
                           borderRadius: BorderRadius.circular(6),
@@ -389,23 +380,21 @@ class WorkOrderCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.slate800,
                       ),
                     ),
                     const SizedBox(width: 12),
                     // Show products count as upsell indicator
                     if (workOrder.products.isNotEmpty)
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.local_offer,
-                                size: 12, color: Color(0xFFD97706)),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.local_offer, size: 12, color: Color(0xFFD97706)),
                             SizedBox(width: 4),
                             Text(
                               'Upsell',

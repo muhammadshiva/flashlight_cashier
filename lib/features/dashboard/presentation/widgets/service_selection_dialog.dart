@@ -1,6 +1,6 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
-import 'package:flutter/material.dart';
 import 'package:flashlight_pos/core/utils/currency_formatter.dart';
+import 'package:flutter/material.dart';
 
 class ServiceSelectionDialog extends StatelessWidget {
   const ServiceSelectionDialog({super.key});
@@ -25,12 +25,12 @@ class ServiceSelectionDialog extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
+                    color: AppColors.slate800,
                   ),
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close, color: Color(0xFF64748B)),
+                  icon: const Icon(Icons.close, color: AppColors.slate500),
                 ),
               ],
             ),
@@ -38,14 +38,14 @@ class ServiceSelectionDialog extends StatelessWidget {
             TextField(
               decoration: InputDecoration(
                 hintText: 'Search services or products...',
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
+                prefixIcon: const Icon(Icons.search, color: AppColors.slate400),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  borderSide: const BorderSide(color: AppColors.slate200),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  borderSide: const BorderSide(color: AppColors.slate200),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -63,7 +63,7 @@ class ServiceSelectionDialog extends StatelessWidget {
                     Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
+                        color: AppColors.slate100,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TabBar(
@@ -78,11 +78,10 @@ class ServiceSelectionDialog extends StatelessWidget {
                             ),
                           ],
                         ),
-                        labelColor: const Color(0xFF1E293B),
-                        unselectedLabelColor: const Color(0xFF64748B),
+                        labelColor: AppColors.slate800,
+                        unselectedLabelColor: AppColors.slate500,
                         dividerColor: Colors.transparent,
-                        labelStyle:
-                            const TextStyle(fontWeight: FontWeight.w600),
+                        labelStyle: const TextStyle(fontWeight: FontWeight.w600),
                         tabs: const [
                           Tab(text: 'Services'),
                           Tab(text: 'Products'),
@@ -90,7 +89,7 @@ class ServiceSelectionDialog extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Expanded(
+                    const Expanded(
                       child: TabBarView(
                         children: [
                           _ServiceList(type: 'Service'),
@@ -154,14 +153,14 @@ class _ServiceList extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.slate800,
                       ),
                     ),
                     Text(
                       type,
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF64748B),
+                        color: AppColors.slate500,
                       ),
                     ),
                   ],
@@ -171,7 +170,7 @@ class _ServiceList extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
+                    color: AppColors.slate800,
                   ),
                 ),
               ],

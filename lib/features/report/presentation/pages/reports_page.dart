@@ -17,7 +17,7 @@ class ReportsPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<ReportsBloc>()..add(LoadReports()),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC), // Slate-50
+        backgroundColor: AppColors.slate50, // Slate-50
         body: BlocBuilder<ReportsBloc, ReportsState>(
           builder: (context, state) {
             if (state is ReportsLoading) {
@@ -96,7 +96,7 @@ class ReportsPage extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1E293B),
+                                  color: AppColors.slate800,
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -116,7 +116,7 @@ class ReportsPage extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1E293B),
+                                  color: AppColors.slate800,
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -153,7 +153,7 @@ class ReportsPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
+          border: Border.all(color: AppColors.slate200),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.02),
@@ -179,7 +179,7 @@ class ReportsPage extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    color: Color(0xFF64748B), // Slate-500
+                    color: AppColors.slate500, // Slate-500
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -188,7 +188,7 @@ class ReportsPage extends StatelessWidget {
                 Text(
                   value,
                   style: const TextStyle(
-                    color: Color(0xFF1E293B), // Slate-900
+                    color: AppColors.slate800, // Slate-900
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -215,7 +215,7 @@ class _HeaderSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1E293B), // Slate-900
+            color: AppColors.slate800, // Slate-900
           ),
         ),
         SizedBox(height: 4),
@@ -225,11 +225,11 @@ class _HeaderSection extends StatelessWidget {
               'Dashboard',
               style: TextStyle(
                 fontSize: 14,
-                color: Color(0xFF64748B), // Slate-500
+                color: AppColors.slate500, // Slate-500
               ),
             ),
             SizedBox(width: 8),
-            Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
+            Icon(Icons.circle, size: 4, color: AppColors.slate300),
             SizedBox(width: 8),
             Text(
               'Laporan',
@@ -257,7 +257,7 @@ class _ServiceRevenueTable extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: AppColors.slate200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -279,7 +279,7 @@ class _ServiceRevenueTable extends StatelessWidget {
               TableRow(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+                  border: Border(bottom: BorderSide(color: AppColors.slate200)),
                 ),
                 children: [
                   _HeaderCell('LAYANAN'),
@@ -301,7 +301,7 @@ class _ServiceRevenueTable extends StatelessWidget {
                   ...serviceRevenue.entries.map((entry) {
                     return TableRow(
                       decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+                        border: Border(bottom: BorderSide(color: AppColors.slate100)),
                       ),
                       children: [
                         _DataCell(
@@ -309,7 +309,7 @@ class _ServiceRevenueTable extends StatelessWidget {
                             entry.key,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF1E293B),
+                              color: AppColors.slate800,
                               fontSize: 14,
                             ),
                           ),
@@ -353,7 +353,7 @@ class _DailyRevenueTable extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: AppColors.slate200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -375,7 +375,7 @@ class _DailyRevenueTable extends StatelessWidget {
               TableRow(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+                  border: Border(bottom: BorderSide(color: AppColors.slate200)),
                 ),
                 children: [
                   _HeaderCell('TANGGAL'),
@@ -398,7 +398,7 @@ class _DailyRevenueTable extends StatelessWidget {
                     final revenue = dailyRevenue[date]!;
                     return TableRow(
                       decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+                        border: Border(bottom: BorderSide(color: AppColors.slate100)),
                       ),
                       children: [
                         _DataCell(
@@ -406,7 +406,7 @@ class _DailyRevenueTable extends StatelessWidget {
                             DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(date),
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF1E293B),
+                              color: AppColors.slate800,
                               fontSize: 14,
                             ),
                           ),
@@ -452,7 +452,7 @@ class _HeaderCell extends StatelessWidget {
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF64748B), // Slate-500
+            color: AppColors.slate500, // Slate-500
             letterSpacing: 0.5,
           ),
         ),

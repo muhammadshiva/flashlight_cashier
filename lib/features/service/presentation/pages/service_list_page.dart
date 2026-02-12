@@ -44,8 +44,7 @@ class ServiceListPage extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is ServiceLoading) {
-              return const Center(
-                  child: CircularProgressIndicator(color: AppColors.primary));
+              return const Center(child: CircularProgressIndicator(color: AppColors.primary));
             } else if (state is ServiceLoaded) {
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(32.0),
@@ -77,10 +76,10 @@ class _HeaderSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Daftar Layanan',
               style: TextStyle(
                 fontSize: 24,
@@ -88,19 +87,19 @@ class _HeaderSection extends StatelessWidget {
                 color: Color(0xFF1E293B), // Slate-900
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Row(
               children: [
-                const Text(
+                Text(
                   'Dashboard',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF64748B), // Slate-500
+                    color: AppColors.slate500, // Slate-500
                   ),
                 ),
-                const SizedBox(width: 8),
-                const Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
+                Icon(Icons.circle, size: 4, color: Color(0xFFCBD5E1)),
+                SizedBox(width: 8),
                 Text(
                   'Layanan',
                   style: TextStyle(
@@ -121,8 +120,7 @@ class _HeaderSection extends StatelessWidget {
             backgroundColor: AppColors.orangePrimary,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 0,
           ),
         ),
@@ -141,7 +139,7 @@ class _SearchSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: AppColors.slate200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -158,11 +156,11 @@ class _SearchSection extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                border: Border.all(color: AppColors.slate200),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.search, color: Color(0xFF94A3B8), size: 20),
+                  const Icon(Icons.search, color: AppColors.slate400, size: 20),
                   const SizedBox(width: 12),
                   Expanded(
                     child: TextField(
@@ -173,8 +171,7 @@ class _SearchSection extends StatelessWidget {
                         hintText: 'Cari layanan...',
                         border: InputBorder.none,
                         isDense: true,
-                        hintStyle:
-                            TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                        hintStyle: TextStyle(color: AppColors.slate400, fontSize: 14),
                       ),
                     ),
                   ),
@@ -188,11 +185,10 @@ class _SearchSection extends StatelessWidget {
             icon: const Icon(Icons.filter_list, size: 18),
             label: const Text('Filter'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(0xFF64748B),
-              side: const BorderSide(color: Color(0xFFE2E8F0)),
+              foregroundColor: AppColors.slate500,
+              side: const BorderSide(color: AppColors.slate200),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
         ],
@@ -226,7 +222,7 @@ class _ServiceTable extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF64748B),
+                  color: AppColors.slate500,
                 ),
               ),
             ],
@@ -239,7 +235,7 @@ class _ServiceTable extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: AppColors.slate200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -264,7 +260,7 @@ class _ServiceTable extends StatelessWidget {
               TableRow(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+                  border: Border(bottom: BorderSide(color: AppColors.slate200)),
                 ),
                 children: [
                   _HeaderCell('LAYANAN'),
@@ -290,138 +286,135 @@ class _ServiceTable extends StatelessWidget {
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: [
                   ...services.map((service) {
-            return TableRow(
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
-              ),
-              children: [
-                _DataCell(
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF1F5F9), // Slate-100
-                          borderRadius: BorderRadius.circular(8),
-                          image: service.imageUrl.isNotEmpty
-                              ? DecorationImage(
-                                  image: NetworkImage(service.imageUrl),
-                                  fit: BoxFit.cover,
-                                )
-                              : null,
-                        ),
-                        child: service.imageUrl.isEmpty
-                            ? const Icon(Icons.miscellaneous_services,
-                                color: Color(0xFF94A3B8), size: 20)
-                            : null,
+                    return TableRow(
+                      decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide(color: AppColors.slate100)),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              service.name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF1E293B),
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              service.description,
-                              style: const TextStyle(
-                                color: Color(0xFF94A3B8),
-                                fontSize: 12,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                _DataCell(
-                  child: _ServiceTypeBadge(type: service.type),
-                ),
-                _DataCell(
-                  child: Text(
-                    CurrencyFormatter.format(service.price),
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                ),
-                _DataCell(
-                  child: Row(
-                    children: [
-                      if (service.isDefault)
-                        Container(
-                          margin: const EdgeInsets.only(right: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFDBEAFE),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Text(
-                            'Default',
-                            style: TextStyle(
-                              color: Color(0xFF1D4ED8),
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      if (service.isActive)
-                        const Icon(Icons.check_circle,
-                            color: AppColors.success600, size: 16)
-                      else
-                        const Icon(Icons.cancel,
-                            color: AppColors.textGray3, size: 16),
-                    ],
-                  ),
-                ),
-                _DataCell(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        IconButton(
-                          onPressed: () =>
-                              context.push('/services/${service.id}/edit'),
-                          icon: const Icon(Icons.edit_outlined, size: 18),
-                          color: const Color(0xFF64748B),
-                          tooltip: 'Edit',
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(8),
+                        _DataCell(
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: AppColors.slate100, // Slate-100
+                                  borderRadius: BorderRadius.circular(8),
+                                  image: service.imageUrl.isNotEmpty
+                                      ? DecorationImage(
+                                          image: NetworkImage(service.imageUrl),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                ),
+                                child: service.imageUrl.isEmpty
+                                    ? const Icon(Icons.miscellaneous_services,
+                                        color: AppColors.slate400, size: 20)
+                                    : null,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      service.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF1E293B),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      service.description,
+                                      style: const TextStyle(
+                                        color: AppColors.slate400,
+                                        fontSize: 12,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            _showDeleteConfirmation(context, service);
-                          },
-                          icon: const Icon(Icons.delete_outline, size: 18),
-                          color: AppColors.error600,
-                          tooltip: 'Hapus',
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(8),
+                        _DataCell(
+                          child: _ServiceTypeBadge(type: service.type),
+                        ),
+                        _DataCell(
+                          child: Text(
+                            CurrencyFormatter.format(service.price),
+                            style: const TextStyle(
+                              fontFamily: 'RobotoMono',
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF1E293B),
+                            ),
+                          ),
+                        ),
+                        _DataCell(
+                          child: Row(
+                            children: [
+                              if (service.isDefault)
+                                Container(
+                                  margin: const EdgeInsets.only(right: 8),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFDBEAFE),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: const Text(
+                                    'Default',
+                                    style: TextStyle(
+                                      color: Color(0xFF1D4ED8),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              if (service.isActive)
+                                const Icon(Icons.check_circle,
+                                    color: AppColors.success600, size: 16)
+                              else
+                                const Icon(Icons.cancel, color: AppColors.textGray3, size: 16),
+                            ],
+                          ),
+                        ),
+                        _DataCell(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: () => context.push('/services/${service.id}/edit'),
+                                  icon: const Icon(Icons.edit_outlined, size: 18),
+                                  color: AppColors.slate500,
+                                  tooltip: 'Edit',
+                                  style: IconButton.styleFrom(
+                                    padding: const EdgeInsets.all(8),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    _showDeleteConfirmation(context, service);
+                                  },
+                                  icon: const Icon(Icons.delete_outline, size: 18),
+                                  color: AppColors.error600,
+                                  tooltip: 'Hapus',
+                                  style: IconButton.styleFrom(
+                                    padding: const EdgeInsets.all(8),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -487,7 +480,7 @@ class _HeaderCell extends StatelessWidget {
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF64748B), // Slate-500
+            color: AppColors.slate500, // Slate-500
             letterSpacing: 0.5,
           ),
         ),
@@ -530,8 +523,8 @@ class _ServiceTypeBadge extends StatelessWidget {
         textColor = const Color(0xFF15803D); // Green-700
         break;
       case 'cleaning':
-        bgColor = const Color(0xFFF1F5F9); // Slate-100
-        textColor = const Color(0xFF64748B); // Slate-500
+        bgColor = AppColors.slate100; // Slate-100
+        textColor = AppColors.slate500; // Slate-500
         break;
       default:
         bgColor = const Color(0xFFFEF3C7); // Amber-100

@@ -51,7 +51,7 @@ class _CustomerContentView extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                  const Divider(height: 1, color: AppColors.slate100),
                   Expanded(
                     child: BlocConsumer<CustomerBloc, CustomerState>(
                       listener: (context, state) {
@@ -62,8 +62,7 @@ class _CustomerContentView extends StatelessWidget {
                         }
                       },
                       builder: (context, state) {
-                        if (state is CustomerLoading ||
-                            state is CustomerInitial) {
+                        if (state is CustomerLoading || state is CustomerInitial) {
                           return const CustomLoading();
                         } else if (state is CustomerLoaded) {
                           if (state.customers.isEmpty) {
@@ -72,17 +71,15 @@ class _CustomerContentView extends StatelessWidget {
                                 'Customer not found',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Color(0xFF64748B),
+                                  color: AppColors.slate500,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             );
                           }
-                          return _CustomerTable(
-                              customers: state.customers);
+                          return _CustomerTable(customers: state.customers);
                         }
-                        return const Center(
-                            child: Text('No customers found'));
+                        return const Center(child: Text('No customers found'));
                       },
                     ),
                   ),
@@ -117,31 +114,26 @@ class _StatsAndFilterSection extends StatelessWidget {
             const Spacer(),
             Container(
               width: 300,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                border: Border.all(color: AppColors.slate200),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.search,
-                      color: Color(0xFF94A3B8), size: 20),
+                  const Icon(Icons.search, color: AppColors.slate400, size: 20),
                   const SizedBox(width: 12),
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        context
-                            .read<CustomerBloc>()
-                            .add(SearchCustomersEvent(value));
+                        context.read<CustomerBloc>().add(SearchCustomersEvent(value));
                       },
                       decoration: const InputDecoration(
                         hintText: 'Search customer...',
                         border: InputBorder.none,
                         isDense: true,
-                        hintStyle: TextStyle(
-                            color: Color(0xFF94A3B8), fontSize: 14),
+                        hintStyle: TextStyle(color: AppColors.slate400, fontSize: 14),
                       ),
                     ),
                   ),
@@ -161,10 +153,8 @@ class _StatsAndFilterSection extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.orangePrimary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 elevation: 0,
               ),
             ),
@@ -196,11 +186,10 @@ class _CustomerTable extends StatelessWidget {
           children: [
             TableRow(
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.vertical(top: Radius.circular(16.r)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
                 color: Colors.white,
                 border: const Border(
-                  bottom: BorderSide(color: Color(0xFFE2E8F0)),
+                  bottom: BorderSide(color: AppColors.slate200),
                 ),
               ),
               children: const [
@@ -222,11 +211,9 @@ class _CustomerTable extends StatelessWidget {
                 2: FlexColumnWidth(2),
                 3: FixedColumnWidth(100),
               },
-              defaultVerticalAlignment:
-                  TableCellVerticalAlignment.middle,
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
-                ...customers.map((customer) =>
-                    _buildCustomerRow(context, customer)),
+                ...customers.map((customer) => _buildCustomerRow(context, customer)),
               ],
             ),
           ),
@@ -238,8 +225,7 @@ class _CustomerTable extends StatelessWidget {
   TableRow _buildCustomerRow(BuildContext context, Customer customer) {
     return TableRow(
       decoration: const BoxDecoration(
-        border:
-            Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+        border: Border(bottom: BorderSide(color: AppColors.slate100)),
       ),
       children: [
         _DataCell(text: customer.name),
@@ -250,22 +236,16 @@ class _CustomerTable extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: const Icon(Icons.edit_outlined,
-                    size: 20, color: Color(0xFF64748B)),
+                icon: const Icon(Icons.edit_outlined, size: 20, color: AppColors.slate500),
                 onPressed: () async {
-                  final result = await CustomerFormDialog.show(
-                      context,
-                      customer: customer);
+                  final result = await CustomerFormDialog.show(context, customer: customer);
                   if (result == true && context.mounted) {
-                    context
-                        .read<CustomerBloc>()
-                        .add(LoadCustomers());
+                    context.read<CustomerBloc>().add(LoadCustomers());
                   }
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.delete_outline,
-                    size: 20, color: Color(0xFFEF4444)),
+                icon: const Icon(Icons.delete_outline, size: 20, color: Color(0xFFEF4444)),
                 onPressed: () async {
                   final confirmed = await showDialog<bool>(
                     context: context,
@@ -275,66 +255,48 @@ class _CustomerTable extends StatelessWidget {
                       ),
                       title: const Row(
                         children: [
-                          Icon(Icons.warning_amber_rounded,
-                              color: Color(0xFFEF4444), size: 24),
+                          Icon(Icons.warning_amber_rounded, color: Color(0xFFEF4444), size: 24),
                           SizedBox(width: 12),
                           Text('Delete Customer',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600)),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       content: Text(
                         'Are you sure you want to delete "${customer.name}"? This action cannot be undone.',
-                        style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF475569)),
+                        style: const TextStyle(fontSize: 14, color: Color(0xFF475569)),
                       ),
                       actions: [
                         OutlinedButton(
-                          onPressed: () =>
-                              Navigator.pop(dialogContext, true),
+                          onPressed: () => Navigator.pop(dialogContext, true),
                           style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            side: const BorderSide(
-                                color: Color(0xFFEF4444)),
+                            side: const BorderSide(color: Color(0xFFEF4444)),
                           ),
                           child: const Text('Delete',
-                              style: TextStyle(
-                                  color: Color(0xFFEF4444),
-                                  fontWeight: FontWeight.w600)),
+                              style:
+                                  TextStyle(color: Color(0xFFEF4444), fontWeight: FontWeight.w600)),
                         ),
                         ElevatedButton(
-                          onPressed: () =>
-                              Navigator.pop(dialogContext, false),
+                          onPressed: () => Navigator.pop(dialogContext, false),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                AppColors.orangePrimary,
+                            backgroundColor: AppColors.orangePrimary,
                             elevation: 0,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           child: const Text('Cancel',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600)),
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
                         ),
                       ],
                     ),
                   );
                   if (confirmed == true && context.mounted) {
-                    context
-                        .read<CustomerBloc>()
-                        .add(DeleteCustomerEvent(customer.id));
+                    context.read<CustomerBloc>().add(DeleteCustomerEvent(customer.id));
                   }
                 },
               ),
@@ -355,8 +317,7 @@ class _HeaderCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Align(
         alignment: align,
         child: Text(
@@ -364,7 +325,7 @@ class _HeaderCell extends StatelessWidget {
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF64748B),
+            color: AppColors.slate500,
             letterSpacing: 0.5,
           ),
         ),
@@ -383,8 +344,7 @@ class _DataCell extends StatelessWidget {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 16, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Text(
           text,
           style: const TextStyle(
@@ -412,9 +372,7 @@ class _PaginationSection extends StatelessWidget {
         final totalItems = state.totalItems;
         final totalPages = (totalItems / itemsPerPage).ceil();
 
-        final startItem = totalItems == 0
-            ? 0
-            : (currentPage - 1) * itemsPerPage + 1;
+        final startItem = totalItems == 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
         final endItem = (startItem + state.customers.length - 1);
 
         return Padding(
@@ -424,75 +382,55 @@ class _PaginationSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Text('View',
-                      style: TextStyle(color: Color(0xFF64748B))),
+                  const Text('View', style: TextStyle(color: AppColors.slate500)),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                          color: const Color(0xFFE2E8F0)),
+                      border: Border.all(color: AppColors.slate200),
                     ),
                     child: Row(
                       children: [
-                        Text('$itemsPerPage',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold)),
-                        const Icon(Icons.keyboard_arrow_down,
-                            size: 16),
+                        Text('$itemsPerPage', style: const TextStyle(fontWeight: FontWeight.bold)),
+                        const Icon(Icons.keyboard_arrow_down, size: 16),
                       ],
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Text('entry per page',
-                      style: TextStyle(color: Color(0xFF64748B))),
+                  const Text('entry per page', style: TextStyle(color: AppColors.slate500)),
                 ],
               ),
               Row(
                 children: [
-                  Text(
-                      'Showing $startItem-$endItem of $totalItems entries',
-                      style: const TextStyle(
-                          color: Color(0xFF64748B))),
+                  Text('Showing $startItem-$endItem of $totalItems entries',
+                      style: const TextStyle(color: AppColors.slate500)),
                   const SizedBox(width: 24),
                   IconButton(
                       onPressed: currentPage > 1
-                          ? () => context
-                              .read<CustomerBloc>()
-                              .add(ChangePageEvent(currentPage - 1))
+                          ? () => context.read<CustomerBloc>().add(ChangePageEvent(currentPage - 1))
                           : null,
                       icon: Icon(Icons.chevron_left,
-                          color: currentPage > 1
-                              ? const Color(0xFF64748B)
-                              : const Color(0xFFCBD5E1))),
+                          color: currentPage > 1 ? AppColors.slate500 : const Color(0xFFCBD5E1))),
                   ...List.generate(totalPages, (index) {
                     final page = index + 1;
                     if (totalPages > 7 &&
                         (page > 2 &&
                             page < totalPages - 1 &&
-                            (page < currentPage - 1 ||
-                                page > currentPage + 1))) {
-                      return page == currentPage - 2 ||
-                              page == currentPage + 2
-                          ? const Text('...',
-                              style: TextStyle(
-                                  color: Color(0xFF64748B)))
+                            (page < currentPage - 1 || page > currentPage + 1))) {
+                      return page == currentPage - 2 || page == currentPage + 2
+                          ? const Text('...', style: TextStyle(color: AppColors.slate500))
                           : const SizedBox.shrink();
                     }
-                    return _buildPageNumber(context, page,
-                        isActive: page == currentPage);
+                    return _buildPageNumber(context, page, isActive: page == currentPage);
                   }),
                   IconButton(
                       onPressed: currentPage < totalPages
-                          ? () => context
-                              .read<CustomerBloc>()
-                              .add(ChangePageEvent(currentPage + 1))
+                          ? () => context.read<CustomerBloc>().add(ChangePageEvent(currentPage + 1))
                           : null,
                       icon: Icon(Icons.chevron_right,
                           color: currentPage < totalPages
-                              ? const Color(0xFF64748B)
+                              ? AppColors.slate500
                               : const Color(0xFFCBD5E1))),
                 ],
               ),
@@ -503,28 +441,22 @@ class _PaginationSection extends StatelessWidget {
     );
   }
 
-  Widget _buildPageNumber(BuildContext context, int number,
-      {required bool isActive}) {
+  Widget _buildPageNumber(BuildContext context, int number, {required bool isActive}) {
     return InkWell(
-      onTap: () =>
-          context.read<CustomerBloc>().add(ChangePageEvent(number)),
+      onTap: () => context.read<CustomerBloc>().add(ChangePageEvent(number)),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
         width: 32,
         height: 32,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isActive
-              ? AppColors.orangePrimary
-              : Colors.transparent,
+          color: isActive ? AppColors.orangePrimary : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           number.toString(),
           style: TextStyle(
-            color: isActive
-                ? Colors.white
-                : const Color(0xFF64748B),
+            color: isActive ? Colors.white : AppColors.slate500,
             fontWeight: FontWeight.w600,
           ),
         ),

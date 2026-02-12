@@ -1,3 +1,4 @@
+import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,6 +28,7 @@ class StatusFilterBar extends StatelessWidget {
         }
 
         return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
@@ -114,10 +116,10 @@ class _FilterChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF1E293B) : Colors.white,
+          color: isActive ? AppColors.slate800 : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isActive ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
+            color: isActive ? AppColors.slate800 : AppColors.slate200,
           ),
         ),
         child: Row(
@@ -127,14 +129,14 @@ class _FilterChip extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isActive ? Colors.white : const Color(0xFF64748B),
+                color: isActive ? Colors.white : AppColors.slate500,
               ),
             ),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: isActive ? const Color(0xFF334155) : const Color(0xFFF1F5F9),
+                color: isActive ? AppColors.slate700 : AppColors.slate100,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -142,7 +144,7 @@ class _FilterChip extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: isActive ? Colors.white : const Color(0xFF64748B),
+                  color: isActive ? Colors.white : AppColors.slate500,
                 ),
               ),
             ),
