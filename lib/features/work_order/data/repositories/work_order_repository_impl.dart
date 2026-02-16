@@ -2,9 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../domain/entities/payment_result.dart';
 import '../../domain/entities/work_order.dart';
 import '../../domain/repositories/work_order_repository.dart';
+import '../../domain/usecases/process_payment.dart';
 import '../datasources/work_order_remote_data_source.dart';
+import '../models/payment_request_model.dart';
 import '../models/work_order_model.dart';
 import '../models/work_order_product_model.dart';
 import '../models/work_order_service_model.dart';
@@ -138,6 +141,31 @@ class WorkOrderRepositoryImpl implements WorkOrderRepository {
   Future<Either<Failure, WorkOrder>> getWorkOrderById(GetWorkOrderByIdParams params) async {
     try {
       final result = await remoteDataSource.getWorkOrderById(params);
+      return Right(result.toEntity());
+    } on Failure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, PaymentResult>> processPayment(
+      ProcessPaymentParams params) async {
+    try {
+      final request = PaymentRequestModel(
+        paymentMethod: params.paymentMethod,
+        paidAmount: params.paidAmount,
+        totalAmount: params.totalAmount,
+        taxAmount: params.taxAmount,
+        changeAmount: params.changeAmount,
+        referenceNumber: params.referenceNumber,
+        memberCode: params.memberCode,
+      );
+      final result = await remoteDataSource.processPayment(
+        params.workOrderId,
+        request,
+        isPrototypeSuccess: params.isPrototypeSuccess,
+        isPrototypeError: params.isPrototypeError,
+      );
       return Right(result.toEntity());
     } on Failure catch (e) {
       return Left(e);

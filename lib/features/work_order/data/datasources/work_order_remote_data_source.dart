@@ -3,6 +3,7 @@ import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_us
 
 import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
+import '../models/payment_request_model.dart';
 import '../models/work_order_model.dart';
 
 /// Abstract interface for work order remote data operations.
@@ -21,6 +22,11 @@ abstract class WorkOrderRemoteDataSource {
 
   /// Gets a work order by [id] from the API.
   Future<WorkOrderModel> getWorkOrderById(GetWorkOrderByIdParams params);
+
+  /// Processes payment for a work order.
+  Future<PaymentResponseModel> processPayment(
+      String workOrderId, PaymentRequestModel request,
+      {bool isPrototypeSuccess = false, bool isPrototypeError = false});
 }
 
 /// Implementation of [WorkOrderRemoteDataSource] using Dio.
@@ -156,6 +162,58 @@ class WorkOrderRemoteDataSourceImpl implements WorkOrderRemoteDataSource {
           return WorkOrderModel.fromJson(result);
         }
         throw ServerFailure(result['message'] ?? 'Failed to update work order status');
+      }
+
+      throw const ServerFailure('Invalid response format');
+    } on DioException catch (e) {
+      throw ServerFailure(
+        e.response?.data?['message'] ?? e.message ?? 'Unknown Error',
+      );
+    }
+  }
+
+  @override
+  Future<PaymentResponseModel> processPayment(
+      String workOrderId, PaymentRequestModel request,
+      {bool isPrototypeSuccess = false, bool isPrototypeError = false}) async {
+    // Prototype error: simulate a server failure
+    if (isPrototypeError) {
+      await Future.delayed(const Duration(milliseconds: 800));
+      throw const ServerFailure('Prototype: Payment processing failed');
+    }
+
+    // Prototype success: return mock payment response
+    if (isPrototypeSuccess) {
+      await Future.delayed(const Duration(milliseconds: 800));
+      return PaymentResponseModel(
+        id: 'pay-prototype-001',
+        workOrderId: workOrderId,
+        paymentMethod: request.paymentMethod,
+        paidAmount: request.paidAmount,
+        totalAmount: request.totalAmount,
+        taxAmount: request.taxAmount,
+        changeAmount: request.changeAmount,
+        referenceNumber: request.referenceNumber,
+        memberCode: request.memberCode,
+        paymentStatus: 'paid',
+        paidAt: DateTime.now(),
+      );
+    }
+
+    try {
+      final response = await dio.post(
+        ApiConst.processPayment(workOrderId),
+        data: request.toJson(),
+      );
+
+      final result = response.data;
+      if (result is Map<String, dynamic>) {
+        if (result['success'] == true && result['data'] != null) {
+          return PaymentResponseModel.fromJson(
+              result['data'] as Map<String, dynamic>);
+        }
+        throw ServerFailure(
+            result['message'] ?? 'Failed to process payment');
       }
 
       throw const ServerFailure('Invalid response format');

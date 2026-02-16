@@ -9,7 +9,6 @@ import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_d
 import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_dialog/components/payment_tab.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flashlight_pos/shared/enum/payment_enum.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -24,9 +23,11 @@ class PaymentFormView extends StatelessWidget {
   final String inputAmountStr;
   final Function(String) onKeypadTap;
   final Function(int) onSetAmount;
-  final ValueListenable<bool> isToastActiveNotifier;
   final VoidCallback onProcessPayment;
+  final bool isSubmitting;
   final TextEditingController refNoController;
+  final TextEditingController memberCodeController;
+  final ValueChanged<String> onMemberCodeChanged;
   final VoidCallback onClose;
 
   const PaymentFormView({
@@ -40,9 +41,11 @@ class PaymentFormView extends StatelessWidget {
     required this.inputAmountStr,
     required this.onKeypadTap,
     required this.onSetAmount,
-    required this.isToastActiveNotifier,
     required this.onProcessPayment,
+    this.isSubmitting = false,
     required this.refNoController,
+    required this.memberCodeController,
+    required this.onMemberCodeChanged,
     required this.onClose,
   });
 
@@ -160,6 +163,8 @@ class PaymentFormView extends StatelessWidget {
                               child: SizedBox(
                                 height: 48.w,
                                 child: TextField(
+                                  controller: memberCodeController,
+                                  onChanged: onMemberCodeChanged,
                                   decoration: InputDecoration(
                                     hintText: 'Input Member Code',
                                     hintStyle: TextStyleConst.poppinsRegular14
@@ -446,22 +451,28 @@ class PaymentFormView extends StatelessWidget {
                     const Spacer(flex: 2),
                     SizedBox(
                       width: double.infinity,
-                      child: ValueListenableBuilder<bool>(
-                        valueListenable: isToastActiveNotifier,
-                        builder: (context, isToastActive, child) {
-                          return ElevatedButton(
-                            onPressed: isToastActive ? null : onProcessPayment,
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.orangePrimary,
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 16.w),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.r)),
-                                elevation: 0),
-                            child: Text('Pay Now',
+                      child: ElevatedButton(
+                        onPressed: isSubmitting ? null : onProcessPayment,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.orangePrimary,
+                            foregroundColor: Colors.white,
+                            disabledBackgroundColor: AppColors.orangePrimary.withValues(alpha: 0.6),
+                            disabledForegroundColor: Colors.white70,
+                            padding: EdgeInsets.symmetric(vertical: 16.w),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r)),
+                            elevation: 0),
+                        child: isSubmitting
+                            ? SizedBox(
+                                height: 20.w,
+                                width: 20.w,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text('Pay Now',
                                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                          );
-                        },
                       ),
                     ),
                   ],
@@ -562,23 +573,28 @@ class PaymentFormView extends StatelessWidget {
                     // Confirm Button
                     SizedBox(
                       width: double.infinity,
-                      child: ValueListenableBuilder<bool>(
-                        valueListenable: isToastActiveNotifier,
-                        builder: (context, isToastActive, child) {
-                          return ElevatedButton(
-                            onPressed: isToastActive ? null : onProcessPayment,
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    AppColors.greenLight100, // Use green for confirmation
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 16.w),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.r)),
-                                elevation: 0),
-                            child: Text('Confirm Payment',
+                      child: ElevatedButton(
+                        onPressed: isSubmitting ? null : onProcessPayment,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.greenLight100,
+                            foregroundColor: Colors.white,
+                            disabledBackgroundColor: AppColors.greenLight100.withValues(alpha: 0.6),
+                            disabledForegroundColor: Colors.white70,
+                            padding: EdgeInsets.symmetric(vertical: 16.w),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r)),
+                            elevation: 0),
+                        child: isSubmitting
+                            ? SizedBox(
+                                height: 20.w,
+                                width: 20.w,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text('Confirm Payment',
                                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                          );
-                        },
                       ),
                     ),
                   ],

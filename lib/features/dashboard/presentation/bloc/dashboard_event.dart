@@ -11,6 +11,17 @@ class LoadDashboardStats extends DashboardEvent {}
 
 class RefreshDashboard extends DashboardEvent {}
 
+class SelectWorkOrder extends DashboardEvent {
+  final String orderId;
+
+  const SelectWorkOrder(this.orderId);
+
+  @override
+  List<Object> get props => [orderId];
+}
+
+class ClearSelectedOrder extends DashboardEvent {}
+
 class FilterWorkOrders extends DashboardEvent {
   final String? status;
   final String? searchQuery;

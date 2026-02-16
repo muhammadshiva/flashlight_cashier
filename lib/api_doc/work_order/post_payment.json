@@ -1,0 +1,211 @@
+{
+  "_info": {
+    "endpoint": "POST /api/work-orders/:id/payment",
+    "method": "POST",
+    "base_url": "https://369820dfc74d.ngrok-free.app/api",
+    "full_url": "https://369820dfc74d.ngrok-free.app/api/work-orders/{workOrderId}/payment",
+    "description": "Memproses pembayaran untuk work order yang sudah completed",
+    "authentication": "Bearer Token (required)",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    "status": "BELUM DIIMPLEMENTASI - Endpoint ini perlu dibuat di backend dan frontend"
+  },
+
+  "_reasoning": {
+    "why_under_work_order": "Payment adalah sub-resource dari work order, sehingga endpoint menggunakan nested path /work-orders/:id/payment",
+    "why_post": "POST karena membuat record pembayaran baru (bukan update status)",
+    "data_source": "Field diambil dari analisis PaymentCubit, PaymentState, PaymentDialog, dan WorkOrder entity yang sudah ada di codebase"
+  },
+
+  "_request_body": {
+    "description": "Data yang dikirim saat proses pembayaran",
+    "content_type": "application/json",
+    "fields": {
+      "paymentMethod": {
+        "type": "string",
+        "required": true,
+        "enum": ["cash", "card", "qris"],
+        "description": "Metode pembayaran yang dipilih user (dari PaymentMethodType enum)"
+      },
+      "paidAmount": {
+        "type": "integer",
+        "required": true,
+        "description": "Jumlah uang yang dibayarkan customer dalam Rupiah (integer, bukan double)"
+      },
+      "totalAmount": {
+        "type": "integer",
+        "required": true,
+        "description": "Grand total yang harus dibayar (totalPrice + tax) dalam Rupiah"
+      },
+      "taxAmount": {
+        "type": "integer",
+        "required": true,
+        "description": "Jumlah pajak 11% dalam Rupiah"
+      },
+      "changeAmount": {
+        "type": "integer",
+        "required": false,
+        "default": 0,
+        "description": "Uang kembalian (paidAmount - totalAmount). Hanya relevan untuk cash"
+      },
+      "referenceNumber": {
+        "type": "string",
+        "required": false,
+        "nullable": true,
+        "description": "Nomor referensi untuk pembayaran non-cash (card/qris). Dari field refNo di PaymentState"
+      },
+      "memberCode": {
+        "type": "string",
+        "required": false,
+        "nullable": true,
+        "description": "Kode member untuk redeem point/diskon. Dari input 'Input Member Code' di dialog"
+      }
+    },
+    "example": {
+      "paymentMethod": "cash",
+      "paidAmount": 20000,
+      "totalAmount": 16650,
+      "taxAmount": 1650,
+      "changeAmount": 3350,
+      "referenceNumber": null,
+      "memberCode": null
+    }
+  },
+
+  "_request_example_cash": {
+    "description": "Contoh request pembayaran CASH (seperti di screenshot)",
+    "body": {
+      "paymentMethod": "cash",
+      "paidAmount": 20000,
+      "totalAmount": 16650,
+      "taxAmount": 1650,
+      "changeAmount": 3350,
+      "referenceNumber": null,
+      "memberCode": null
+    }
+  },
+
+  "_request_example_card": {
+    "description": "Contoh request pembayaran CARD",
+    "body": {
+      "paymentMethod": "card",
+      "paidAmount": 16650,
+      "totalAmount": 16650,
+      "taxAmount": 1650,
+      "changeAmount": 0,
+      "referenceNumber": "TRX-20260217-001",
+      "memberCode": "MBR-001"
+    }
+  },
+
+  "_request_example_qris": {
+    "description": "Contoh request pembayaran QRIS",
+    "body": {
+      "paymentMethod": "qris",
+      "paidAmount": 16650,
+      "totalAmount": 16650,
+      "taxAmount": 1650,
+      "changeAmount": 0,
+      "referenceNumber": "QRIS-20260217-ABC123",
+      "memberCode": null
+    }
+  },
+
+  "_response_success": {
+    "description": "Response ketika pembayaran berhasil diproses (HTTP 200)",
+    "example": {
+      "success": true,
+      "message": "Payment processed successfully",
+      "data": {
+        "id": "pay-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "workOrderId": "wo-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "paymentMethod": "cash",
+        "paidAmount": 20000,
+        "totalAmount": 16650,
+        "taxAmount": 1650,
+        "changeAmount": 3350,
+        "referenceNumber": null,
+        "memberCode": null,
+        "paymentStatus": "paid",
+        "paidAt": "2026-02-17T03:45:00.000Z",
+        "workOrder": {
+          "id": "wo-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "workOrderCode": "WO-20260217-008",
+          "status": "completed",
+          "paymentStatus": "paid",
+          "paymentMethod": "cash",
+          "paidAmount": 20000,
+          "totalPrice": 15000
+        }
+      },
+      "error_code": 0
+    }
+  },
+
+  "_response_error_already_paid": {
+    "description": "Response ketika work order sudah dibayar (HTTP 400)",
+    "example": {
+      "success": false,
+      "message": "Work order has already been paid",
+      "data": null,
+      "error_code": 400
+    }
+  },
+
+  "_response_error_insufficient": {
+    "description": "Response ketika jumlah bayar kurang untuk cash (HTTP 422)",
+    "example": {
+      "success": false,
+      "message": "Insufficient payment amount",
+      "data": null,
+      "error_code": 422
+    }
+  },
+
+  "_response_error_not_found": {
+    "description": "Response ketika work order tidak ditemukan (HTTP 404)",
+    "example": {
+      "success": false,
+      "message": "Work order not found",
+      "data": null,
+      "error_code": 404
+    }
+  },
+
+  "_response_error_unauthorized": {
+    "description": "Response ketika token tidak valid (HTTP 401)",
+    "example": {
+      "success": false,
+      "message": "Unauthenticated.",
+      "data": null,
+      "error_code": 401
+    }
+  },
+
+  "_field_mapping_from_ui": {
+    "description": "Mapping dari UI/State ke request body field",
+    "mapping": {
+      "PaymentState.selectedPaymentMethod": "paymentMethod (cash/card/qris)",
+      "PaymentCubit.inputAmount": "paidAmount (dibulatkan ke int)",
+      "PaymentCubit.grandTotal": "totalAmount (totalPrice + tax 11%)",
+      "PaymentCubit._taxAmount": "taxAmount (totalPrice * 0.11)",
+      "PaymentCubit.change": "changeAmount (inputAmount - grandTotal)",
+      "PaymentState.refNo": "referenceNumber (untuk card/qris)",
+      "Input Member Code (UI)": "memberCode (dari search member di dialog)"
+    }
+  },
+
+  "_implementation_notes": [
+    "Saat ini PaymentCubit.processPayment() hanya mengubah state lokal, TIDAK ada API call",
+    "Endpoint ini perlu: (1) dibuat di backend, (2) ditambahkan di ApiConst, (3) dibuat datasource/repository/usecase",
+    "Tax 11% dihitung di frontend (PaymentCubit._taxAmount) - sebaiknya backend juga validasi",
+    "Untuk card/qris, paidAmount otomatis di-set sama dengan grandTotal di cubit",
+    "changeAmount hanya relevan untuk cash, untuk card/qris selalu 0",
+    "referenceNumber wajib untuk card/qris, nullable untuk cash",
+    "Response success sebaiknya return updated WorkOrder agar UI bisa sync state",
+    "Backend perlu update work order: paymentStatus='paid', paymentMethod, paidAmount, completedAt"
+  ]
+}

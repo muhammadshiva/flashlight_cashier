@@ -4,6 +4,7 @@ class ApiConst {
   static String dashboardStats = '/dashboard/stats';
   static String workOrders = '/work-orders';
   static String updateWorkOrderStatus(String id) => '/work-orders/$id/status';
+  static String processPayment(String id) => '/work-orders/$id/payment';
   static String customers = '/customers';
 
   // Auth

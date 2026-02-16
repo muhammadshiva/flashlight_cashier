@@ -19,7 +19,7 @@ abstract class DashboardState extends Equatable {
   DashboardUpdating get updating => this as DashboardUpdating;
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class DashboardInitial extends DashboardState {}
@@ -36,6 +36,7 @@ class DashboardLoaded extends DashboardState {
   final List<StatusCount> statusCounts;
   final String selectedStatus;
   final String searchQuery;
+  final String? selectedOrderId;
 
   const DashboardLoaded({
     required this.totalOrders,
@@ -47,10 +48,11 @@ class DashboardLoaded extends DashboardState {
     this.statusCounts = const [],
     this.selectedStatus = 'Semua',
     this.searchQuery = '',
+    this.selectedOrderId,
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         totalOrders,
         totalRevenue,
         recentOrders,
@@ -60,6 +62,7 @@ class DashboardLoaded extends DashboardState {
         statusCounts,
         selectedStatus,
         searchQuery,
+        selectedOrderId,
       ];
 
   DashboardLoaded copyWith({
@@ -72,6 +75,8 @@ class DashboardLoaded extends DashboardState {
     List<StatusCount>? statusCounts,
     String? selectedStatus,
     String? searchQuery,
+    String? selectedOrderId,
+    bool clearSelectedOrderId = false,
   }) {
     return DashboardLoaded(
       totalOrders: totalOrders ?? this.totalOrders,
@@ -83,6 +88,7 @@ class DashboardLoaded extends DashboardState {
       statusCounts: statusCounts ?? this.statusCounts,
       selectedStatus: selectedStatus ?? this.selectedStatus,
       searchQuery: searchQuery ?? this.searchQuery,
+      selectedOrderId: clearSelectedOrderId ? null : (selectedOrderId ?? this.selectedOrderId),
     );
   }
 }

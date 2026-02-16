@@ -1,50 +1,38 @@
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/order_detail_panel.dart';
 import 'components/order_list_panel.dart';
 
-class CashierDashboardLayout extends StatefulWidget {
+class CashierDashboardLayout extends StatelessWidget {
   final DashboardLoaded state;
 
   const CashierDashboardLayout({super.key, required this.state});
 
   @override
-  State<CashierDashboardLayout> createState() => _CashierDashboardLayoutState();
-}
-
-class _CashierDashboardLayoutState extends State<CashierDashboardLayout> {
-  String? _selectedOrderId;
-
-  @override
-  void didUpdateWidget(covariant CashierDashboardLayout oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // If the list changes and the selected order is no longer in it, deselect?
-    // Or if initial load, maybe select the first one?
-    // For now, keep selection if possible.
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final selectedOrderId = state.selectedOrderId;
+
     // Find selected order object
     final selectedOrder =
-        widget.state.filteredOrders.where((o) => o.id == _selectedOrderId).firstOrNull;
+        state.filteredOrders.where((o) => o.id == selectedOrderId).firstOrNull;
 
     final customer =
-        selectedOrder != null ? widget.state.customers[selectedOrder.customerId] : null;
+        selectedOrder != null ? state.customers[selectedOrder.customerId] : null;
     final vehicle =
-        selectedOrder != null ? widget.state.vehicles[selectedOrder.vehicleDataId] : null;
+        selectedOrder != null ? state.vehicles[selectedOrder.vehicleDataId] : null;
 
     return Row(
       children: [
         //* Left Panel: Order List
         OrderListPanel(
-          state: widget.state,
-          selectedOrderId: _selectedOrderId,
+          state: state,
+          selectedOrderId: selectedOrderId,
           onOrderSelected: (order) {
-            setState(() {
-              _selectedOrderId = order.id;
-            });
+            context.read<DashboardBloc>().add(SelectWorkOrder(order.id));
           },
         ),
         // Vertical Divider

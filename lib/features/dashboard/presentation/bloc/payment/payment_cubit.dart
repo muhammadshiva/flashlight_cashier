@@ -8,14 +8,19 @@ import 'package:flashlight_pos/features/settings/domain/entities/receipt_setting
 import 'package:flashlight_pos/features/settings/domain/services/receipt_generator.dart';
 import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
+import 'package:flashlight_pos/features/work_order/domain/usecases/process_payment.dart';
 import 'package:flashlight_pos/shared/enum/payment_enum.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 class PaymentCubit extends Cubit<PaymentState> {
   final WorkOrder order;
+  final ProcessPayment processPaymentUseCase;
   Timer? _timer;
 
-  PaymentCubit({required this.order}) : super(const PaymentState());
+  PaymentCubit({
+    required this.order,
+    required this.processPaymentUseCase,
+  }) : super(const PaymentState());
 
   double get _taxAmount => order.totalPrice * 0.11;
   double get grandTotal => order.totalPrice + _taxAmount;
@@ -47,6 +52,10 @@ class PaymentCubit extends Cubit<PaymentState> {
     emit(state.copyWith(refNo: value));
   }
 
+  void updateMemberCode(String value) {
+    emit(state.copyWith(memberCode: value));
+  }
+
   void onKeypadTap(String value) {
     if (state.isPaymentSuccess) return;
 
@@ -70,34 +79,69 @@ class PaymentCubit extends Cubit<PaymentState> {
     emit(state.copyWith(inputAmountStr: amount.toString()));
   }
 
-  void processPayment() {
-    // For Cash
+  Future<void> processPayment() async {
+    // Prevent double submission
+    if (state.isSubmitting) return;
+
+    // For Cash — validate sufficient amount
     if (state.selectedPaymentMethod.isCash) {
       if (inputAmount < grandTotal) {
         emit(state.copyWith(
           status: PaymentStatus.failure,
-          errorMessage: 'Insufficient amount',
+          errorMessage: 'Jumlah pembayaran kurang',
         ));
-        // Reset status after a bit so toast can show again if needed?
-        // Or just let UI handle it. UI consumes the state.
-
-        // We clear error logic in UI listener usually.
-        // But to allow re-trigger, we might emit initial status shortly after.
         return;
       }
     }
 
-    // Success
+    // Start submitting
     emit(state.copyWith(
-      isPaymentSuccess: true,
-      status: PaymentStatus.success,
-      // Ensure input amount is set to full if it was external payment
-      inputAmountStr: !state.selectedPaymentMethod.isCash
-          ? grandTotal.toInt().toString()
-          : state.inputAmountStr,
+      isSubmitting: true,
+      status: PaymentStatus.submitting,
     ));
 
-    _startAutoCloseTimer();
+    // Resolve payment method string
+    String paymentMethod = 'cash';
+    if (state.selectedPaymentMethod.isCard) paymentMethod = 'card';
+    if (state.selectedPaymentMethod.isQris) paymentMethod = 'qris';
+
+    final int paidAmountInt =
+        state.selectedPaymentMethod.isCash ? inputAmount.toInt() : grandTotal.toInt();
+
+    final params = ProcessPaymentParams(
+      workOrderId: order.id,
+      paymentMethod: paymentMethod,
+      paidAmount: paidAmountInt,
+      totalAmount: grandTotal.toInt(),
+      taxAmount: _taxAmount.toInt(),
+      changeAmount: change.toInt(),
+      referenceNumber: state.refNo.isNotEmpty ? state.refNo : null,
+      memberCode: state.memberCode.isNotEmpty ? state.memberCode : null,
+      isPrototypeSuccess: true,
+    );
+
+    final result = await processPaymentUseCase(params);
+
+    result.fold(
+      (failure) {
+        emit(state.copyWith(
+          isSubmitting: false,
+          status: PaymentStatus.failure,
+          errorMessage: failure.message,
+        ));
+      },
+      (paymentResult) {
+        emit(state.copyWith(
+          isSubmitting: false,
+          isPaymentSuccess: true,
+          status: PaymentStatus.success,
+          inputAmountStr: !state.selectedPaymentMethod.isCash
+              ? grandTotal.toInt().toString()
+              : state.inputAmountStr,
+        ));
+        _startAutoCloseTimer();
+      },
+    );
   }
 
   void _startAutoCloseTimer() {

@@ -32,6 +32,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }) : super(DashboardInitial()) {
     on<LoadDashboardStats>(_onLoadDashboardStats);
     on<RefreshDashboard>(_onRefreshDashboard);
+    on<SelectWorkOrder>(_onSelectWorkOrder);
+    on<ClearSelectedOrder>(_onClearSelectedOrder);
     on<FilterWorkOrders>(_onFilterWorkOrders);
     on<UpdateWorkOrderStatusEvent>(_onUpdateWorkOrderStatus);
     on<AddWorkOrderItemEvent>(_onAddWorkOrderItem);
@@ -48,7 +50,24 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     await _loadDashboardData(emit);
   }
 
+  void _onSelectWorkOrder(SelectWorkOrder event, Emitter<DashboardState> emit) {
+    if (state is DashboardLoaded) {
+      emit((state as DashboardLoaded).copyWith(selectedOrderId: event.orderId));
+    }
+  }
+
+  void _onClearSelectedOrder(ClearSelectedOrder event, Emitter<DashboardState> emit) {
+    if (state is DashboardLoaded) {
+      emit((state as DashboardLoaded).copyWith(clearSelectedOrderId: true));
+    }
+  }
+
   Future<void> _loadDashboardData(Emitter<DashboardState> emit) async {
+    // Preserve selectedOrderId from current state during refresh
+    final currentSelectedOrderId = state is DashboardLoaded
+        ? (state as DashboardLoaded).selectedOrderId
+        : null;
+
     try {
       // Get dashboard stats from API (returns Either<Failure, DashboardStats>)
       final statsResult = await getDashboardStats(const DashboardParams(isPrototype: true));
@@ -122,6 +141,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             vehicles: vehicleMap,
             statusCounts: calculatedStats.statusCounts,
             selectedStatus: 'Semua',
+            selectedOrderId: currentSelectedOrderId,
           ));
         },
       );

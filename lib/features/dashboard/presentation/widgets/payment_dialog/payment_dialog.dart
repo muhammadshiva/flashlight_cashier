@@ -1,6 +1,7 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/features/customer/domain/entities/customer.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/dashboard_state.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/payment/payment_cubit.dart';
 import 'package:flashlight_pos/features/dashboard/presentation/bloc/payment/payment_state.dart';
@@ -9,11 +10,12 @@ import 'package:flashlight_pos/features/dashboard/presentation/widgets/payment_d
 import 'package:flashlight_pos/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
+import 'package:flashlight_pos/features/work_order/domain/usecases/process_payment.dart';
 import 'package:flashlight_pos/shared/enum/payment_enum.dart';
-import 'package:flashlight_pos/shared/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 
 class PaymentDialog extends StatefulWidget {
   final WorkOrder order;
@@ -31,40 +33,77 @@ class PaymentDialog extends StatefulWidget {
 
 class _PaymentDialogState extends State<PaymentDialog> {
   final TextEditingController _refNoController = TextEditingController();
-  final ValueNotifier<bool> _isToastActiveNotifier = ValueNotifier(false);
+  final TextEditingController _memberCodeController = TextEditingController();
 
   @override
   void dispose() {
     _refNoController.dispose();
-    _isToastActiveNotifier.dispose();
+    _memberCodeController.dispose();
     super.dispose();
+  }
+
+  void _softRefreshAndClose(BuildContext context) {
+    context.read<DashboardBloc>().add(ClearSelectedOrder());
+    context.read<DashboardBloc>().add(RefreshDashboard());
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PaymentCubit(order: widget.order),
+      create: (context) => PaymentCubit(
+        order: widget.order,
+        processPaymentUseCase: GetIt.instance<ProcessPayment>(),
+      ),
       child: BlocConsumer<PaymentCubit, PaymentState>(
         listenWhen: (previous, current) =>
             previous.status != current.status || previous.autoCloseTimer != current.autoCloseTimer,
         listener: (context, state) {
           if (state.status == PaymentStatus.failure && state.errorMessage != null) {
-            CustomSnackbar.showToast(
-              context,
-              message: state.errorMessage!,
-              backgroundColor: AppColors.error5,
-            );
             context.read<PaymentCubit>().resetStatus();
-
-            // Handle toast active state if needed (though CustomSnackbar usually handles its own display time)
-            _isToastActiveNotifier.value = true;
-            Future.delayed(const Duration(seconds: 3), () {
-              if (mounted) _isToastActiveNotifier.value = false;
-            });
+            showDialog(
+              context: context,
+              builder: (dialogContext) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                title: Row(
+                  children: [
+                    Icon(Icons.error_outline,
+                        color: AppColors.error5, size: 24.w),
+                    SizedBox(width: 12.w),
+                    Text('Payment Failed',
+                        style: TextStyle(
+                            fontSize: 18.sp, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                content: Text(
+                  state.errorMessage!,
+                  style: TextStyle(
+                      fontSize: 14.sp, color: AppColors.slate500),
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.orangePrimary,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 24.w, vertical: 12.w),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                    ),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
           }
 
+          // Auto-close: soft refresh dashboard before popping
           if (state.isPaymentSuccess && state.autoCloseTimer == 0) {
-            Navigator.pop(context);
+            _softRefreshAndClose(context);
           }
         },
         builder: (context, state) {
@@ -91,7 +130,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         change: change,
                         autoCloseTimer: state.autoCloseTimer,
                         onPrintReceipt: () => _handlePrintReceipt(context, cubit),
-                        onConfirm: () => Navigator.pop(context),
+                        onConfirm: () => _softRefreshAndClose(context),
                       )
                     : PaymentFormView(
                         selectedPaymentMethod: state.selectedPaymentMethod,
@@ -103,11 +142,15 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         inputAmountStr: state.inputAmountStr,
                         onKeypadTap: cubit.onKeypadTap,
                         onSetAmount: cubit.setAmount,
-                        isToastActiveNotifier: _isToastActiveNotifier,
                         onProcessPayment: cubit.processPayment,
+                        isSubmitting: state.isSubmitting,
                         refNoController: _refNoController
                           ..text = state.refNo
                           ..selection = TextSelection.collapsed(offset: state.refNo.length),
+                        memberCodeController: _memberCodeController
+                          ..text = state.memberCode
+                          ..selection = TextSelection.collapsed(offset: state.memberCode.length),
+                        onMemberCodeChanged: cubit.updateMemberCode,
                         onClose: () => Navigator.pop(context),
                       ),
               ),
@@ -119,7 +162,6 @@ class _PaymentDialogState extends State<PaymentDialog> {
   }
 
   void _handlePrintReceipt(BuildContext context, PaymentCubit cubit) {
-    // Collect dependencies
     final settingsState = context.read<SettingsBloc>().state;
     Vehicle? vehicle;
     final dashboardState = context.read<DashboardBloc>().state;

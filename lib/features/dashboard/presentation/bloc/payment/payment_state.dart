@@ -5,7 +5,9 @@ class PaymentState extends Equatable {
   final PaymentMethodType selectedPaymentMethod;
   final String inputAmountStr;
   final String refNo;
+  final String memberCode;
   final bool isPaymentSuccess;
+  final bool isSubmitting;
   final int autoCloseTimer;
   final PaymentStatus status;
   final String? errorMessage;
@@ -15,7 +17,9 @@ class PaymentState extends Equatable {
     this.selectedPaymentMethod = PaymentMethodType.cash,
     this.inputAmountStr = '',
     this.refNo = '',
+    this.memberCode = '',
     this.isPaymentSuccess = false,
+    this.isSubmitting = false,
     this.autoCloseTimer = 5,
     this.status = PaymentStatus.initial,
     this.errorMessage,
@@ -26,7 +30,9 @@ class PaymentState extends Equatable {
     PaymentMethodType? selectedPaymentMethod,
     String? inputAmountStr,
     String? refNo,
+    String? memberCode,
     bool? isPaymentSuccess,
+    bool? isSubmitting,
     int? autoCloseTimer,
     PaymentStatus? status,
     String? errorMessage,
@@ -36,10 +42,12 @@ class PaymentState extends Equatable {
       selectedPaymentMethod: selectedPaymentMethod ?? this.selectedPaymentMethod,
       inputAmountStr: inputAmountStr ?? this.inputAmountStr,
       refNo: refNo ?? this.refNo,
+      memberCode: memberCode ?? this.memberCode,
       isPaymentSuccess: isPaymentSuccess ?? this.isPaymentSuccess,
+      isSubmitting: isSubmitting ?? this.isSubmitting,
       autoCloseTimer: autoCloseTimer ?? this.autoCloseTimer,
       status: status ?? this.status,
-      errorMessage: errorMessage, // Reset error on change generally, but custom here
+      errorMessage: errorMessage,
       isPrinting: isPrinting ?? this.isPrinting,
     );
   }
@@ -49,7 +57,9 @@ class PaymentState extends Equatable {
         selectedPaymentMethod,
         inputAmountStr,
         refNo,
+        memberCode,
         isPaymentSuccess,
+        isSubmitting,
         autoCloseTimer,
         status,
         errorMessage,

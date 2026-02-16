@@ -2,7 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:flashlight_pos/features/work_order/domain/usecases/work_order_usecases.dart';
 
 import '../../../../core/error/failures.dart';
+import '../entities/payment_result.dart';
 import '../entities/work_order.dart';
+import '../usecases/process_payment.dart';
 
 /// Abstract repository interface for work order operations.
 abstract class WorkOrderRepository {
@@ -20,4 +22,7 @@ abstract class WorkOrderRepository {
 
   /// Gets a work order by id.
   Future<Either<Failure, WorkOrder>> getWorkOrderById(GetWorkOrderByIdParams params);
+
+  /// Processes payment for a work order.
+  Future<Either<Failure, PaymentResult>> processPayment(ProcessPaymentParams params);
 }

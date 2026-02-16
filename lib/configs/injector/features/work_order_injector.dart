@@ -7,6 +7,7 @@ import '../../../features/work_order/domain/repositories/work_order_repository.d
 import '../../../features/work_order/domain/usecases/work_order_usecases.dart';
 import '../../../features/work_order/domain/usecases/update_work_order_status.dart';
 import '../../../features/work_order/domain/usecases/get_work_order.dart';
+import '../../../features/work_order/domain/usecases/process_payment.dart';
 import '../../../features/work_order/presentation/bloc/pos_bloc.dart';
 import '../../../features/work_order/presentation/bloc/detail/work_order_detail_bloc.dart';
 import '../../../features/history/presentation/bloc/history_bloc.dart';
@@ -61,6 +62,10 @@ class WorkOrderInjector {
 
     _sl.registerLazySingleton<UpdateWorkOrderStatus>(
       () => UpdateWorkOrderStatus(_sl()),
+    );
+
+    _sl.registerLazySingleton<ProcessPayment>(
+      () => ProcessPayment(_sl()),
     );
 
     // ============================================
