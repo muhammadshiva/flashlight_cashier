@@ -297,13 +297,13 @@ class PaymentFormView extends StatelessWidget {
                       icon: Icons.money,
                       isSelected: selectedPaymentMethod.isCash,
                       onTap: () => onPaymentMethodChanged(PaymentMethodType.cash)),
-                  Container(width: 1, height: 20.w, color: AppColors.slate200),
+                  Container(width: 1.w, height: 20.w, color: AppColors.slate200),
                   PaymentTab(
                       label: 'Card',
                       icon: Icons.credit_card,
                       isSelected: selectedPaymentMethod.isCard,
                       onTap: () => onPaymentMethodChanged(PaymentMethodType.card)),
-                  Container(width: 1, height: 20, color: AppColors.slate200),
+                  Container(width: 1.w, height: 20.w, color: AppColors.slate200),
                   PaymentTab(
                       label: 'QR Code',
                       icon: Icons.qr_code,
@@ -454,12 +454,12 @@ class PaymentFormView extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.orangePrimary,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape:
-                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                padding: EdgeInsets.symmetric(vertical: 16.w),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r)),
                                 elevation: 0),
-                            child: const Text('Pay Now',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            child: Text('Pay Now',
+                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
                           );
                         },
                       ),
@@ -493,7 +493,7 @@ class PaymentFormView extends StatelessWidget {
                     const Spacer(),
                     // Icon and Instruction
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: EdgeInsets.all(20.w),
                       decoration: const BoxDecoration(
                         color: AppColors.slate100,
                         shape: BoxShape.circle,

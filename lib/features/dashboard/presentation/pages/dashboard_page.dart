@@ -90,15 +90,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildDashboardContent(BuildContext context, DashboardLoaded state) {
     return Container(
       color: const Color(0xFFF8FAFC),
-      child: RefreshIndicator(
-        onRefresh: () async {
-          context.read<DashboardBloc>().add(RefreshDashboard());
-          await Future.delayed(const Duration(milliseconds: 500));
-        },
-        child: CashierDashboardLayout(state: state),
-      ),
+      child: CashierDashboardLayout(state: state),
     );
   }
-
-  // ... (Greeting and Stats widgets remain unchanged)
 }

@@ -1,6 +1,7 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../bloc/dashboard_bloc.dart';
 import '../bloc/dashboard_event.dart';
@@ -28,7 +29,7 @@ class StatusFilterBar extends StatelessWidget {
         }
 
         return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
@@ -39,7 +40,7 @@ class StatusFilterBar extends StatelessWidget {
                 onTap: () =>
                     context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'Semua')),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               _FilterChip(
                 label: 'queued',
                 count: getCount('queued'),
@@ -47,7 +48,7 @@ class StatusFilterBar extends StatelessWidget {
                 onTap: () =>
                     context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'queued')),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               _FilterChip(
                 label: 'washing',
                 count: getCount('washing'),
@@ -55,7 +56,7 @@ class StatusFilterBar extends StatelessWidget {
                 onTap: () =>
                     context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'washing')),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               _FilterChip(
                 label: 'drying',
                 count: getCount('drying'),
@@ -63,7 +64,7 @@ class StatusFilterBar extends StatelessWidget {
                 onTap: () =>
                     context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'drying')),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               _FilterChip(
                 label: 'inspection',
                 count: getCount('inspection'),
@@ -71,7 +72,7 @@ class StatusFilterBar extends StatelessWidget {
                 onTap: () =>
                     context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'inspection')),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               _FilterChip(
                 label: 'completed', // 'Ready' in UI might map to 'completed' API status
                 count: getCount('completed'),
@@ -79,7 +80,7 @@ class StatusFilterBar extends StatelessWidget {
                 onTap: () =>
                     context.read<DashboardBloc>().add(const FilterWorkOrders(status: 'completed')),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               _FilterChip(
                 label: 'paid',
                 count: getCount('paid'),
@@ -112,12 +113,12 @@ class _FilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(20.r),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
         decoration: BoxDecoration(
           color: isActive ? AppColors.slate800 : Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: isActive ? AppColors.slate800 : AppColors.slate200,
           ),
@@ -127,22 +128,22 @@ class _FilterChip extends StatelessWidget {
             Text(
               label[0].toUpperCase() + label.substring(1),
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 color: isActive ? Colors.white : AppColors.slate500,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8.w),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.w),
               decoration: BoxDecoration(
                 color: isActive ? AppColors.slate700 : AppColors.slate100,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10.r),
               ),
               child: Text(
                 count.toString(),
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.bold,
                   color: isActive ? Colors.white : AppColors.slate500,
                 ),

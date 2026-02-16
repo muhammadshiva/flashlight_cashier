@@ -7,6 +7,7 @@ import 'package:flashlight_pos/features/vehicle/domain/entities/vehicle.dart';
 import 'package:flashlight_pos/features/work_order/domain/entities/work_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CashierOrderDetail extends StatelessWidget {
   final WorkOrder? selectedOrder;
@@ -35,12 +36,12 @@ class CashierOrderDetail extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.point_of_sale, size: 64, color: Colors.grey[300]),
-              const SizedBox(height: 16),
+              Icon(Icons.point_of_sale, size: 64.w, color: Colors.grey[300]),
+              SizedBox(height: 16.w),
               Text(
                 'Select an order to view details',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   color: Colors.grey[500],
                   fontWeight: FontWeight.w500,
                 ),
@@ -59,19 +60,19 @@ class CashierOrderDetail extends StatelessWidget {
         children: [
           // Header
           _OrderHeader(order: order, customer: customer, vehicle: vehicle),
-          const Divider(height: 1),
+          Divider(height: 1.w),
           // Items List
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Order Items',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.slate500,
                         letterSpacing: 0.5,
@@ -79,7 +80,7 @@ class CashierOrderDetail extends StatelessWidget {
                     ),
                     TextButton.icon(
                       onPressed: () => onAddService?.call('OPEN_DIALOG'),
-                      icon: const Icon(Icons.add, size: 16),
+                      icon: Icon(Icons.add, size: 16.w),
                       label: const Text('Add Item'),
                       style: TextButton.styleFrom(
                         foregroundColor: AppColors.orangePrimary,
@@ -88,7 +89,7 @@ class CashierOrderDetail extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.w),
                 ...order.services.map((s) => _OrderItemRow(
                       name: s.service?.name ?? 'Service',
                       quantity: s.quantity,
@@ -106,14 +107,14 @@ class CashierOrderDetail extends StatelessWidget {
                       onRemove: () => onRemove?.call({'id': p.id, 'type': 'Product'}),
                     )),
                 if (order.services.isEmpty && order.products.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24),
-                    child: Center(child: Text('No items in this order')),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24.w),
+                    child: const Center(child: Text('No items in this order')),
                   ),
               ],
             ),
           ),
-          const Divider(height: 1),
+          Divider(height: 1.w),
           // Payment Section (Stick to bottom)
           _PaymentSection(
             order: order,
@@ -139,13 +140,13 @@ class QuickActionChip extends StatelessWidget {
       onPressed: onTap,
       backgroundColor: Colors.white,
       side: const BorderSide(color: AppColors.slate200),
-      labelStyle: const TextStyle(
+      labelStyle: TextStyle(
         color: AppColors.slate600,
-        fontSize: 12,
+        fontSize: 12.sp,
         fontWeight: FontWeight.w500,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
     );
   }
 }
@@ -164,7 +165,7 @@ class _OrderHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: EdgeInsets.all(24.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -176,36 +177,36 @@ class _OrderHeader extends StatelessWidget {
                 children: [
                   Text(
                     'Order #${order.workOrderCode}',
-                    style: const TextStyle(
-                      fontSize: 20,
+                    style: TextStyle(
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
                       color: AppColors.slate800,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.w),
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.w),
                         decoration: BoxDecoration(
                           color: AppColors.slate800,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
                           'Q-${order.queueNumber}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       Text(
                         order.estimatedTime,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.slate500,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                     ],
@@ -215,7 +216,7 @@ class _OrderHeader extends StatelessWidget {
               _StatusBadgeLarge(status: order.status),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24.w),
           Row(
             children: [
               Expanded(
@@ -258,22 +259,22 @@ class _InfoTile extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
             color: AppColors.slate100,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
-          child: Icon(icon, size: 20, color: AppColors.slate500),
+          child: Icon(icon, size: 20.w, color: AppColors.slate500),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: const TextStyle(fontSize: 12, color: AppColors.slate400)),
+              Text(label, style: TextStyle(fontSize: 12.sp, color: AppColors.slate400)),
               Text(value,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.slate700),
+                  style: TextStyle(
+                      fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.slate700),
                   overflow: TextOverflow.ellipsis),
             ],
           ),
@@ -303,43 +304,43 @@ class _OrderItemRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: EdgeInsets.only(bottom: 16.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.w),
             decoration: BoxDecoration(
               color:
                   type == 'Service' ? Colors.blue.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(4.r),
             ),
             child: Text(
               type[0],
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 10.sp,
                 fontWeight: FontWeight.bold,
                 color: type == 'Service' ? Colors.blue : Colors.orange,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.slate800,
                   ),
                 ),
                 Text(
                   '$quantity x ${price.toCurrencyFormat()}',
-                  style: const TextStyle(
-                    fontSize: 13,
+                  style: TextStyle(
+                    fontSize: 13.sp,
                     color: AppColors.slate500,
                   ),
                 ),
@@ -351,16 +352,16 @@ class _OrderItemRow extends StatelessWidget {
             children: [
               Text(
                 (price * quantity).toCurrencyFormat(),
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   color: AppColors.slate800,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               IconButton(
                 onPressed: onRemove,
-                icon: const Icon(Icons.delete_outline, size: 20, color: Color(0xFFEF4444)),
+                icon: Icon(Icons.delete_outline, size: 20.w, color: const Color(0xFFEF4444)),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 tooltip: 'Remove Item',
@@ -387,14 +388,14 @@ class _PaymentSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.w),
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
+            blurRadius: 10.r,
+            offset: Offset(0, -5.w),
           ),
         ],
       ),
@@ -403,25 +404,25 @@ class _PaymentSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Total Amount',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   color: AppColors.slate500,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
                 order.totalPrice.toCurrencyFormat(),
-                style: const TextStyle(
-                  fontSize: 18,
+                style: TextStyle(
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                   color: AppColors.slate800,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24.w),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
@@ -443,10 +444,10 @@ class _PaymentSection extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.orangePrimary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: 16.w),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
             ),
@@ -494,15 +495,15 @@ class _StatusBadgeLarge extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 14.sp,
           fontWeight: FontWeight.bold,
           color: text,
         ),

@@ -76,7 +76,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
           return Dialog(
             backgroundColor: Colors.white,
             surfaceTintColor: Colors.transparent,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
             insetPadding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.w),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16.r),

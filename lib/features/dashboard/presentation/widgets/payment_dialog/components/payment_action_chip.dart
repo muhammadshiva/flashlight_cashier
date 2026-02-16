@@ -19,12 +19,12 @@ class PaymentActionChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(8.r),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.orangePrimary : Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           border: Border.all(
             color: isSelected ? AppColors.orangePrimary : AppColors.slate200,
           ),

@@ -212,7 +212,7 @@ class SecuritySettingsSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade300),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Row(
             children: [
@@ -239,10 +239,10 @@ class SecuritySettingsSection extends StatelessWidget {
               if (state.isUpdatingAutoLockDuration)
                 Padding(
                   padding: EdgeInsets.only(left: 12.w),
-                  child: const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                  child: SizedBox(
+                    width: 16.w,
+                    height: 16.w,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
             ],

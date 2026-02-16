@@ -63,25 +63,25 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
       height: 80.h,
       decoration: BoxDecoration(
         color: AppColors.greyFoundation50,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
+            SizedBox(
+              width: 16.w,
+              height: 16.w,
+              child: const CircularProgressIndicator(
                 strokeWidth: 2,
                 color: AppColors.primary600,
               ),
             ),
             12.horizontalSpace,
-            const Text(
+            Text(
               'Loading store information...',
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 13.sp,
                 color: AppColors.greyFoundation300,
               ),
             ),
@@ -93,24 +93,24 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
 
   Widget _buildError(BuildContext context, String message) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: AppColors.error50,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.error600.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
-          const Icon(
+          Icon(
             Icons.error_outline,
-            size: 48,
+            size: 48.w,
             color: AppColors.error600,
           ),
           16.verticalSpace,
-          const Text(
+          Text(
             'Failed to load store information',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.red_1,
             ),
@@ -118,8 +118,8 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
           8.verticalSpace,
           Text(
             message,
-            style: const TextStyle(
-              fontSize: 13,
+            style: TextStyle(
+              fontSize: 13.sp,
               color: AppColors.red_2,
             ),
             textAlign: TextAlign.center,
@@ -129,14 +129,14 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
             onPressed: () {
               context.read<StoreInfoCubit>().fetchStoreInfo(isPrototype: true);
             },
-            icon: const Icon(Icons.refresh, size: 18),
+            icon: Icon(Icons.refresh, size: 18.w),
             label: const Text('Retry'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.error600,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
             ),
           ),
@@ -153,14 +153,14 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: AppColors.primary50,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.store,
-                size: 24,
+                size: 24.w,
                 color: AppColors.primary600,
               ),
             ),
@@ -169,19 +169,19 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Store Information',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w700,
                       color: AppColors.blackFoundation600,
                     ),
                   ),
                   4.verticalSpace,
-                  const Text(
+                  Text(
                     'Business details and contact information',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       color: AppColors.greyFoundation300,
                     ),
                   ),
@@ -281,24 +281,24 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
 
         // Metadata
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
             color: AppColors.greyFoundation50,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.info_outline,
-                size: 16,
+                size: 16.w,
                 color: AppColors.greyFoundation300,
               ),
               8.horizontalSpace,
               Expanded(
                 child: Text(
                   'Last updated: ${_formatDateTime(storeInfo.updatedAt)}',
-                  style: const TextStyle(
-                    fontSize: 12,
+                  style: TextStyle(
+                    fontSize: 12.sp,
                     color: AppColors.greyFoundation300,
                   ),
                 ),
@@ -318,10 +318,10 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
     required List<Widget> children,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.borderGray),
         boxShadow: [
           BoxShadow(
@@ -338,14 +338,14 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
             children: [
               Icon(
                 icon,
-                size: 18,
+                size: 18.w,
                 color: AppColors.primary600,
               ),
               8.horizontalSpace,
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 15,
+                style: TextStyle(
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.blackFoundation600,
                 ),
@@ -370,14 +370,14 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
             color: AppColors.greyFoundation50,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Icon(
             icon,
-            size: 16,
+            size: 16.w,
             color: AppColors.greyFoundation300,
           ),
         ),
@@ -388,8 +388,8 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
             children: [
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: TextStyle(
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.greyFoundation300,
                 ),
@@ -397,8 +397,8 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
               4.verticalSpace,
               Text(
                 value,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.blackFoundation600,
                 ),
@@ -412,16 +412,16 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
           8.horizontalSpace,
           InkWell(
             onTap: () => _copyToClipboard(value),
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(6.r),
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
                 color: AppColors.greyFoundation50,
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(6.r),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.copy,
-                size: 14,
+                size: 14.w,
                 color: AppColors.greyFoundation300,
               ),
             ),
@@ -437,7 +437,7 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: AppColors.white, size: 20),
+            Icon(Icons.check_circle, color: AppColors.white, size: 20.w),
             12.horizontalSpace,
             const Text('Copied to clipboard'),
           ],
@@ -445,7 +445,7 @@ class _StoreInfoSectionState extends State<StoreInfoSection> {
         backgroundColor: AppColors.success600,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
         ),
         duration: const Duration(seconds: 2),
       ),

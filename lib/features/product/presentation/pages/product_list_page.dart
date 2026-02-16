@@ -42,7 +42,7 @@ class _ProductContentView extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
-                    blurRadius: 20,
+                    blurRadius: 20.r,
                     offset: const Offset(0, 4),
                   ),
                 ],
@@ -64,11 +64,11 @@ class _ProductContentView extends StatelessWidget {
                           return const CustomLoading();
                         } else if (state is ProductLoaded) {
                           if (state.products.isEmpty) {
-                            return const Center(
+                            return Center(
                               child: Text(
                                 'Product not found',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 16.sp,
                                   color: AppColors.slate500,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -101,44 +101,44 @@ class _StatsAndFilterSection extends StatelessWidget {
       builder: (context, state) {
         return Row(
           children: [
-            const Text(
+            Text(
               'Products',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
+                color: const Color(0xFF1E293B),
               ),
             ),
             const Spacer(),
             Container(
-              width: 300,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              width: 300.w,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(color: AppColors.slate200),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.search, color: AppColors.slate400, size: 20),
-                  const SizedBox(width: 12),
+                  Icon(Icons.search, color: AppColors.slate400, size: 20.w),
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
                         context.read<ProductBloc>().add(SearchProductsEvent(value));
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Search product name, sku...',
                         border: InputBorder.none,
                         isDense: true,
-                        hintStyle: TextStyle(color: AppColors.slate400, fontSize: 14),
+                        hintStyle: TextStyle(color: AppColors.slate400, fontSize: 14.sp),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16.w),
             ElevatedButton.icon(
               onPressed: () async {
                 final result = await ProductFormDialog.show(context);
@@ -151,8 +151,8 @@ class _StatsAndFilterSection extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.orangePrimary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                 elevation: 0,
               ),
             ),
@@ -234,15 +234,15 @@ class _ProductTable extends StatelessWidget {
       children: [
         TableCell(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 16.w),
             child: Row(
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 48.w,
+                  height: 48.w,
                   decoration: BoxDecoration(
                     color: AppColors.slate100,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                     image: product.imageUrl.isNotEmpty
                         ? DecorationImage(
                             image: NetworkImage(product.imageUrl),
@@ -251,29 +251,29 @@ class _ProductTable extends StatelessWidget {
                         : null,
                   ),
                   child: product.imageUrl.isEmpty
-                      ? const Icon(Icons.image_not_supported, color: AppColors.slate400, size: 20)
+                      ? Icon(Icons.image_not_supported, color: AppColors.slate400, size: 20.w)
                       : null,
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         product.name,
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF1E293B),
+                          color: const Color(0xFF1E293B),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         product.type, // Using type as variant/category
-                        style: const TextStyle(
-                          fontSize: 12,
+                        style: TextStyle(
+                          fontSize: 12.sp,
                           color: AppColors.slate500,
                         ),
                       ),
@@ -292,16 +292,16 @@ class _ProductTable extends StatelessWidget {
         _DataCell(text: product.stock.toString()),
         TableCell(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
             decoration: BoxDecoration(
               color: product.isAvailable ? const Color(0xFFDCFCE7) : AppColors.slate100,
-              borderRadius: BorderRadius.circular(99),
+              borderRadius: BorderRadius.circular(99.r),
             ),
             child: Text(
               product.isAvailable ? 'Active' : 'Inactive',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: product.isAvailable ? const Color(0xFF166534) : AppColors.slate500,
               ),
@@ -328,27 +328,28 @@ class _ProductTable extends StatelessWidget {
                     context: context,
                     builder: (dialogContext) => AlertDialog(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
-                      title: const Row(
+                      title: Row(
                         children: [
-                          Icon(Icons.warning_amber_rounded, color: Color(0xFFEF4444), size: 24),
-                          SizedBox(width: 12),
+                          Icon(Icons.warning_amber_rounded,
+                              color: const Color(0xFFEF4444), size: 24.w),
+                          SizedBox(width: 12.w),
                           Text('Delete Product',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       content: Text(
                         'Are you sure you want to delete "${product.name}"? This action cannot be undone.',
-                        style: const TextStyle(fontSize: 14, color: Color(0xFF475569)),
+                        style: TextStyle(fontSize: 14.sp, color: const Color(0xFF475569)),
                       ),
                       actions: [
                         OutlinedButton(
                           onPressed: () => Navigator.pop(dialogContext, true),
                           style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                             side: const BorderSide(color: Color(0xFFEF4444)),
                           ),
@@ -361,9 +362,9 @@ class _ProductTable extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.orangePrimary,
                             elevation: 0,
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                           child: const Text('Cancel',
@@ -394,13 +395,13 @@ class _HeaderCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
       child: Align(
         alignment: align,
         child: Text(
           label,
-          style: const TextStyle(
-            fontSize: 12,
+          style: TextStyle(
+            fontSize: 12.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.slate500, // Slate-500
             letterSpacing: 0.5,
@@ -421,13 +422,13 @@ class _DataCell extends StatelessWidget {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Text(
           text,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: Color(0xFF475569),
+            color: const Color(0xFF475569),
           ),
         ),
       ),
@@ -453,28 +454,28 @@ class _PaginationSection extends StatelessWidget {
         final endItem = (startItem + state.products.length - 1);
 
         return Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(24.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   const Text('View', style: TextStyle(color: AppColors.slate500)),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                       border: Border.all(color: AppColors.slate200),
                     ),
                     child: Row(
                       children: [
                         Text('$itemsPerPage', style: const TextStyle(fontWeight: FontWeight.bold)),
-                        const Icon(Icons.keyboard_arrow_down, size: 16),
+                        Icon(Icons.keyboard_arrow_down, size: 16.w),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   const Text('entry per page', style: TextStyle(color: AppColors.slate500)),
                 ],
               ),
@@ -482,7 +483,7 @@ class _PaginationSection extends StatelessWidget {
                 children: [
                   Text('Showing $startItem-$endItem of $totalItems entries',
                       style: const TextStyle(color: AppColors.slate500)),
-                  const SizedBox(width: 24),
+                  SizedBox(width: 24.w),
                   IconButton(
                       onPressed: currentPage > 1
                           ? () => context.read<ProductBloc>().add(ChangePageEvent(currentPage - 1))
@@ -523,13 +524,13 @@ class _PaginationSection extends StatelessWidget {
     return InkWell(
       onTap: () => context.read<ProductBloc>().add(ChangePageEvent(number)),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        width: 32,
-        height: 32,
+        margin: EdgeInsets.symmetric(horizontal: 4.w),
+        width: 32.w,
+        height: 32.w,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isActive ? AppColors.orangePrimary : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
         ),
         child: Text(
           number.toString(),

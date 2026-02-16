@@ -172,32 +172,32 @@ class _SettingsDialogState extends State<SettingsDialog> {
         return AlertDialog(
           title: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.warning_amber_rounded,
                 color: AppColors.warning7,
-                size: 28,
+                size: 28.w,
               ),
               12.horizontalSpace,
-              const Text(
+              Text(
                 'Permission Required',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.blackFoundation600,
                 ),
               ),
             ],
           ),
-          content: const Text(
+          content: Text(
             'Bluetooth permissions are required to use printer features. '
             'Please enable Bluetooth permissions in your device settings.',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: AppColors.blackFoundation600,
             ),
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
           actions: [
             TextButton(
@@ -222,9 +222,9 @@ class _SettingsDialogState extends State<SettingsDialog> {
                 backgroundColor: AppColors.orangeAccent,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.w),
               ),
               child: const Text(
                 'Open Bluetooth Settings',
@@ -253,35 +253,35 @@ class _SettingsDialogState extends State<SettingsDialog> {
     return Dialog(
       insetPadding: EdgeInsets.symmetric(vertical: 70.h),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Container(
         width: dialogWidth,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Row(
           children: [
             // Left Sidebar Menu
             Container(
               width: 250.w,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: AppColors.backgroundGrey6,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
+                  topLeft: Radius.circular(16.r),
+                  bottomLeft: Radius.circular(16.r),
                 ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(24),
+                  Padding(
+                    padding: EdgeInsets.all(24.w),
                     child: Text(
                       'Settings Menu',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
                         color: AppColors.blackFoundation600,
                       ),
@@ -355,14 +355,14 @@ class _SettingsDialogState extends State<SettingsDialog> {
                 children: [
                   // Header with close button
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(24.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           _getContentTitle(),
-                          style: const TextStyle(
-                            fontSize: 20,
+                          style: TextStyle(
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.w700,
                             color: AppColors.blackFoundation600,
                           ),
@@ -372,7 +372,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
                           icon: const Icon(Icons.close, color: AppColors.blackFoundation600),
                           style: IconButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                         ),
@@ -383,7 +383,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
                   // Content
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
                       child: _buildContent(),
                     ),
                   ),
@@ -409,13 +409,13 @@ class _SettingsDialogState extends State<SettingsDialog> {
           selectedMenu = value;
         });
       },
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(8.r),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        margin: EdgeInsets.only(bottom: 4.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.w),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
         ),
         child: Row(
           children: [
@@ -424,11 +424,11 @@ class _SettingsDialogState extends State<SettingsDialog> {
               size: isSelected ? 24.sp : 20.sp,
               color: isSelected ? AppColors.orangePrimary : AppColors.textGray2,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             Text(
               label,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: isSelected ? AppColors.orangePrimary : AppColors.blackFoundation600,
               ),
@@ -477,11 +477,11 @@ class _SettingsDialogState extends State<SettingsDialog> {
       default:
         return Center(
           child: Padding(
-            padding: const EdgeInsets.all(48),
+            padding: EdgeInsets.all(48.w),
             child: Text(
               'Content for ${_getContentTitle()} coming soon',
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: 14.sp,
                 color: AppColors.textGray2,
               ),
             ),
@@ -549,8 +549,8 @@ class _SettingsDialogState extends State<SettingsDialog> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: 14.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.blackFoundation600,
           ),
@@ -561,8 +561,8 @@ class _SettingsDialogState extends State<SettingsDialog> {
             Expanded(
               child: Text(
                 value,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   color: AppColors.textGray2,
                 ),
               ),
@@ -573,13 +573,13 @@ class _SettingsDialogState extends State<SettingsDialog> {
                   SnackBar(content: Text('Edit $label - coming soon')),
                 );
               },
-              icon: const Icon(
+              icon: Icon(
                 Icons.edit_outlined,
-                size: 20,
+                size: 20.w,
                 color: AppColors.orangeAccent,
               ),
               style: IconButton.styleFrom(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8.w),
               ),
             ),
           ],
@@ -598,25 +598,25 @@ class _SettingsDialogState extends State<SettingsDialog> {
         // Platform Warning for non-mobile platforms
         if (!isMobilePlatform) ...[
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
               color: AppColors.warning50,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               border: Border.all(color: AppColors.warning3),
             ),
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.info_outline,
                   color: AppColors.warning7,
-                  size: 24,
+                  size: 24.w,
                 ),
                 12.horizontalSpace,
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Bluetooth printer features are only available on Android and iOS platforms. Please run this app on a mobile device to use Bluetooth printer functionality.',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       color: AppColors.blackFoundation600,
                     ),
                   ),
@@ -643,10 +643,10 @@ class _SettingsDialogState extends State<SettingsDialog> {
         24.verticalSpace,
 
         // Printer Connection Section
-        const Text(
+        Text(
           'Bluetooth Printer',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.w700,
             color: AppColors.blackFoundation600,
           ),
@@ -655,28 +655,28 @@ class _SettingsDialogState extends State<SettingsDialog> {
 
         // Connected Printer Display
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
             color: AppColors.backgroundGrey6,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             border: Border.all(color: AppColors.borderGray),
           ),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
                   color: selectedPrinter == 'Not Connected'
                       ? AppColors.backgroundGrey3.withOpacity(0.3)
                       : AppColors.success50,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Icon(
                   Icons.print_outlined,
                   color: selectedPrinter == 'Not Connected'
                       ? AppColors.textGray2
                       : AppColors.success600,
-                  size: 24,
+                  size: 24.w,
                 ),
               ),
               16.horizontalSpace,
@@ -686,8 +686,8 @@ class _SettingsDialogState extends State<SettingsDialog> {
                   children: [
                     Text(
                       selectedPrinter == 'Not Connected' ? 'No Printer Connected' : selectedPrinter,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.blackFoundation600,
                       ),
@@ -697,8 +697,8 @@ class _SettingsDialogState extends State<SettingsDialog> {
                       selectedPrinter == 'Not Connected'
                           ? 'Connect a Bluetooth printer to print receipts'
                           : 'Ready to print',
-                      style: const TextStyle(
-                        fontSize: 12,
+                      style: TextStyle(
+                        fontSize: 12.sp,
                         color: AppColors.textGray2,
                       ),
                     ),
@@ -715,7 +715,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
                       const SnackBar(content: Text('Printer disconnected')),
                     );
                   },
-                  icon: const Icon(Icons.close, color: AppColors.error600, size: 20),
+                  icon: Icon(Icons.close, color: AppColors.error600, size: 20.w),
                 ),
             ],
           ),
@@ -787,14 +787,14 @@ class _SettingsDialogState extends State<SettingsDialog> {
               ),
             ),
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 16.w),
               side: BorderSide(
                 color: (!bluetoothEnabled || isSearchingPrinter)
                     ? AppColors.textGray2
                     : AppColors.orangePrimary,
               ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
             ),
           ),
@@ -803,20 +803,20 @@ class _SettingsDialogState extends State<SettingsDialog> {
         // Available Printers List
         if (availablePrinters.isNotEmpty) ...[
           16.verticalSpace,
-          const Text(
+          Text(
             'Available Devices',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.blackFoundation600,
             ),
           ),
           8.verticalSpace,
           Container(
-            constraints: const BoxConstraints(maxHeight: 200),
+            constraints: BoxConstraints(maxHeight: 200.w),
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.borderGray),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
             child: ListView.separated(
               shrinkWrap: true,
@@ -859,14 +859,14 @@ class _SettingsDialogState extends State<SettingsDialog> {
                     }
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(12.w),
                     color: isConnected ? AppColors.success50 : Colors.transparent,
                     child: Row(
                       children: [
                         Icon(
                           Icons.print,
                           color: isConnected ? AppColors.success600 : AppColors.textGray2,
-                          size: 20,
+                          size: 20.w,
                         ),
                         12.horizontalSpace,
                         Expanded(
@@ -876,7 +876,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
                               Text(
                                 printer.name,
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 13.sp,
                                   fontWeight: isConnected ? FontWeight.w600 : FontWeight.w400,
                                   color: AppColors.blackFoundation600,
                                 ),
@@ -884,8 +884,8 @@ class _SettingsDialogState extends State<SettingsDialog> {
                               2.verticalSpace,
                               Text(
                                 printer.macAdress,
-                                style: const TextStyle(
-                                  fontSize: 11,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
                                   color: AppColors.textGray2,
                                 ),
                               ),
@@ -893,10 +893,10 @@ class _SettingsDialogState extends State<SettingsDialog> {
                           ),
                         ),
                         if (isConnected)
-                          const Icon(
+                          Icon(
                             Icons.check_circle,
                             color: AppColors.success600,
-                            size: 20,
+                            size: 20.w,
                           ),
                       ],
                     ),
@@ -987,9 +987,9 @@ class _SettingsDialogState extends State<SettingsDialog> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.orangePrimary,
               disabledBackgroundColor: AppColors.backgroundGrey3,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 16.w),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
             ),
           ),

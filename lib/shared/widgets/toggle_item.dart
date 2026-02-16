@@ -32,8 +32,8 @@ class ToggleItem extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.blackFoundation600,
                 ),
@@ -42,7 +42,7 @@ class ToggleItem extends StatelessWidget {
               Text(
                 description,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 13.sp,
                   color:
                       isLoading ? AppColors.textGray2.withValues(alpha: 0.5) : AppColors.textGray3,
                 ),
@@ -51,10 +51,10 @@ class ToggleItem extends StatelessWidget {
           ),
         ),
         if (isLoading)
-          const SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
+          SizedBox(
+            width: 24.w,
+            height: 24.w,
+            child: const CircularProgressIndicator(
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangeAccent),
             ),

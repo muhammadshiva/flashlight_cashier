@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../config/pages/app_pages.dart';
 import '../../config/routes/app_routes.dart';
@@ -65,13 +66,13 @@ class _DebugButtonState extends State<DebugButton> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const AlertDialog(
+      builder: (context) => AlertDialog(
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Running network diagnostics...'),
+            const CircularProgressIndicator(),
+            SizedBox(height: 16.w),
+            const Text('Running network diagnostics...'),
           ],
         ),
       ),
@@ -110,14 +111,14 @@ class _DebugButtonState extends State<DebugButton> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Summary',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.w),
                 Text('Total Tests: $total'),
                 Text(
                   'Passed: $passed',
@@ -131,38 +132,36 @@ class _DebugButtonState extends State<DebugButton> {
                 ),
                 Text('Pass Rate: ${passRate.toStringAsFixed(1)}%'),
                 const Divider(height: 24),
-                const Text(
+                Text(
                   'Details',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.w),
                 ...results.entries
                     .where(
-                  (e) =>
-                      e.value is Map && (e.value as Map).containsKey('success'),
+                  (e) => e.value is Map && (e.value as Map).containsKey('success'),
                 )
                     .map<Widget>((e) {
                   final result = e.value as Map<String, dynamic>;
                   final success = result['success'] as bool;
                   final endpoint = result['endpoint'] ?? e.key;
-                  final message = success
-                      ? (result['message'] ?? 'Success')
-                      : (result['error'] ?? 'Failed');
+                  final message =
+                      success ? (result['message'] ?? 'Success') : (result['error'] ?? 'Failed');
 
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                    padding: EdgeInsets.only(bottom: 8.w),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
                           success ? Icons.check_circle : Icons.error,
-                          size: 16,
+                          size: 16.w,
                           color: success ? Colors.green : Colors.red,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8.w),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +175,7 @@ class _DebugButtonState extends State<DebugButton> {
                               Text(
                                 message,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   color: Colors.grey[600],
                                 ),
                               ),
@@ -268,10 +267,10 @@ class _DebugButtonState extends State<DebugButton> {
             onLongPress: () {
               _showDebugMenu(context);
             },
-            child: const SizedBox(
-              width: 35,
-              height: 35,
-              child: Icon(Icons.bug_report_outlined, color: Colors.yellow),
+            child: SizedBox(
+              width: 35.w,
+              height: 35.w,
+              child: const Icon(Icons.bug_report_outlined, color: Colors.yellow),
             ),
           ),
         ),

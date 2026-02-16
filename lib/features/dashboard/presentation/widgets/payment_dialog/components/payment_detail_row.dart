@@ -31,8 +31,8 @@ class PaymentDetailRow extends StatelessWidget {
         Row(
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 16.sp, color: valueColor ?? AppColors.slate800),
-              const SizedBox(width: 4),
+              Icon(icon, size: 16.w, color: valueColor ?? AppColors.slate800),
+              SizedBox(width: 4.w),
             ],
             Text(
               value,

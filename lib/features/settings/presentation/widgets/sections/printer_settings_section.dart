@@ -117,16 +117,16 @@ class PrinterSettingsSection extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.error_outline,
             color: AppColors.error600,
-            size: 48,
+            size: 48.w,
           ),
           16.verticalSpace,
-          const Text(
+          Text(
             'Error loading printer settings',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.blackFoundation600,
             ),
@@ -134,8 +134,8 @@ class PrinterSettingsSection extends StatelessWidget {
           8.verticalSpace,
           Text(
             message,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: 14.sp,
               color: AppColors.textGray2,
             ),
             textAlign: TextAlign.center,
@@ -189,32 +189,32 @@ class PrinterSettingsSection extends StatelessWidget {
         return AlertDialog(
           title: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.warning_amber_rounded,
                 color: AppColors.warning7,
-                size: 28,
+                size: 28.w,
               ),
               12.horizontalSpace,
-              const Text(
+              Text(
                 'Permission Required',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.blackFoundation600,
                 ),
               ),
             ],
           ),
-          content: const Text(
+          content: Text(
             'Bluetooth permissions are required to use printer features. '
             'Please enable Bluetooth permissions in your device settings.',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: AppColors.blackFoundation600,
             ),
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
           actions: [
             TextButton(
@@ -238,9 +238,9 @@ class PrinterSettingsSection extends StatelessWidget {
                 backgroundColor: AppColors.orangeAccent,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.w),
               ),
               child: const Text(
                 'Open Bluetooth Settings',
@@ -263,25 +263,25 @@ class PlatformWarningWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.warning50,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.warning3),
       ),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.info_outline,
             color: AppColors.warning7,
-            size: 24,
+            size: 24.w,
           ),
           12.horizontalSpace,
-          const Expanded(
+          Expanded(
             child: Text(
               'Bluetooth printer features are only available on Android and iOS platforms. Please run this app on a mobile device to use Bluetooth printer functionality.',
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 13.sp,
                 color: AppColors.blackFoundation600,
               ),
             ),
@@ -331,26 +331,26 @@ class ConnectedPrinterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.backgroundGrey6,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.borderGray),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
               color: connectedPrinterName == null
                   ? AppColors.backgroundGrey3.withOpacity(0.3)
                   : AppColors.success50,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
             child: Icon(
               Icons.print_outlined,
               color: connectedPrinterName == null ? AppColors.textGray2 : AppColors.success600,
-              size: 24,
+              size: 24.w,
             ),
           ),
           16.horizontalSpace,
@@ -360,8 +360,8 @@ class ConnectedPrinterWidget extends StatelessWidget {
               children: [
                 Text(
                   connectedPrinterName ?? 'No Printer Connected',
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.blackFoundation600,
                   ),
@@ -371,8 +371,8 @@ class ConnectedPrinterWidget extends StatelessWidget {
                   connectedPrinterName == null
                       ? 'Connect a Bluetooth printer to print receipts'
                       : 'Ready to print',
-                  style: const TextStyle(
-                    fontSize: 12,
+                  style: TextStyle(
+                    fontSize: 12.sp,
                     color: AppColors.textGray2,
                   ),
                 ),
@@ -382,7 +382,7 @@ class ConnectedPrinterWidget extends StatelessWidget {
           if (connectedPrinterName != null)
             IconButton(
               onPressed: onDisconnect,
-              icon: const Icon(Icons.close, color: AppColors.error600, size: 20),
+              icon: Icon(Icons.close, color: AppColors.error600, size: 20.w),
             ),
         ],
       ),
@@ -430,12 +430,12 @@ class SearchPrinterButtonWidget extends StatelessWidget {
           ),
         ),
         style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 16.w),
           side: BorderSide(
             color: isEnabled ? AppColors.orangePrimary : AppColors.textGray2,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
         ),
       ),
@@ -463,20 +463,20 @@ class AvailablePrintersWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Available Devices',
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.blackFoundation600,
           ),
         ),
         8.verticalSpace,
         Container(
-          constraints: const BoxConstraints(maxHeight: 200),
+          constraints: BoxConstraints(maxHeight: 200.w),
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.borderGray),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: ListView.separated(
             shrinkWrap: true,
@@ -492,14 +492,14 @@ class AvailablePrintersWidget extends StatelessWidget {
               return InkWell(
                 onTap: isConnectingPrinter ? null : () => onConnectToPrinter(printer),
                 child: Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(12.w),
                   color: isConnected ? AppColors.success50 : Colors.transparent,
                   child: Row(
                     children: [
                       Icon(
                         Icons.print,
                         color: isConnected ? AppColors.success600 : AppColors.textGray2,
-                        size: 20,
+                        size: 20.w,
                       ),
                       12.horizontalSpace,
                       Expanded(
@@ -509,7 +509,7 @@ class AvailablePrintersWidget extends StatelessWidget {
                             Text(
                               printer.name,
                               style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 13.sp,
                                 fontWeight: isConnected ? FontWeight.w600 : FontWeight.w400,
                                 color: AppColors.blackFoundation600,
                               ),
@@ -517,8 +517,8 @@ class AvailablePrintersWidget extends StatelessWidget {
                             2.verticalSpace,
                             Text(
                               printer.macAddress,
-                              style: const TextStyle(
-                                fontSize: 11,
+                              style: TextStyle(
+                                fontSize: 11.sp,
                                 color: AppColors.textGray2,
                               ),
                             ),
@@ -526,16 +526,16 @@ class AvailablePrintersWidget extends StatelessWidget {
                         ),
                       ),
                       if (isConnected)
-                        const Icon(
+                        Icon(
                           Icons.check_circle,
                           color: AppColors.success600,
-                          size: 20,
+                          size: 20.w,
                         )
                       else if (isConnectingPrinter)
-                        const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
+                        SizedBox(
+                          width: 20.w,
+                          height: 20.w,
+                          child: const CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(AppColors.orangePrimary),
                           ),
@@ -565,8 +565,8 @@ class SectionTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 16,
+      style: TextStyle(
+        fontSize: 16.sp,
         fontWeight: FontWeight.w700,
         color: AppColors.blackFoundation600,
       ),
@@ -600,10 +600,10 @@ class PaperSizeDropdownWidget extends StatelessWidget {
         ),
         8.verticalSpace,
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.borderGray),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: DropdownButton<String>(
             value: paperSize,
@@ -615,8 +615,8 @@ class PaperSizeDropdownWidget extends StatelessWidget {
                 value: item,
                 child: Text(
                   item,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: 14.sp,
                     color: AppColors.blackFoundation600,
                   ),
                 ),

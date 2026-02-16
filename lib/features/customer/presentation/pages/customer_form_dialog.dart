@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../injection_container.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
@@ -34,12 +35,10 @@ class _CustomerFormDialogContent extends StatefulWidget {
   const _CustomerFormDialogContent({this.customer});
 
   @override
-  State<_CustomerFormDialogContent> createState() =>
-      _CustomerFormDialogContentState();
+  State<_CustomerFormDialogContent> createState() => _CustomerFormDialogContentState();
 }
 
-class _CustomerFormDialogContentState
-    extends State<_CustomerFormDialogContent> {
+class _CustomerFormDialogContentState extends State<_CustomerFormDialogContent> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
@@ -50,12 +49,9 @@ class _CustomerFormDialogContentState
   @override
   void initState() {
     super.initState();
-    _nameController =
-        TextEditingController(text: widget.customer?.name ?? '');
-    _phoneController =
-        TextEditingController(text: widget.customer?.phoneNumber ?? '');
-    _emailController =
-        TextEditingController(text: widget.customer?.email ?? '');
+    _nameController = TextEditingController(text: widget.customer?.name ?? '');
+    _phoneController = TextEditingController(text: widget.customer?.phoneNumber ?? '');
+    _emailController = TextEditingController(text: widget.customer?.email ?? '');
   }
 
   @override
@@ -75,9 +71,7 @@ class _CustomerFormDialogContentState
           phoneNumber: _phoneController.text,
           email: _emailController.text,
         );
-        context
-            .read<CustomerBloc>()
-            .add(UpdateCustomerEvent(updatedCustomer));
+        context.read<CustomerBloc>().add(UpdateCustomerEvent(updatedCustomer));
       } else {
         context.read<CustomerBloc>().add(
               CreateCustomerEvent(
@@ -101,23 +95,19 @@ class _CustomerFormDialogContentState
           Navigator.pop(context, true);
         } else if (state is CustomerError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(state.message), backgroundColor: Colors.red),
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
           );
         }
       },
       child: Dialog(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        insetPadding:
-            EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.w),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        insetPadding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.w),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16.r),
           child: ConstrainedBox(
-            constraints:
-                BoxConstraints(maxWidth: 900.w, maxHeight: 500.w),
+            constraints: BoxConstraints(maxWidth: 900.w, maxHeight: 500.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -125,7 +115,7 @@ class _CustomerFormDialogContentState
                 const Divider(height: 1, color: Color(0xFFE2E8F0)),
                 Flexible(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: EdgeInsets.all(24.w),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -137,58 +127,40 @@ class _CustomerFormDialogContentState
                               _buildLabel('Full Name', isRequired: true),
                               TextFormField(
                                 controller: _nameController,
-                                decoration: _buildInputDecoration(
-                                    hint: 'e.g. John Doe'),
-                                validator: (v) => v!.isEmpty
-                                    ? 'Name is required'
-                                    : null,
+                                decoration: _buildInputDecoration(hint: 'e.g. John Doe'),
+                                validator: (v) => v!.isEmpty ? 'Name is required' : null,
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16.w),
                               Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        _buildLabel('Phone Number',
-                                            isRequired: true),
+                                        _buildLabel('Phone Number', isRequired: true),
                                         TextFormField(
                                           controller: _phoneController,
                                           decoration:
-                                              _buildInputDecoration(
-                                                  hint:
-                                                      'e.g. 081234567890'),
-                                          keyboardType:
-                                              TextInputType.phone,
-                                          validator: (v) => v!.isEmpty
-                                              ? 'Phone is required'
-                                              : null,
+                                              _buildInputDecoration(hint: 'e.g. 081234567890'),
+                                          keyboardType: TextInputType.phone,
+                                          validator: (v) => v!.isEmpty ? 'Phone is required' : null,
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 16),
+                                  SizedBox(width: 16.w),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        _buildLabel('Email Address',
-                                            isRequired: true),
+                                        _buildLabel('Email Address', isRequired: true),
                                         TextFormField(
                                           controller: _emailController,
                                           decoration:
-                                              _buildInputDecoration(
-                                                  hint:
-                                                      'e.g. john@example.com'),
-                                          keyboardType: TextInputType
-                                              .emailAddress,
-                                          validator: (v) => v!.isEmpty
-                                              ? 'Email is required'
-                                              : null,
+                                              _buildInputDecoration(hint: 'e.g. john@example.com'),
+                                          keyboardType: TextInputType.emailAddress,
+                                          validator: (v) => v!.isEmpty ? 'Email is required' : null,
                                         ),
                                       ],
                                     ),
@@ -214,15 +186,15 @@ class _CustomerFormDialogContentState
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.w),
       child: Row(
         children: [
           Text(
             isEditMode ? 'Edit Customer' : 'New Customer',
-            style: const TextStyle(
-              fontSize: 18,
+            style: TextStyle(
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1E293B),
+              color: const Color(0xFF1E293B),
             ),
           ),
           const Spacer(),
@@ -238,17 +210,16 @@ class _CustomerFormDialogContentState
 
   Widget _buildFooter() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           OutlinedButton(
             onPressed: () => Navigator.pop(context),
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.w),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               side: const BorderSide(color: Color(0xFFE2E8F0)),
             ),
@@ -260,15 +231,14 @@ class _CustomerFormDialogContentState
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           ElevatedButton(
             onPressed: _onSubmit,
             style: ElevatedButton.styleFrom(
               elevation: 0,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.w),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
             ),
             child: Text(
@@ -283,13 +253,12 @@ class _CustomerFormDialogContentState
     );
   }
 
-  Widget _buildSectionCard(
-      {required String title, required List<Widget> children}) {
+  Widget _buildSectionCard({required String title, required List<Widget> children}) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: Column(
@@ -297,13 +266,13 @@ class _CustomerFormDialogContentState
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20.w),
           ...children,
         ],
       ),
@@ -312,24 +281,24 @@ class _CustomerFormDialogContentState
 
   Widget _buildLabel(String label, {bool isRequired = false}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: EdgeInsets.only(bottom: 8.w),
       child: Row(
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               color: Colors.black54,
             ),
           ),
           if (isRequired)
-            const Text(
+            Text(
               ' *',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFFEF4444),
+                color: const Color(0xFFEF4444),
               ),
             ),
         ],
@@ -337,27 +306,25 @@ class _CustomerFormDialogContentState
     );
   }
 
-  InputDecoration _buildInputDecoration(
-      {String? hint, String? prefixText}) {
+  InputDecoration _buildInputDecoration({String? hint, String? prefixText}) {
     return InputDecoration(
       hintText: hint,
       prefixText: prefixText,
       filled: true,
       fillColor: Colors.white,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         borderSide: BorderSide(color: Colors.grey[300]!),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         borderSide: BorderSide(color: Colors.grey[300]!),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         borderSide: BorderSide(color: Theme.of(context).primaryColor),
       ),
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
     );
   }
 }

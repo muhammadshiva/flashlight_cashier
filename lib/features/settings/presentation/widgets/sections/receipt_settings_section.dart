@@ -192,8 +192,8 @@ class ReceiptSettingsSection extends StatelessWidget {
                       ),
                       8.horizontalSpace,
                       Container(
-                        width: 8,
-                        height: 8,
+                        width: 8.w,
+                        height: 8.w,
                         decoration: const BoxDecoration(
                           color: AppColors.success600,
                           shape: BoxShape.circle,
@@ -255,18 +255,18 @@ class ReceiptSettingsSection extends StatelessWidget {
             color: AppColors.blackFoundation600,
           ),
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.w),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: const BorderSide(color: AppColors.borderGray),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: const BorderSide(color: AppColors.borderGray),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.orangePrimary, width: 2),
+              borderRadius: BorderRadius.circular(8.r),
+              borderSide: BorderSide(color: AppColors.orangePrimary, width: 2.w),
             ),
           ),
         ),
@@ -280,10 +280,10 @@ class ReceiptSettingsSection extends StatelessWidget {
     required appSettings,
   }) {
     return Container(
-      constraints: BoxConstraints(maxHeight: 600.h),
+      constraints: BoxConstraints(maxHeight: 600.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: AppColors.borderGray),
         boxShadow: [
           BoxShadow(
@@ -295,23 +295,23 @@ class ReceiptSettingsSection extends StatelessWidget {
       ),
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Logo (if enabled)
               if (receiptSettings.showLogo) ...[
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 60.w,
+                  height: 60.w,
                   decoration: BoxDecoration(
                     color: AppColors.blackFoundation600,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.flash_on,
                     color: Colors.white,
-                    size: 32,
+                    size: 32.w,
                   ),
                 ),
                 16.verticalSpaceFromWidth,
@@ -405,7 +405,7 @@ class ReceiptSettingsSection extends StatelessWidget {
               ],
 
               12.verticalSpaceFromWidth,
-              const Divider(color: AppColors.borderGray, thickness: 2, height: 1),
+              Divider(color: AppColors.borderGray, thickness: 2, height: 1.w),
               12.verticalSpaceFromWidth,
 
               // Total
@@ -525,7 +525,7 @@ class ReceiptSettingsSection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 30,
+          width: 30.w,
           child: Text(
             'Qty',
             style: TextStyleConst.poppinsSemiBold12.copyWith(
@@ -535,9 +535,9 @@ class ReceiptSettingsSection extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8.w),
         SizedBox(
-          width: 80,
+          width: 80.w,
           child: Text(
             'Amount',
             style: TextStyleConst.poppinsSemiBold12.copyWith(
@@ -553,7 +553,7 @@ class ReceiptSettingsSection extends StatelessWidget {
 
   Widget _buildReceiptItem(String name, int qty, int price) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: 4.w),
       child: Row(
         children: [
           Expanded(
@@ -567,7 +567,7 @@ class ReceiptSettingsSection extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 30,
+            width: 30.w,
             child: Text(
               '$qty',
               style: TextStyleConst.poppinsRegular12.copyWith(
@@ -577,9 +577,9 @@ class ReceiptSettingsSection extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           SizedBox(
-            width: 80,
+            width: 80.w,
             child: Text(
               'Rp ${(price * qty).toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
               style: TextStyleConst.poppinsRegular12.copyWith(

@@ -52,14 +52,14 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
                       color: AppColors.orangePrimary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.point_of_sale,
-                      size: 24,
+                      size: 24.w,
                       color: AppColors.orangePrimary,
                     ),
                   ),
@@ -68,19 +68,19 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'POS Settings',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
                             color: AppColors.blackFoundation600,
                           ),
                         ),
                         4.verticalSpace,
-                        const Text(
+                        Text(
                           'Configure point of sale and cashier settings',
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 13.sp,
                             color: AppColors.greyFoundation300,
                           ),
                         ),
@@ -152,10 +152,10 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
     required List<Widget> children,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.borderGray),
         boxShadow: [
           BoxShadow(
@@ -172,14 +172,14 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
             children: [
               Icon(
                 icon,
-                size: 18,
+                size: 18.w,
                 color: AppColors.orangePrimary,
               ),
               8.horizontalSpace,
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 15,
+                style: TextStyle(
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.blackFoundation600,
                 ),
@@ -196,8 +196,8 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
   Widget _buildLabelText(String text) {
     return Text(
       text,
-      style: const TextStyle(
-        fontSize: 13,
+      style: TextStyle(
+        fontSize: 13.sp,
         fontWeight: FontWeight.w600,
         color: AppColors.blackFoundation600,
       ),
@@ -214,35 +214,35 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
       decoration: InputDecoration(
         hintText: 'Enter tax rate (e.g., 11.0)',
         suffixText: '%',
-        suffixStyle: const TextStyle(
-          fontSize: 14,
+        suffixStyle: TextStyle(
+          fontSize: 14.sp,
           fontWeight: FontWeight.w500,
           color: AppColors.greyFoundation300,
         ),
-        prefixIcon: const Icon(
+        prefixIcon: Icon(
           Icons.percent,
-          size: 20,
+          size: 20.w,
           color: AppColors.greyFoundation300,
         ),
         filled: true,
         fillColor: AppColors.greyFoundation50,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           borderSide: const BorderSide(color: AppColors.borderGray),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           borderSide: const BorderSide(color: AppColors.borderGray),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           borderSide: const BorderSide(color: AppColors.orangePrimary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           borderSide: const BorderSide(color: AppColors.error600),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -268,25 +268,25 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
 
   Widget _buildAutoCalculateTaxToggle(POSSettingsState state) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.greyFoundation50,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: AppColors.borderGray),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
               color: state.autoCalculateTax
                   ? AppColors.orangePrimary.withValues(alpha: 0.1)
                   : AppColors.greyFoundation50,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
             child: Icon(
               Icons.auto_awesome,
-              size: 20,
+              size: 20.w,
               color: state.autoCalculateTax ? AppColors.orangePrimary : AppColors.greyFoundation300,
             ),
           ),
@@ -295,19 +295,19 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Auto Calculate Tax',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.blackFoundation600,
                   ),
                 ),
                 4.verticalSpace,
-                const Text(
+                Text(
                   'Automatically add tax to transactions',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     color: AppColors.greyFoundation300,
                   ),
                 ),
@@ -328,25 +328,25 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
 
   Widget _buildAutoPrintReceiptToggle(POSSettingsState state) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.greyFoundation50,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: AppColors.borderGray),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
               color: state.autoPrintReceipt
                   ? AppColors.orangePrimary.withValues(alpha: 0.1)
                   : AppColors.greyFoundation50,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
             child: Icon(
               Icons.print,
-              size: 20,
+              size: 20.w,
               color: state.autoPrintReceipt ? AppColors.orangePrimary : AppColors.greyFoundation300,
             ),
           ),
@@ -355,19 +355,19 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Auto Print Receipt',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.blackFoundation600,
                   ),
                 ),
                 4.verticalSpace,
-                const Text(
+                Text(
                   'Automatically print receipt after transaction',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     color: AppColors.greyFoundation300,
                   ),
                 ),
@@ -395,26 +395,26 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
         DropdownButtonFormField<String>(
           initialValue: state.currencyCode,
           decoration: InputDecoration(
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.attach_money,
-              size: 20,
+              size: 20.w,
               color: AppColors.greyFoundation300,
             ),
             filled: true,
             fillColor: AppColors.greyFoundation50,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: const BorderSide(color: AppColors.borderGray),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: const BorderSide(color: AppColors.borderGray),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: const BorderSide(color: AppColors.orangePrimary, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
           ),
           items: const [
             DropdownMenuItem(value: 'IDR', child: Text('IDR (Indonesian Rupiah)')),
@@ -442,26 +442,26 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
         DropdownButtonFormField<int>(
           initialValue: state.decimalPlaces,
           decoration: InputDecoration(
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.filter_9_plus,
-              size: 20,
+              size: 20.w,
               color: AppColors.greyFoundation300,
             ),
             filled: true,
             fillColor: AppColors.greyFoundation50,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: const BorderSide(color: AppColors.borderGray),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: const BorderSide(color: AppColors.borderGray),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: const BorderSide(color: AppColors.orangePrimary, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
           ),
           items: const [
             DropdownMenuItem(value: 0, child: Text('0 digits (e.g., 1234)')),
@@ -481,10 +481,10 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
 
   Widget _buildActionButtons(POSSettingsState state) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.warning50,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.warning1),
       ),
       child: Column(
@@ -492,17 +492,17 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.info_outline,
-                size: 20,
+                size: 20.w,
                 color: AppColors.warning600,
               ),
               8.horizontalSpace,
-              const Expanded(
+              Expanded(
                 child: Text(
                   'You have unsaved changes',
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.warning600,
                   ),
@@ -521,14 +521,14 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
                           context.read<POSSettingsCubit>().discardChanges();
                           _taxRateController.text = state.taxRate.toString();
                         },
-                  icon: const Icon(Icons.close, size: 18),
+                  icon: Icon(Icons.close, size: 18.w),
                   label: const Text('Discard'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.greyFoundation400,
                     side: const BorderSide(color: AppColors.borderGray),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: 12.w),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                   ),
                 ),
@@ -547,8 +547,7 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
                                 SnackBar(
                                   content: Row(
                                     children: [
-                                      const Icon(Icons.check_circle,
-                                          color: AppColors.white, size: 20),
+                                      Icon(Icons.check_circle, color: AppColors.white, size: 20.w),
                                       12.horizontalSpace,
                                       const Text('POS settings saved successfully'),
                                     ],
@@ -556,7 +555,7 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
                                   backgroundColor: AppColors.success600,
                                   behavior: SnackBarBehavior.floating,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(8.r),
                                   ),
                                   duration: const Duration(seconds: 2),
                                 ),
@@ -565,22 +564,22 @@ class _POSSettingsSectionState extends State<POSSettingsSection> {
                           }
                         },
                   icon: state.isSaving
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
+                      ? SizedBox(
+                          width: 18.w,
+                          height: 18.w,
+                          child: const CircularProgressIndicator(
                             strokeWidth: 2,
                             color: AppColors.white,
                           ),
                         )
-                      : const Icon(Icons.save, size: 18),
+                      : Icon(Icons.save, size: 18.w),
                   label: Text(state.isSaving ? 'Saving...' : 'Save Changes'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.orangePrimary,
                     foregroundColor: AppColors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: 12.w),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     elevation: 0,
                   ),

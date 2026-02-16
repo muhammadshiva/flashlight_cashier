@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class ClockWidget extends StatefulWidget {
@@ -40,18 +41,18 @@ class _ClockWidgetState extends State<ClockWidget> {
       children: [
         Text(
           DateFormat('HH:mm:ss').format(_currentTime),
-          style: const TextStyle(
-            fontSize: 18,
+          style: TextStyle(
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1E293B),
+            color: const Color(0xFF1E293B),
             letterSpacing: 1,
           ),
         ),
         Text(
           DateFormat('EEE, d MMMM yyyy').format(_currentTime),
-          style: const TextStyle(
-            fontSize: 16,
-            color: Color(0xFF94A3B8),
+          style: TextStyle(
+            fontSize: 16.sp,
+            color: const Color(0xFF94A3B8),
             fontWeight: FontWeight.w400,
           ),
         ),

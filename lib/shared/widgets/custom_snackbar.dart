@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomSnackbar {
   static void show(
@@ -22,7 +23,7 @@ class CustomSnackbar {
         content: Text(message),
         backgroundColor: backgroundColor,
         behavior: SnackBarBehavior.floating, // Make it less intrusive
-        margin: const EdgeInsets.all(16),
+        margin: EdgeInsets.all(16.w),
         duration: duration,
         action: onRetry != null
             ? SnackBarAction(
@@ -175,11 +176,11 @@ class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderSta
           child: FadeTransition(
             opacity: _opacity,
             child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              margin: EdgeInsets.symmetric(horizontal: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
               decoration: BoxDecoration(
                 color: widget.backgroundColor,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
                 boxShadow: const [
                   BoxShadow(
                     color: Color(0x33000000),
@@ -197,7 +198,7 @@ class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderSta
                       style: TextStyle(
                         fontFamily: 'Inter',
                         color: widget.textColor,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -209,7 +210,7 @@ class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderSta
                         _dismiss();
                       },
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8.w),
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),

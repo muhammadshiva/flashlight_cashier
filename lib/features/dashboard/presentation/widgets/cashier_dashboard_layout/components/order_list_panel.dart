@@ -7,10 +7,11 @@ import 'package:flashlight_pos/features/dashboard/presentation/widgets/status_fi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'clock_widget.dart';
 
-class OrderListPanel extends StatelessWidget {
+class OrderListPanel extends StatefulWidget {
   final DashboardLoaded state;
   final String? selectedOrderId;
   final ValueChanged<dynamic>
@@ -24,6 +25,28 @@ class OrderListPanel extends StatelessWidget {
   });
 
   @override
+  State<OrderListPanel> createState() => _OrderListPanelState();
+}
+
+class _OrderListPanelState extends State<OrderListPanel> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+
+  @override
+  void dispose() {
+    _refreshController.dispose();
+    super.dispose();
+  }
+
+  void _onRefresh() {
+    context.read<DashboardBloc>().add(RefreshDashboard());
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) {
+        _refreshController.refreshCompleted();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       flex: 6,
@@ -33,13 +56,13 @@ class OrderListPanel extends StatelessWidget {
           children: [
             // Top Bar for Left Panel
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: EdgeInsets.symmetric(vertical: 20.w),
               color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
                     child: Row(
                       children: [
                         const ClockWidget(),
@@ -50,7 +73,7 @@ class OrderListPanel extends StatelessWidget {
                           height: 40.w,
                           decoration: BoxDecoration(
                             color: AppColors.slate100,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.r),
                             border: Border.all(color: AppColors.slate200),
                           ),
                           child: TextField(
@@ -60,12 +83,12 @@ class OrderListPanel extends StatelessWidget {
                                   .add(FilterWorkOrders(searchQuery: value));
                             },
                             textAlignVertical: TextAlignVertical.center,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: 'Search...',
-                              hintStyle: TextStyle(color: AppColors.slate400, fontSize: 13),
-                              prefixIcon: Icon(Icons.search, color: AppColors.slate400, size: 18),
+                              hintStyle: TextStyle(color: AppColors.slate400, fontSize: 13.sp),
+                              prefixIcon: Icon(Icons.search, color: AppColors.slate400, size: 18.w),
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
                               isDense: true,
                             ),
                           ),
@@ -83,11 +106,13 @@ class OrderListPanel extends StatelessWidget {
             // List
             Expanded(
               child: CashierOrderList(
-                orders: state.filteredOrders,
-                customers: state.customers,
-                vehicles: state.vehicles,
-                selectedOrderId: selectedOrderId,
-                onOrderSelected: onOrderSelected,
+                orders: widget.state.filteredOrders,
+                customers: widget.state.customers,
+                vehicles: widget.state.vehicles,
+                selectedOrderId: widget.selectedOrderId,
+                onOrderSelected: widget.onOrderSelected,
+                refreshController: _refreshController,
+                onRefresh: _onRefresh,
               ),
             ),
           ],

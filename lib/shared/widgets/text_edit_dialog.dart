@@ -88,7 +88,7 @@ class _TextEditDialogState extends State<TextEditDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Padding(
         padding: EdgeInsets.only(
@@ -96,7 +96,7 @@ class _TextEditDialogState extends State<TextEditDialog> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,8 +104,8 @@ class _TextEditDialogState extends State<TextEditDialog> {
                 // Title
                 Text(
                   widget.title,
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: TextStyle(
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w700,
                     color: AppColors.blackFoundation600,
                   ),
@@ -115,8 +115,8 @@ class _TextEditDialogState extends State<TextEditDialog> {
                   8.verticalSpace,
                   Text(
                     widget.description!,
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: TextStyle(
+                      fontSize: 13.sp,
                       color: AppColors.textGray2,
                     ),
                   ),
@@ -129,23 +129,23 @@ class _TextEditDialogState extends State<TextEditDialog> {
                   controller: _controller,
                   focusNode: _focusNode,
                   maxLines: widget.maxLines,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: 14.sp,
                     color: AppColors.blackFoundation600,
                   ),
                   decoration: InputDecoration(
                     hintText: widget.hintText,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.w),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                       borderSide: const BorderSide(color: AppColors.borderGray),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                       borderSide: const BorderSide(color: AppColors.borderGray),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                       borderSide: const BorderSide(color: AppColors.orangePrimary, width: 2),
                     ),
                   ),
@@ -175,9 +175,9 @@ class _TextEditDialogState extends State<TextEditDialog> {
                         backgroundColor: AppColors.orangeAccent,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.w),
                       ),
                       child: const Text(
                         'Save',

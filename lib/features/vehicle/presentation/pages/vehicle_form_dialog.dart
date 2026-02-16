@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../injection_container.dart';
 import '../../domain/entities/vehicle.dart';
 import '../bloc/vehicle_bloc.dart';
@@ -32,12 +33,10 @@ class _VehicleFormDialogContent extends StatefulWidget {
   const _VehicleFormDialogContent({this.vehicle});
 
   @override
-  State<_VehicleFormDialogContent> createState() =>
-      _VehicleFormDialogContentState();
+  State<_VehicleFormDialogContent> createState() => _VehicleFormDialogContentState();
 }
 
-class _VehicleFormDialogContentState
-    extends State<_VehicleFormDialogContent> {
+class _VehicleFormDialogContentState extends State<_VehicleFormDialogContent> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _plateController;
   late TextEditingController _brandController;
@@ -50,14 +49,10 @@ class _VehicleFormDialogContentState
   @override
   void initState() {
     super.initState();
-    _plateController =
-        TextEditingController(text: widget.vehicle?.licensePlate ?? '');
-    _brandController =
-        TextEditingController(text: widget.vehicle?.vehicleBrand ?? '');
-    _colorController =
-        TextEditingController(text: widget.vehicle?.vehicleColor ?? '');
-    _specsController =
-        TextEditingController(text: widget.vehicle?.vehicleSpecs ?? '');
+    _plateController = TextEditingController(text: widget.vehicle?.licensePlate ?? '');
+    _brandController = TextEditingController(text: widget.vehicle?.vehicleBrand ?? '');
+    _colorController = TextEditingController(text: widget.vehicle?.vehicleColor ?? '');
+    _specsController = TextEditingController(text: widget.vehicle?.vehicleSpecs ?? '');
     _category = widget.vehicle?.vehicleCategory ?? 'Motor';
   }
 
@@ -101,23 +96,19 @@ class _VehicleFormDialogContentState
           Navigator.pop(context, true);
         } else if (state is VehicleError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(state.message), backgroundColor: Colors.red),
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
           );
         }
       },
       child: Dialog(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        insetPadding:
-            EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.w),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        insetPadding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.w),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16.r),
           child: ConstrainedBox(
-            constraints:
-                BoxConstraints(maxWidth: 1000.w, maxHeight: 600.w),
+            constraints: BoxConstraints(maxWidth: 1000.w, maxHeight: 600.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -125,7 +116,7 @@ class _VehicleFormDialogContentState
                 const Divider(height: 1, color: Color(0xFFE2E8F0)),
                 Flexible(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: EdgeInsets.all(24.w),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -134,92 +125,68 @@ class _VehicleFormDialogContentState
                           _buildSectionCard(
                             title: 'Vehicle Information',
                             children: [
-                              _buildLabel('License Plate',
-                                  isRequired: true),
+                              _buildLabel('License Plate', isRequired: true),
                               TextFormField(
                                 controller: _plateController,
-                                decoration: _buildInputDecoration(
-                                    hint: 'e.g. B 1234 ABC'),
-                                validator: (v) => v!.isEmpty
-                                    ? 'License plate is required'
-                                    : null,
+                                decoration: _buildInputDecoration(hint: 'e.g. B 1234 ABC'),
+                                validator: (v) => v!.isEmpty ? 'License plate is required' : null,
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16.w),
                               Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        _buildLabel('Brand',
-                                            isRequired: true),
+                                        _buildLabel('Brand', isRequired: true),
                                         TextFormField(
                                           controller: _brandController,
                                           decoration:
-                                              _buildInputDecoration(
-                                                  hint:
-                                                      'e.g. Toyota Avanza'),
-                                          validator: (v) => v!.isEmpty
-                                              ? 'Brand is required'
-                                              : null,
+                                              _buildInputDecoration(hint: 'e.g. Toyota Avanza'),
+                                          validator: (v) => v!.isEmpty ? 'Brand is required' : null,
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 16),
+                                  SizedBox(width: 16.w),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        _buildLabel('Color',
-                                            isRequired: true),
+                                        _buildLabel('Color', isRequired: true),
                                         TextFormField(
                                           controller: _colorController,
-                                          decoration:
-                                              _buildInputDecoration(
-                                                  hint: 'e.g. White'),
-                                          validator: (v) => v!.isEmpty
-                                              ? 'Color is required'
-                                              : null,
+                                          decoration: _buildInputDecoration(hint: 'e.g. White'),
+                                          validator: (v) => v!.isEmpty ? 'Color is required' : null,
                                         ),
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16.w),
                               Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        _buildLabel('Category',
-                                            isRequired: true),
+                                        _buildLabel('Category', isRequired: true),
                                         _buildCategorySelector(),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 16),
+                                  SizedBox(width: 16.w),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         _buildLabel('Specs'),
                                         TextFormField(
                                           controller: _specsController,
-                                          decoration:
-                                              _buildInputDecoration(
-                                                  hint:
-                                                      'e.g. 1.5L AT'),
+                                          decoration: _buildInputDecoration(hint: 'e.g. 1.5L AT'),
                                         ),
                                       ],
                                     ),
@@ -245,15 +212,15 @@ class _VehicleFormDialogContentState
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.w),
       child: Row(
         children: [
           Text(
             isEditMode ? 'Edit Vehicle' : 'New Vehicle',
-            style: const TextStyle(
-              fontSize: 18,
+            style: TextStyle(
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1E293B),
+              color: const Color(0xFF1E293B),
             ),
           ),
           const Spacer(),
@@ -269,17 +236,16 @@ class _VehicleFormDialogContentState
 
   Widget _buildFooter() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           OutlinedButton(
             onPressed: () => Navigator.pop(context),
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.w),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               side: const BorderSide(color: Color(0xFFE2E8F0)),
             ),
@@ -291,15 +257,14 @@ class _VehicleFormDialogContentState
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           ElevatedButton(
             onPressed: _onSubmit,
             style: ElevatedButton.styleFrom(
               elevation: 0,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.w),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
             ),
             child: Text(
@@ -334,7 +299,7 @@ class _VehicleFormDialogContentState
             maxWidth: constraints.maxWidth,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             side: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
           color: Colors.white,
@@ -348,30 +313,24 @@ class _VehicleFormDialogContentState
                 children: [
                   Icon(
                     e.value,
-                    size: 20,
-                    color: isSelected
-                        ? Theme.of(context).primaryColor
-                        : const Color(0xFF64748B),
+                    size: 20.w,
+                    color: isSelected ? Theme.of(context).primaryColor : const Color(0xFF64748B),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: Text(
                       _categoryLabels[e.key]!,
                       style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.normal,
-                        color: isSelected
-                            ? const Color(0xFF1E293B)
-                            : const Color(0xFF475569),
+                        fontSize: 14.sp,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                        color: isSelected ? const Color(0xFF1E293B) : const Color(0xFF475569),
                       ),
                     ),
                   ),
                   if (isSelected)
                     Icon(
                       Icons.check,
-                      size: 18,
+                      size: 18.w,
                       color: Theme.of(context).primaryColor,
                     ),
                 ],
@@ -379,33 +338,32 @@ class _VehicleFormDialogContentState
             );
           }).toList(),
           child: Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 14),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               border: Border.all(color: Colors.grey[300]!),
             ),
             child: Row(
               children: [
                 Icon(
                   _categories[_category],
-                  size: 20,
+                  size: 20.w,
                   color: const Color(0xFF64748B),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12.w),
                 Expanded(
                   child: Text(
                     _categoryLabels[_category]!,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: TextStyle(
+                      fontSize: 14.sp,
                       color: Color(0xFF1E293B),
                     ),
                   ),
                 ),
-                const Icon(
+                Icon(
                   Icons.keyboard_arrow_down,
-                  size: 20,
+                  size: 20.w,
                   color: Color(0xFF64748B),
                 ),
               ],
@@ -416,13 +374,12 @@ class _VehicleFormDialogContentState
     );
   }
 
-  Widget _buildSectionCard(
-      {required String title, required List<Widget> children}) {
+  Widget _buildSectionCard({required String title, required List<Widget> children}) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: Column(
@@ -430,13 +387,13 @@ class _VehicleFormDialogContentState
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20.w),
           ...children,
         ],
       ),
@@ -445,24 +402,24 @@ class _VehicleFormDialogContentState
 
   Widget _buildLabel(String label, {bool isRequired = false}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: EdgeInsets.only(bottom: 8.w),
       child: Row(
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               color: Colors.black54,
             ),
           ),
           if (isRequired)
-            const Text(
+            Text(
               ' *',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFFEF4444),
+                color: const Color(0xFFEF4444),
               ),
             ),
         ],
@@ -470,27 +427,25 @@ class _VehicleFormDialogContentState
     );
   }
 
-  InputDecoration _buildInputDecoration(
-      {String? hint, String? prefixText}) {
+  InputDecoration _buildInputDecoration({String? hint, String? prefixText}) {
     return InputDecoration(
       hintText: hint,
       prefixText: prefixText,
       filled: true,
       fillColor: Colors.white,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         borderSide: BorderSide(color: Colors.grey[300]!),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         borderSide: BorderSide(color: Colors.grey[300]!),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         borderSide: BorderSide(color: Theme.of(context).primaryColor),
       ),
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
     );
   }
 }

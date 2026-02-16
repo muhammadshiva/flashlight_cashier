@@ -224,7 +224,7 @@ class _BackupSettingsSectionState extends State<BackupSettingsSection>
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade300),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Row(
             children: [
@@ -251,10 +251,10 @@ class _BackupSettingsSectionState extends State<BackupSettingsSection>
               if (state.isUpdatingAutoBackupInterval)
                 Padding(
                   padding: EdgeInsets.only(left: 12.w),
-                  child: const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                  child: SizedBox(
+                    width: 16.w,
+                    height: 16.w,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
             ],
@@ -332,10 +332,10 @@ class _BackupSettingsSectionState extends State<BackupSettingsSection>
           child: ElevatedButton.icon(
             onPressed: state.isCreatingBackup ? null : () => _createManualBackup(context),
             icon: state.isCreatingBackup
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
+                ? SizedBox(
+                    width: 16.w,
+                    height: 16.w,
+                    child: const CircularProgressIndicator(
                       strokeWidth: 2,
                       color: Colors.white,
                     ),
@@ -379,10 +379,10 @@ class _BackupSettingsSectionState extends State<BackupSettingsSection>
             child: ElevatedButton.icon(
               onPressed: state.isRestoringBackup ? null : () => _restoreFromBackup(context),
               icon: state.isRestoringBackup
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
+                  ? SizedBox(
+                      width: 16.w,
+                      height: 16.w,
+                      child: const CircularProgressIndicator(
                         strokeWidth: 2,
                         color: Colors.white,
                       ),
@@ -410,7 +410,7 @@ class _BackupSettingsSectionState extends State<BackupSettingsSection>
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: AppColors.success50,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: AppColors.success3),
       ),
       child: Row(
@@ -437,7 +437,7 @@ class _BackupSettingsSectionState extends State<BackupSettingsSection>
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: AppColors.error50,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: AppColors.error1),
       ),
       child: Row(

@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
 class SessionTimeoutListener extends StatefulWidget {
@@ -36,7 +38,7 @@ class _SessionTimeoutListenerState extends State<SessionTimeoutListener> {
     // Only logout if currently authenticated
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthSuccess) {
-      context.read<AuthBloc>().add(LogoutRequested());
+      context.read<AuthBloc>().add(const LogoutRequested());
       context.go('/login');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Session timed out due to inactivity.')),

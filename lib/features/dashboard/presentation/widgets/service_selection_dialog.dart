@@ -1,6 +1,7 @@
 import 'package:flashlight_pos/config/themes/app_colors.dart';
 import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ServiceSelectionDialog extends StatelessWidget {
   const ServiceSelectionDialog({super.key});
@@ -9,72 +10,72 @@ class ServiceSelectionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       child: Container(
-        width: 500,
-        height: 600,
-        padding: const EdgeInsets.all(24),
+        width: 500.w,
+        height: 600.w,
+        padding: EdgeInsets.all(24.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Add Item',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.slate800,
                   ),
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close, color: AppColors.slate500),
+                  icon: Icon(Icons.close, color: AppColors.slate500, size: 24.w),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             TextField(
               decoration: InputDecoration(
                 hintText: 'Search services or products...',
-                prefixIcon: const Icon(Icons.search, color: AppColors.slate400),
+                prefixIcon: Icon(Icons.search, color: AppColors.slate400, size: 20.w),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                   borderSide: const BorderSide(color: AppColors.slate200),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                   borderSide: const BorderSide(color: AppColors.slate200),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                   borderSide: const BorderSide(color: AppColors.orangePrimary),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             Expanded(
               child: DefaultTabController(
                 length: 2,
                 child: Column(
                   children: [
                     Container(
-                      height: 40,
+                      height: 40.w,
                       decoration: BoxDecoration(
                         color: AppColors.slate100,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: TabBar(
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicator: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.05),
-                              blurRadius: 4,
+                              blurRadius: 4.r,
                             ),
                           ],
                         ),
@@ -88,7 +89,7 @@ class ServiceSelectionDialog extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.w),
                     const Expanded(
                       child: TabBarView(
                         children: [
@@ -139,9 +140,9 @@ class _ServiceList extends StatelessWidget {
           onTap: () {
             Navigator.pop(context, item);
           },
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 8.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -150,16 +151,16 @@ class _ServiceList extends StatelessWidget {
                   children: [
                     Text(
                       item['name'] as String,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.slate800,
                       ),
                     ),
                     Text(
                       type,
-                      style: const TextStyle(
-                        fontSize: 12,
+                      style: TextStyle(
+                        fontSize: 12.sp,
                         color: AppColors.slate500,
                       ),
                     ),
@@ -167,8 +168,8 @@ class _ServiceList extends StatelessWidget {
                 ),
                 Text(
                   (item['price'] as int).toCurrencyFormat(),
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.slate800,
                   ),

@@ -1,8 +1,9 @@
 import 'package:flashlight_pos/config/constans/text_styles_const.dart';
+import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flashlight_pos/core/utils/currency_formatter.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../vehicle/domain/entities/vehicle.dart';
@@ -40,13 +41,13 @@ class HistoryCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(12.r),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(24),
+        margin: EdgeInsets.only(bottom: 16.w),
+        padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           border: Border.all(color: AppColors.borderGray, width: 0.5),
           boxShadow: const [
             BoxShadow(
@@ -62,23 +63,17 @@ class HistoryCard extends StatelessWidget {
           children: [
             // Status Icon Circle
             Container(
-              width: 48,
-              height: 48,
+              width: 48.w,
+              height: 48.w,
               decoration: BoxDecoration(
                 gradient: workOrder.status.toLowerCase() == 'paid'
                     ? const LinearGradient(
-                        colors: [
-                          AppColors.dashboardGreen,
-                          AppColors.dashboardTeal
-                        ],
+                        colors: [AppColors.dashboardGreen, AppColors.dashboardTeal],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       )
                     : const LinearGradient(
-                        colors: [
-                          AppColors.success600,
-                          AppColors.dashboardGreen
-                        ],
+                        colors: [AppColors.success600, AppColors.dashboardGreen],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -93,14 +88,12 @@ class HistoryCard extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: Icon(
-                workOrder.status.toLowerCase() == 'paid'
-                    ? Icons.check_circle
-                    : Icons.check,
+                workOrder.status.toLowerCase() == 'paid' ? Icons.check_circle : Icons.check,
                 color: AppColors.white,
-                size: 24,
+                size: 24.w,
               ),
             ),
-            const SizedBox(width: 24),
+            SizedBox(width: 24.w),
 
             // Main Content
             Expanded(
@@ -118,14 +111,13 @@ class HistoryCard extends StatelessWidget {
                       const SizedBox(width: 12),
                       Text(
                         _formatDate(completedDate),
-                        style: TextStyleConst.poppinsRegular14
-                            .copyWith(color: AppColors.textGray3),
+                        style: TextStyleConst.poppinsRegular14.copyWith(color: AppColors.textGray3),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12.w),
                       _StatusBadge(status: workOrder.status),
                     ],
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12.w),
 
                   // Customer & Vehicle Info
                   Row(
@@ -138,28 +130,24 @@ class HistoryCard extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.person,
-                                    size: 16, color: AppColors.textGray3),
-                                const SizedBox(width: 8),
+                                const Icon(Icons.person, size: 16, color: AppColors.textGray3),
+                                SizedBox(width: 8.w),
                                 Expanded(
                                   child: Text(
-                                    customer?.name ??
-                                        'Cust: ${_shortenId(workOrder.customerId)}',
+                                    customer?.name ?? 'Cust: ${_shortenId(workOrder.customerId)}',
                                     style: TextStyleConst.poppinsSemiBold16
-                                        .copyWith(
-                                            color: AppColors.blackText900),
+                                        .copyWith(color: AppColors.blackText900),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4.w),
                             Row(
                               children: [
-                                const Icon(Icons.phone,
-                                    size: 14, color: AppColors.textGray3),
-                                const SizedBox(width: 8),
+                                const Icon(Icons.phone, size: 14, color: AppColors.textGray3),
+                                SizedBox(width: 8.w),
                                 Text(
                                   customer?.phoneNumber ?? '-',
                                   style: TextStyleConst.poppinsRegular14
@@ -167,12 +155,12 @@ class HistoryCard extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: 12.w),
                             Row(
                               children: [
                                 const Icon(Icons.directions_car,
                                     size: 16, color: AppColors.textGray3),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8.w),
                                 Expanded(
                                   child: Text(
                                     vehicle != null
@@ -186,10 +174,10 @@ class HistoryCard extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4.w),
                             Row(
                               children: [
-                                const SizedBox(width: 24),
+                                SizedBox(width: 24.w),
                                 Text(
                                   vehicle?.licensePlate ?? '-',
                                   style: TextStyleConst.poppinsBold14.copyWith(
@@ -202,7 +190,7 @@ class HistoryCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16.w),
                       // Price Section
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -212,21 +200,20 @@ class HistoryCard extends StatelessWidget {
                             style: TextStyleConst.poppinsBold20
                                 .copyWith(color: AppColors.blackText900),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4.w),
                           if (workOrder.status.toLowerCase() == 'paid')
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
                               decoration: BoxDecoration(
                                 color: AppColors.success50,
-                                borderRadius: BorderRadius.circular(6),
+                                borderRadius: BorderRadius.circular(6.r),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const Icon(Icons.check_circle,
                                       size: 12, color: AppColors.success600),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: 4.w),
                                   Text(
                                     'Lunas',
                                     style: TextStyleConst.poppinsBold10
@@ -239,79 +226,72 @@ class HistoryCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.w),
 
                   // Services
                   if (workOrder.services.isNotEmpty) ...[
                     Row(
                       children: [
-                        const Icon(Icons.build,
-                            size: 14, color: AppColors.textGray3),
-                        const SizedBox(width: 6),
+                        const Icon(Icons.build, size: 14, color: AppColors.textGray3),
+                        SizedBox(width: 6.w),
                         Text(
                           'Layanan:',
-                          style: TextStyleConst.poppinsMedium12
-                              .copyWith(color: AppColors.textGray3),
+                          style:
+                              TextStyleConst.poppinsMedium12.copyWith(color: AppColors.textGray3),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.w),
                     Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                      spacing: 8.w,
+                      runSpacing: 8.w,
                       children: workOrder.services.map((service) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
                           decoration: BoxDecoration(
                             color: AppColors.dashboardBlueLight,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(6.r),
                             border: Border.all(
-                              color: AppColors.dashboardBlue
-                                  .withValues(alpha: 0.3),
+                              color: AppColors.dashboardBlue.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
                           child: Text(
-                            service.service?.name ??
-                                'Svc: ${_shortenId(service.serviceId)}',
+                            service.service?.name ?? 'Svc: ${_shortenId(service.serviceId)}',
                             style: TextStyleConst.poppinsMedium12
                                 .copyWith(color: AppColors.dashboardBlue),
                           ),
                         );
                       }).toList(),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.w),
                   ],
 
                   // Products (F&B)
                   if (workOrder.products.isNotEmpty) ...[
                     Row(
                       children: [
-                        const Icon(Icons.fastfood,
-                            size: 14, color: AppColors.textGray3),
-                        const SizedBox(width: 6),
+                        const Icon(Icons.fastfood, size: 14, color: AppColors.textGray3),
+                        SizedBox(width: 6.w),
                         Text(
                           'F&B:',
-                          style: TextStyleConst.poppinsMedium12
-                              .copyWith(color: AppColors.textGray3),
+                          style:
+                              TextStyleConst.poppinsMedium12.copyWith(color: AppColors.textGray3),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.w),
                     Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                      spacing: 8.w,
+                      runSpacing: 8.w,
                       children: workOrder.products.map((product) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
                           decoration: BoxDecoration(
                             color: AppColors.dashboardOrangeLight,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(6.r),
                             border: Border.all(
-                              color: AppColors.dashboardOrange
-                                  .withValues(alpha: 0.3),
+                              color: AppColors.dashboardOrange.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
@@ -364,10 +344,10 @@ class _StatusBadge extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.w),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Text(
         text,

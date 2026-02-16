@@ -92,7 +92,7 @@ class HistoryHeader extends StatelessWidget {
             PopupMenuButton<String>(
               offset: Offset(0, 50.w),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
                 side: const BorderSide(color: Color(0xFFE2E8F0)),
               ),
               color: Colors.white,
@@ -102,8 +102,10 @@ class HistoryHeader extends StatelessWidget {
               },
               itemBuilder: (context) => [
                 _buildPopupItem('Semua', Icons.list, state.selectedStatus),
-                _buildPopupItem('completed', Icons.check_circle_outline, state.selectedStatus, label: 'Selesai'),
-                _buildPopupItem('paid', Icons.payments_outlined, state.selectedStatus, label: 'Lunas'),
+                _buildPopupItem('completed', Icons.check_circle_outline, state.selectedStatus,
+                    label: 'Selesai'),
+                _buildPopupItem('paid', Icons.payments_outlined, state.selectedStatus,
+                    label: 'Lunas'),
               ],
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.w),
@@ -136,8 +138,8 @@ class HistoryHeader extends StatelessWidget {
     );
   }
 
-  PopupMenuItem<String> _buildPopupItem(
-      String value, IconData icon, String selectedStatus, {String? label}) {
+  PopupMenuItem<String> _buildPopupItem(String value, IconData icon, String selectedStatus,
+      {String? label}) {
     final isSelected = selectedStatus == value;
     final displayLabel = label ?? value;
     return PopupMenuItem<String>(
@@ -146,21 +148,21 @@ class HistoryHeader extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 20,
+            size: 20.w,
             color: isSelected ? AppColors.orangePrimary : const Color(0xFF64748B),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Text(
             displayLabel,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: isSelected ? AppColors.orangePrimary : const Color(0xFF1E293B),
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             ),
           ),
           if (isSelected) ...[
             const Spacer(),
-            const Icon(Icons.check, size: 18, color: AppColors.orangePrimary),
+            Icon(Icons.check, size: 18.w, color: AppColors.orangePrimary),
           ],
         ],
       ),
