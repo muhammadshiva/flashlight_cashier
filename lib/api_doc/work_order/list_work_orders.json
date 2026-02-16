@@ -1,0 +1,276 @@
+{
+  "_info": {
+    "endpoint": "GET /api/work-orders",
+    "method": "GET",
+    "base_url": "https://369820dfc74d.ngrok-free.app/api",
+    "full_url": "https://369820dfc74d.ngrok-free.app/api/work-orders",
+    "description": "Mengambil daftar semua work order beserta detail service dan product",
+    "authentication": "Bearer Token (required)",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Accept": "application/json"
+    }
+  },
+
+  "_response_success": {
+    "description": "Response ketika request berhasil (HTTP 200)",
+    "example": {
+      "success": true,
+      "message": "Work orders retrieved successfully",
+      "data": {
+        "workOrders": [
+          {
+            "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "workOrderCode": "WO-17302456001",
+            "customerId": "cust-1111-2222-3333-444455556666",
+            "vehicleDataId": "veh-aaaa-bbbb-cccc-ddddeeee0001",
+            "queueNumber": "1",
+            "estimatedTime": "30 menit",
+            "status": "created",
+            "paymentStatus": "pending",
+            "paymentMethod": null,
+            "paidAmount": 0,
+            "totalPrice": 55000,
+            "services": [
+              {
+                "id": "wos-1111-2222-3333-444455550001",
+                "workOrderId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "serviceId": "svc-aaaa-bbbb-cccc-ddddeeee0001",
+                "quantity": 1,
+                "priceAtOrder": 25000,
+                "subtotal": 25000,
+                "service": {
+                  "id": "svc-aaaa-bbbb-cccc-ddddeeee0001",
+                  "name": "Cuci Reguler",
+                  "price": 25000,
+                  "category": "washing"
+                }
+              },
+              {
+                "id": "wos-1111-2222-3333-444455550002",
+                "workOrderId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "serviceId": "svc-aaaa-bbbb-cccc-ddddeeee0002",
+                "quantity": 1,
+                "priceAtOrder": 30000,
+                "subtotal": 30000,
+                "service": {
+                  "id": "svc-aaaa-bbbb-cccc-ddddeeee0002",
+                  "name": "Wax Body",
+                  "price": 30000,
+                  "category": "detailing"
+                }
+              }
+            ],
+            "products": [
+              {
+                "id": "wop-1111-2222-3333-444455550001",
+                "workOrderId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "productId": "prod-aaaa-bbbb-cccc-ddddeeee0001",
+                "quantity": 2,
+                "priceAtOrder": 5000,
+                "subtotal": 10000,
+                "product": {
+                  "id": "prod-aaaa-bbbb-cccc-ddddeeee0001",
+                  "name": "Pengharum Mobil",
+                  "price": 5000,
+                  "stock": 50
+                }
+              }
+            ],
+            "createdAt": "2026-02-17T08:30:00.000Z",
+            "updatedAt": "2026-02-17T08:30:00.000Z",
+            "completedAt": null
+          },
+          {
+            "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+            "workOrderCode": "WO-17302456002",
+            "customerId": "cust-2222-3333-4444-555566667777",
+            "vehicleDataId": "veh-aaaa-bbbb-cccc-ddddeeee0002",
+            "queueNumber": "2",
+            "estimatedTime": "20 menit",
+            "status": "inProgress",
+            "paymentStatus": "pending",
+            "paymentMethod": null,
+            "paidAmount": 0,
+            "totalPrice": 18000,
+            "services": [
+              {
+                "id": "wos-2222-3333-4444-555566660001",
+                "workOrderId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+                "serviceId": "svc-aaaa-bbbb-cccc-ddddeeee0003",
+                "quantity": 1,
+                "priceAtOrder": 15000,
+                "subtotal": 15000,
+                "service": {
+                  "id": "svc-aaaa-bbbb-cccc-ddddeeee0003",
+                  "name": "Cuci Express",
+                  "price": 15000,
+                  "category": "washing"
+                }
+              }
+            ],
+            "products": [
+              {
+                "id": "wop-2222-3333-4444-555566660001",
+                "workOrderId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+                "productId": "prod-aaaa-bbbb-cccc-ddddeeee0002",
+                "quantity": 1,
+                "priceAtOrder": 3000,
+                "subtotal": 3000,
+                "product": {
+                  "id": "prod-aaaa-bbbb-cccc-ddddeeee0002",
+                  "name": "Lap Microfiber",
+                  "price": 3000,
+                  "stock": 100
+                }
+              }
+            ],
+            "createdAt": "2026-02-17T08:00:00.000Z",
+            "updatedAt": "2026-02-17T08:25:00.000Z",
+            "completedAt": null
+          },
+          {
+            "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+            "workOrderCode": "WO-17302456003",
+            "customerId": "cust-3333-4444-5555-666677778888",
+            "vehicleDataId": "veh-aaaa-bbbb-cccc-ddddeeee0003",
+            "queueNumber": "3",
+            "estimatedTime": "30 menit",
+            "status": "completed",
+            "paymentStatus": "paid",
+            "paymentMethod": "cash",
+            "paidAmount": 70000,
+            "totalPrice": 70000,
+            "services": [
+              {
+                "id": "wos-3333-4444-5555-666677770001",
+                "workOrderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+                "serviceId": "svc-aaaa-bbbb-cccc-ddddeeee0004",
+                "quantity": 1,
+                "priceAtOrder": 40000,
+                "subtotal": 40000,
+                "service": {
+                  "id": "svc-aaaa-bbbb-cccc-ddddeeee0004",
+                  "name": "Cuci Premium",
+                  "price": 40000,
+                  "category": "washing"
+                }
+              }
+            ],
+            "products": [
+              {
+                "id": "wop-3333-4444-5555-666677770001",
+                "workOrderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+                "productId": "prod-aaaa-bbbb-cccc-ddddeeee0003",
+                "quantity": 1,
+                "priceAtOrder": 8000,
+                "subtotal": 8000,
+                "product": {
+                  "id": "prod-aaaa-bbbb-cccc-ddddeeee0003",
+                  "name": "Semir Ban",
+                  "price": 8000,
+                  "stock": 30
+                }
+              },
+              {
+                "id": "wop-3333-4444-5555-666677770002",
+                "workOrderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+                "productId": "prod-aaaa-bbbb-cccc-ddddeeee0004",
+                "quantity": 3,
+                "priceAtOrder": 2000,
+                "subtotal": 6000,
+                "product": {
+                  "id": "prod-aaaa-bbbb-cccc-ddddeeee0004",
+                  "name": "Tissue Basah",
+                  "price": 2000,
+                  "stock": 200
+                }
+              }
+            ],
+            "createdAt": "2026-02-17T07:00:00.000Z",
+            "updatedAt": "2026-02-17T07:45:00.000Z",
+            "completedAt": "2026-02-17T07:45:00.000Z"
+          }
+        ],
+        "total": 3
+      },
+      "error_code": 0
+    }
+  },
+
+  "_response_error_unauthorized": {
+    "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+    "example": {
+      "success": false,
+      "message": "Unauthenticated.",
+      "data": null,
+      "error_code": 401
+    }
+  },
+
+  "_response_error_server": {
+    "description": "Response ketika terjadi error di server (HTTP 500)",
+    "example": {
+      "success": false,
+      "message": "Internal server error",
+      "data": null,
+      "error_code": 500
+    }
+  },
+
+  "_field_descriptions": {
+    "data.workOrders": "Array berisi daftar work order (List<WorkOrder>)",
+    "data.total": "Total jumlah work order (integer)",
+
+    "workOrder.id": "UUID unik work order (string)",
+    "workOrder.workOrderCode": "Kode work order, format: WO-{timestamp} (string)",
+    "workOrder.customerId": "UUID customer pemilik order (string)",
+    "workOrder.vehicleDataId": "UUID data kendaraan (string)",
+    "workOrder.queueNumber": "Nomor antrian (string)",
+    "workOrder.estimatedTime": "Estimasi waktu pengerjaan (string)",
+    "workOrder.status": "Status order: created | inProgress | completed | cancelled (string)",
+    "workOrder.paymentStatus": "Status pembayaran: pending | paid (string, nullable)",
+    "workOrder.paymentMethod": "Metode pembayaran: cash | transfer | qris (string, nullable)",
+    "workOrder.paidAmount": "Jumlah yang sudah dibayar dalam Rupiah (integer, default 0)",
+    "workOrder.totalPrice": "Total harga order dalam Rupiah (integer)",
+    "workOrder.services": "Array berisi daftar service dalam order (List<WorkOrderService>)",
+    "workOrder.products": "Array berisi daftar product dalam order (List<WorkOrderProduct>)",
+    "workOrder.createdAt": "Waktu pembuatan order (string ISO8601, nullable)",
+    "workOrder.updatedAt": "Waktu update terakhir (string ISO8601, nullable)",
+    "workOrder.completedAt": "Waktu selesai order (string ISO8601, nullable)",
+
+    "service.id": "UUID unik work order service (string)",
+    "service.workOrderId": "UUID work order induk (string)",
+    "service.serviceId": "UUID service catalog (string)",
+    "service.quantity": "Jumlah service (integer)",
+    "service.priceAtOrder": "Harga service saat order dibuat dalam Rupiah (integer)",
+    "service.subtotal": "Subtotal = quantity x priceAtOrder (integer)",
+    "service.service": "Detail service dari catalog (object, nullable - preloaded relation)",
+
+    "product.id": "UUID unik work order product (string)",
+    "product.workOrderId": "UUID work order induk (string)",
+    "product.productId": "UUID product catalog (string)",
+    "product.quantity": "Jumlah product (integer)",
+    "product.priceAtOrder": "Harga product saat order dibuat dalam Rupiah (integer)",
+    "product.subtotal": "Subtotal = quantity x priceAtOrder (integer)",
+    "product.product": "Detail product dari catalog (object, nullable - preloaded relation)"
+  },
+
+  "_notes": [
+    "Response dibungkus dalam envelope standar: { success, message, data, error_code }",
+    "Field 'data' berisi object dengan 'workOrders' (array) dan 'total' (integer)",
+    "Setiap work order memiliki nested 'services' dan 'products' array",
+    "Field 'service' dan 'product' di dalam nested array adalah preloaded relation (bisa null)",
+    "Status yang valid menurut API contract: created, inProgress, completed, cancelled",
+    "Semua harga dalam satuan Rupiah (integer, bukan double)",
+    "Field waktu (createdAt, updatedAt, completedAt) dalam format ISO8601",
+    "completedAt bernilai null jika order belum selesai"
+  ],
+
+  "_parsing_note": {
+    "description": "Catatan tentang parsing di data source (WorkOrderDataModel.fromJson)",
+    "contract_key": "data.workOrders",
+    "implementation_key": "data.data",
+    "issue": "WorkOrderDataModel.fromJson membaca json['data'] (bukan json['workOrders']) untuk list work order. Perlu dicek apakah API mengembalikan key 'workOrders' atau 'data' di dalam object data."
+  }
+}

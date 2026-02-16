@@ -1,0 +1,79 @@
+{
+  "_info": {
+    "endpoint": "GET /api/dashboard/stats",
+    "method": "GET",
+    "base_url": "https://369820dfc74d.ngrok-free.app/api",
+    "full_url": "https://369820dfc74d.ngrok-free.app/api/dashboard/stats",
+    "description": "Mengambil statistik dashboard (total order, revenue, dan status count)",
+    "authentication": "Bearer Token (required)",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Accept": "application/json"
+    }
+  },
+
+  "_response_success": {
+    "description": "Response ketika request berhasil (HTTP 200)",
+    "example": {
+      "success": true,
+      "message": "Dashboard stats retrieved successfully",
+      "data": {
+        "totalOrders": 45,
+        "totalRevenue": 12500000,
+        "pendingOrders": 5,
+        "inProgressOrders": 12,
+        "completedOrders": 25,
+        "cancelledOrders": 3,
+        "statusCounts": {
+          "created": 5,
+          "inProgress": 12,
+          "completed": 25,
+          "cancelled": 3
+        }
+      },
+      "error_code": 0
+    }
+  },
+
+  "_response_error_unauthorized": {
+    "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+    "example": {
+      "success": false,
+      "message": "Unauthenticated.",
+      "data": null,
+      "error_code": 401
+    }
+  },
+
+  "_response_error_server": {
+    "description": "Response ketika terjadi error di server (HTTP 500)",
+    "example": {
+      "success": false,
+      "message": "Internal server error",
+      "data": null,
+      "error_code": 500
+    }
+  },
+
+  "_field_descriptions": {
+    "totalOrders": "Total semua work order (integer)",
+    "totalRevenue": "Total pendapatan dalam Rupiah (integer)",
+    "pendingOrders": "Jumlah order dengan status pending/created (integer)",
+    "inProgressOrders": "Jumlah order yang sedang dikerjakan (integer)",
+    "completedOrders": "Jumlah order yang sudah selesai (integer)",
+    "cancelledOrders": "Jumlah order yang dibatalkan (integer)",
+    "statusCounts": "Breakdown jumlah order berdasarkan status (object)",
+    "statusCounts.created": "Jumlah order baru dibuat (integer)",
+    "statusCounts.inProgress": "Jumlah order sedang dikerjakan (integer)",
+    "statusCounts.completed": "Jumlah order selesai (integer)",
+    "statusCounts.cancelled": "Jumlah order dibatalkan (integer)"
+  },
+
+  "_notes": [
+    "Response dibungkus dalam envelope standar: { success, message, data, error_code }",
+    "Field 'data' berisi object dashboard stats jika success=true",
+    "Field 'data' bernilai null jika success=false",
+    "Semua nilai numerik bertipe integer (bukan double/float)",
+    "totalRevenue dalam satuan Rupiah (bukan sen/centavo)"
+  ]
+}
