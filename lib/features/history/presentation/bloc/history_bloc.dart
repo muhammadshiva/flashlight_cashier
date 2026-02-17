@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 
 import '../../../../core/utils/dummy_data.dart';
@@ -14,6 +16,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   final GetWorkOrders getWorkOrders;
   final GetCustomers getCustomers;
   final GetVehicles getVehicles;
+  Timer? _refreshTimer;
 
   HistoryBloc({
     required this.getWorkOrders,
@@ -26,10 +29,24 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     on<ChangePageEvent>(_onChangePage);
   }
 
+  @override
+  Future<void> close() {
+    _refreshTimer?.cancel();
+    return super.close();
+  }
+
   Future<void> _onLoadHistory(
       LoadHistory event, Emitter<HistoryState> emit) async {
     emit(HistoryLoading());
     await _loadHistoryData(emit);
+    _startRefreshTimer();
+  }
+
+  void _startRefreshTimer() {
+    _refreshTimer?.cancel();
+    _refreshTimer = Timer.periodic(const Duration(seconds: 60), (_) {
+      add(RefreshHistory());
+    });
   }
 
   Future<void> _onRefreshHistory(

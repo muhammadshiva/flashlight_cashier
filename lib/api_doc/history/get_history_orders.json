@@ -1,0 +1,543 @@
+{
+  "_info": {
+    "endpoint": "GET /api/work-orders/history",
+    "method": "GET",
+    "base_url": "https://369820dfc74d.ngrok-free.app/api",
+    "full_url": "https://369820dfc74d.ngrok-free.app/api/work-orders/history",
+    "description": "Mengambil daftar riwayat work order yang sudah selesai (completed/paid) beserta data customer dan kendaraan",
+    "authentication": "Bearer Token (required)",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Accept": "application/json"
+    }
+  },
+
+  "_query_parameters": {
+    "description": "Query parameter untuk filter, pencarian, dan paginasi",
+    "parameters": {
+      "status": {
+        "type": "string",
+        "required": false,
+        "enum": ["completed", "paid"],
+        "default": null,
+        "description": "Filter berdasarkan status order. Jika tidak diisi, menampilkan semua (completed + paid)"
+      },
+      "search": {
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Pencarian berdasarkan: workOrderCode, nama customer, nomor telepon customer, info kendaraan (brand, spesifikasi, plat nomor)"
+      },
+      "startDate": {
+        "type": "string (ISO8601)",
+        "required": false,
+        "default": null,
+        "description": "Filter tanggal mulai (format: 2026-02-17T00:00:00.000Z). Berdasarkan completedAt/updatedAt/createdAt"
+      },
+      "endDate": {
+        "type": "string (ISO8601)",
+        "required": false,
+        "default": null,
+        "description": "Filter tanggal akhir (format: 2026-02-17T23:59:59.000Z). Berdasarkan completedAt/updatedAt/createdAt"
+      },
+      "page": {
+        "type": "integer",
+        "required": false,
+        "default": 1,
+        "description": "Nomor halaman untuk paginasi (dimulai dari 1)"
+      },
+      "per_page": {
+        "type": "integer",
+        "required": false,
+        "default": 10,
+        "description": "Jumlah item per halaman (sesuai MetaModel.perPage)"
+      }
+    },
+    "example_urls": [
+      "/api/work-orders/history",
+      "/api/work-orders/history?status=paid&page=1&per_page=10",
+      "/api/work-orders/history?search=Ahmad&startDate=2026-02-01T00:00:00.000Z&endDate=2026-02-17T23:59:59.000Z",
+      "/api/work-orders/history?status=completed&search=WO-2026&page=2&limit=10"
+    ]
+  },
+
+  "_response_success": {
+    "description": "Response ketika request berhasil (HTTP 200). Data berisi work orders beserta relasi customer dan vehicle",
+    "example": {
+      "success": true,
+      "message": "History orders retrieved successfully",
+      "data": [
+        {
+          "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+          "workOrderCode": "WO-20260217003",
+          "customerId": "cust-3333-4444-5555-666677778888",
+          "vehicleDataId": "veh-aaaa-bbbb-cccc-ddddeeee0003",
+          "queueNumber": "3",
+          "estimatedTime": "30 menit",
+          "status": "paid",
+          "paymentStatus": "paid",
+          "paymentMethod": "cash",
+          "paidAmount": 77700,
+          "totalPrice": 70000,
+          "services": [
+            {
+              "id": "wos-3333-4444-5555-666677770001",
+              "workOrderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+              "serviceId": "svc-aaaa-bbbb-cccc-ddddeeee0004",
+              "quantity": 1,
+              "priceAtOrder": 40000,
+              "subtotal": 40000,
+              "service": {
+                "id": "svc-aaaa-bbbb-cccc-ddddeeee0004",
+                "name": "Cuci Premium",
+                "price": 40000,
+                "category": "washing"
+              }
+            }
+          ],
+          "products": [
+            {
+              "id": "wop-3333-4444-5555-666677770001",
+              "workOrderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+              "productId": "prod-aaaa-bbbb-cccc-ddddeeee0003",
+              "quantity": 1,
+              "priceAtOrder": 8000,
+              "subtotal": 8000,
+              "product": {
+                "id": "prod-aaaa-bbbb-cccc-ddddeeee0003",
+                "name": "Semir Ban",
+                "price": 8000,
+                "stock": 30
+              }
+            },
+            {
+              "id": "wop-3333-4444-5555-666677770002",
+              "workOrderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+              "productId": "prod-aaaa-bbbb-cccc-ddddeeee0004",
+              "quantity": 3,
+              "priceAtOrder": 2000,
+              "subtotal": 6000,
+              "product": {
+                "id": "prod-aaaa-bbbb-cccc-ddddeeee0004",
+                "name": "Tissue Basah",
+                "price": 2000,
+                "stock": 200
+              }
+            }
+          ],
+          "customer": {
+            "id": "cust-3333-4444-5555-666677778888",
+            "name": "Budi Santoso",
+            "phoneNumber": "081234567892",
+            "email": "budi.santoso@email.com",
+            "membership": {
+              "id": "mbr-001",
+              "name": "Silver",
+              "discount": 5
+            }
+          },
+          "vehicle": {
+            "id": "veh-aaaa-bbbb-cccc-ddddeeee0003",
+            "customerId": "cust-3333-4444-5555-666677778888",
+            "licensePlate": "B 9012 DEF",
+            "vehicleBrand": "Toyota",
+            "vehicleColor": "Putih",
+            "vehicleCategory": "Mobil",
+            "vehicleSpecs": "1.3L, Manual, 7 Seater"
+          },
+          "createdAt": "2026-02-17T07:00:00.000Z",
+          "updatedAt": "2026-02-17T07:45:00.000Z",
+          "completedAt": "2026-02-17T07:45:00.000Z"
+        },
+        {
+          "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
+          "workOrderCode": "WO-20260217005",
+          "customerId": "cust-5555-6666-7777-888899990000",
+          "vehicleDataId": "veh-aaaa-bbbb-cccc-ddddeeee0005",
+          "queueNumber": "5",
+          "estimatedTime": "30 menit",
+          "status": "completed",
+          "paymentStatus": "pending",
+          "paymentMethod": null,
+          "paidAmount": 0,
+          "totalPrice": 55000,
+          "services": [
+            {
+              "id": "wos-5555-6666-7777-888899990001",
+              "workOrderId": "d4e5f6a7-b8c9-0123-defa-234567890123",
+              "serviceId": "svc-aaaa-bbbb-cccc-ddddeeee0002",
+              "quantity": 1,
+              "priceAtOrder": 25000,
+              "subtotal": 25000,
+              "service": {
+                "id": "svc-aaaa-bbbb-cccc-ddddeeee0002",
+                "name": "Cuci Reguler",
+                "price": 25000,
+                "category": "washing"
+              }
+            },
+            {
+              "id": "wos-5555-6666-7777-888899990002",
+              "workOrderId": "d4e5f6a7-b8c9-0123-defa-234567890123",
+              "serviceId": "svc-aaaa-bbbb-cccc-ddddeeee0003",
+              "quantity": 1,
+              "priceAtOrder": 30000,
+              "subtotal": 30000,
+              "service": {
+                "id": "svc-aaaa-bbbb-cccc-ddddeeee0003",
+                "name": "Wax Body",
+                "price": 30000,
+                "category": "detailing"
+              }
+            }
+          ],
+          "products": [],
+          "customer": {
+            "id": "cust-5555-6666-7777-888899990000",
+            "name": "Agus Salim",
+            "phoneNumber": "081234567894",
+            "email": "agus.salim@email.com",
+            "membership": null
+          },
+          "vehicle": {
+            "id": "veh-aaaa-bbbb-cccc-ddddeeee0005",
+            "customerId": "cust-5555-6666-7777-888899990000",
+            "licensePlate": "B 7890 JKL",
+            "vehicleBrand": "Mitsubishi",
+            "vehicleColor": "Silver",
+            "vehicleCategory": "Mobil",
+            "vehicleSpecs": "1.5L, Automatic, 7 Seater"
+          },
+          "createdAt": "2026-02-17T06:30:00.000Z",
+          "updatedAt": "2026-02-17T07:00:00.000Z",
+          "completedAt": "2026-02-17T07:00:00.000Z"
+        },
+        {
+          "id": "e5f6a7b8-c9d0-1234-efab-345678901234",
+          "workOrderCode": "WO-20260217006",
+          "customerId": "cust-6666-7777-8888-999900001111",
+          "vehicleDataId": "veh-aaaa-bbbb-cccc-ddddeeee0006",
+          "queueNumber": "6",
+          "estimatedTime": "20 menit",
+          "status": "paid",
+          "paymentStatus": "paid",
+          "paymentMethod": "qris",
+          "paidAmount": 19980,
+          "totalPrice": 18000,
+          "services": [
+            {
+              "id": "wos-6666-7777-8888-999900001001",
+              "workOrderId": "e5f6a7b8-c9d0-1234-efab-345678901234",
+              "serviceId": "svc-aaaa-bbbb-cccc-ddddeeee0001",
+              "quantity": 1,
+              "priceAtOrder": 15000,
+              "subtotal": 15000,
+              "service": {
+                "id": "svc-aaaa-bbbb-cccc-ddddeeee0001",
+                "name": "Cuci Express",
+                "price": 15000,
+                "category": "washing"
+              }
+            }
+          ],
+          "products": [
+            {
+              "id": "wop-6666-7777-8888-999900001001",
+              "workOrderId": "e5f6a7b8-c9d0-1234-efab-345678901234",
+              "productId": "prod-aaaa-bbbb-cccc-ddddeeee0003",
+              "quantity": 1,
+              "priceAtOrder": 3000,
+              "subtotal": 3000,
+              "product": {
+                "id": "prod-aaaa-bbbb-cccc-ddddeeee0003",
+                "name": "Lap Microfiber",
+                "price": 3000,
+                "stock": 100
+              }
+            }
+          ],
+          "customer": {
+            "id": "cust-6666-7777-8888-999900001111",
+            "name": "Maya Sari",
+            "phoneNumber": "081234567895",
+            "email": "maya.sari@email.com",
+            "membership": null
+          },
+          "vehicle": {
+            "id": "veh-aaaa-bbbb-cccc-ddddeeee0006",
+            "customerId": "cust-6666-7777-8888-999900001111",
+            "licensePlate": "B 2345 MNO",
+            "vehicleBrand": "Suzuki",
+            "vehicleColor": "Biru",
+            "vehicleCategory": "Mobil",
+            "vehicleSpecs": "1.5L, Automatic, 5 Seater"
+          },
+          "createdAt": "2026-02-17T05:00:00.000Z",
+          "updatedAt": "2026-02-17T05:30:00.000Z",
+          "completedAt": "2026-02-17T05:30:00.000Z"
+        }
+      ],
+      "meta": {
+        "page": 1,
+        "per_page": 10,
+        "last_page": 2,
+        "total": 15,
+        "first_item": 1,
+        "last_item": 10
+      },
+      "error_code": 0
+    }
+  },
+
+  "_response_success_with_filter": {
+    "description": "Response ketika request dengan filter status=paid dan search berhasil (HTTP 200)",
+    "request_url": "/api/work-orders/history?status=paid&search=Budi&page=1&per_page=10",
+    "example": {
+      "success": true,
+      "message": "History orders retrieved successfully",
+      "data": [
+        {
+          "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+          "workOrderCode": "WO-20260217003",
+          "customerId": "cust-3333-4444-5555-666677778888",
+          "vehicleDataId": "veh-aaaa-bbbb-cccc-ddddeeee0003",
+          "queueNumber": "3",
+          "estimatedTime": "30 menit",
+          "status": "paid",
+          "paymentStatus": "paid",
+          "paymentMethod": "cash",
+          "paidAmount": 77700,
+          "totalPrice": 70000,
+          "services": [],
+          "products": [],
+          "customer": {
+            "id": "cust-3333-4444-5555-666677778888",
+            "name": "Budi Santoso",
+            "phoneNumber": "081234567892",
+            "email": "budi.santoso@email.com",
+            "membership": null
+          },
+          "vehicle": {
+            "id": "veh-aaaa-bbbb-cccc-ddddeeee0003",
+            "customerId": "cust-3333-4444-5555-666677778888",
+            "licensePlate": "B 9012 DEF",
+            "vehicleBrand": "Toyota",
+            "vehicleColor": "Putih",
+            "vehicleCategory": "Mobil",
+            "vehicleSpecs": "1.3L, Manual, 7 Seater"
+          },
+          "createdAt": "2026-02-17T07:00:00.000Z",
+          "updatedAt": "2026-02-17T07:45:00.000Z",
+          "completedAt": "2026-02-17T07:45:00.000Z"
+        }
+      ],
+      "meta": {
+        "page": 1,
+        "per_page": 10,
+        "last_page": 1,
+        "total": 1,
+        "first_item": 1,
+        "last_item": 1
+      },
+      "error_code": 0
+    }
+  },
+
+  "_response_success_empty": {
+    "description": "Response ketika tidak ada data history yang cocok dengan filter (HTTP 200)",
+    "example": {
+      "success": true,
+      "message": "History orders retrieved successfully",
+      "data": [],
+      "meta": {
+        "page": 1,
+        "per_page": 10,
+        "last_page": 0,
+        "total": 0,
+        "first_item": null,
+        "last_item": null
+      },
+      "error_code": 0
+    }
+  },
+
+  "_response_error_unauthorized": {
+    "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+    "example": {
+      "success": false,
+      "message": "Unauthenticated.",
+      "data": null,
+      "error_code": 401
+    }
+  },
+
+  "_response_error_server": {
+    "description": "Response ketika terjadi error di server (HTTP 500)",
+    "example": {
+      "success": false,
+      "message": "Internal server error",
+      "data": null,
+      "error_code": 500
+    }
+  },
+
+  "_field_descriptions": {
+    "_data": {
+      "data": "Array berisi daftar history work order (List<WorkOrder>). 1 level dengan 'meta' di dalam response envelope"
+    },
+
+    "_meta (MetaModel — lib/shared/models/meta_model.dart)": {
+      "meta": "Object pagination metadata, 1 level dengan 'data' di dalam response envelope",
+      "meta.page": "Halaman saat ini (integer, nullable, dimulai dari 1)",
+      "meta.per_page": "Jumlah item per halaman (integer, nullable, default 10)",
+      "meta.last_page": "Halaman terakhir yang tersedia (integer, nullable)",
+      "meta.total": "Total jumlah seluruh item yang cocok dengan filter (integer, nullable)",
+      "meta.first_item": "Index item pertama di halaman ini (integer, nullable — 1-based, null jika kosong)",
+      "meta.last_item": "Index item terakhir di halaman ini (integer, nullable — 1-based, null jika kosong)"
+    },
+
+    "_work_order": {
+      "workOrder.id": "UUID unik work order (string)",
+      "workOrder.workOrderCode": "Kode work order, format: WO-{YYYYMMDD}{sequence} (string)",
+      "workOrder.customerId": "UUID customer pemilik order (string)",
+      "workOrder.vehicleDataId": "UUID data kendaraan (string)",
+      "workOrder.queueNumber": "Nomor antrian (string)",
+      "workOrder.estimatedTime": "Estimasi waktu pengerjaan, contoh: '30 menit' (string)",
+      "workOrder.status": "Status order, untuk history hanya: completed | paid (string)",
+      "workOrder.paymentStatus": "Status pembayaran: pending | paid (string, nullable)",
+      "workOrder.paymentMethod": "Metode pembayaran: cash | card | qris (string, nullable — null jika belum dibayar)",
+      "workOrder.paidAmount": "Jumlah yang sudah dibayar dalam Rupiah, termasuk tax (integer, default 0)",
+      "workOrder.totalPrice": "Total harga order dalam Rupiah sebelum tax (integer)",
+      "workOrder.services": "Array berisi daftar service dalam order (List<WorkOrderService>)",
+      "workOrder.products": "Array berisi daftar product dalam order (List<WorkOrderProduct>)",
+      "workOrder.customer": "Relasi customer pemilik order (object, preloaded)",
+      "workOrder.vehicle": "Relasi data kendaraan (object, preloaded)",
+      "workOrder.createdAt": "Waktu pembuatan order (string ISO8601, nullable)",
+      "workOrder.updatedAt": "Waktu update terakhir (string ISO8601, nullable)",
+      "workOrder.completedAt": "Waktu selesai order (string ISO8601, nullable — selalu terisi untuk history)"
+    },
+
+    "_work_order_service": {
+      "service.id": "UUID unik work order service (string)",
+      "service.workOrderId": "UUID work order induk (string)",
+      "service.serviceId": "UUID service catalog (string)",
+      "service.quantity": "Jumlah service (integer)",
+      "service.priceAtOrder": "Harga service saat order dibuat dalam Rupiah (integer)",
+      "service.subtotal": "Subtotal = quantity x priceAtOrder dalam Rupiah (integer)",
+      "service.service": "Detail service dari catalog (object, nullable — preloaded relation)"
+    },
+
+    "_work_order_product": {
+      "product.id": "UUID unik work order product (string)",
+      "product.workOrderId": "UUID work order induk (string)",
+      "product.productId": "UUID product catalog (string)",
+      "product.quantity": "Jumlah product (integer)",
+      "product.priceAtOrder": "Harga product saat order dibuat dalam Rupiah (integer)",
+      "product.subtotal": "Subtotal = quantity x priceAtOrder dalam Rupiah (integer)",
+      "product.product": "Detail product dari catalog (object, nullable — preloaded relation)"
+    },
+
+    "_customer": {
+      "customer.id": "UUID unik customer (string)",
+      "customer.name": "Nama customer (string)",
+      "customer.phoneNumber": "Nomor telepon customer (string)",
+      "customer.email": "Email customer (string)",
+      "customer.membership": "Data membership customer (object, nullable — null jika bukan member)"
+    },
+
+    "_vehicle": {
+      "vehicle.id": "UUID unik kendaraan (string)",
+      "vehicle.customerId": "UUID customer pemilik kendaraan (string, nullable)",
+      "vehicle.licensePlate": "Nomor plat kendaraan (string)",
+      "vehicle.vehicleBrand": "Merek kendaraan, contoh: Toyota, Honda (string, nullable)",
+      "vehicle.vehicleColor": "Warna kendaraan (string, nullable)",
+      "vehicle.vehicleCategory": "Kategori kendaraan: Motor | Mobil (string, nullable)",
+      "vehicle.vehicleSpecs": "Spesifikasi kendaraan, contoh: '1.3L, Manual, 7 Seater' (string, nullable)"
+    },
+
+    "_service_catalog": {
+      "service.service.id": "UUID service di catalog (string)",
+      "service.service.name": "Nama service, contoh: Cuci Premium (string)",
+      "service.service.price": "Harga service saat ini dalam Rupiah (integer)",
+      "service.service.category": "Kategori service: washing | detailing (string)"
+    },
+
+    "_product_catalog": {
+      "product.product.id": "UUID product di catalog (string)",
+      "product.product.name": "Nama product, contoh: Semir Ban (string)",
+      "product.product.price": "Harga product saat ini dalam Rupiah (integer)",
+      "product.product.stock": "Stok product saat ini (integer)"
+    },
+
+    "_membership": {
+      "customer.membership.id": "UUID membership (string)",
+      "customer.membership.name": "Nama tier membership: Silver | Gold | Premium (string)",
+      "customer.membership.discount": "Persentase diskon membership (integer, contoh: 5 = 5%)"
+    }
+  },
+
+  "_status_counts": {
+    "description": "Frontend menghitung status counts dari data history untuk ditampilkan di HistoryStats widget",
+    "example": {
+      "Semua": 15,
+      "completed": 5,
+      "paid": 10
+    },
+    "note": "Status counts bisa dihitung di frontend dari total data, atau backend bisa menyediakan endpoint terpisah / field tambahan"
+  },
+
+  "_frontend_mapping": {
+    "description": "Mapping dari response API ke BLoC state (HistoryLoaded) dan MetaModel",
+    "model_file": "lib/shared/models/meta_model.dart",
+    "mapping": {
+      "data[]": "historyOrders / filteredOrders / displayedOrders (List<WorkOrder>)",
+      "data[].customer": "customers (Map<String, Customer>) — di-map berdasarkan customer.id",
+      "data[].vehicle": "vehicles (Map<String, Vehicle>) — di-map berdasarkan vehicle.id",
+      "meta.total": "totalItems (int) → MetaModel.total",
+      "meta.page": "currentPage (int) → MetaModel.page",
+      "meta.per_page": "itemsPerPage (int) → MetaModel.perPage",
+      "meta.last_page": "untuk validasi pagination di frontend → MetaModel.lastPage",
+      "meta.first_item": "index item pertama di halaman → MetaModel.firstItem",
+      "meta.last_item": "index item terakhir di halaman → MetaModel.lastItem",
+      "query.status": "selectedStatus (String)",
+      "query.search": "searchQuery (String)",
+      "query.startDate": "startDate (DateTime?)",
+      "query.endDate": "endDate (DateTime?)"
+    }
+  },
+
+  "_current_implementation": {
+    "description": "Status implementasi saat ini di frontend",
+    "status": "MENGGUNAKAN DUMMY DATA",
+    "details": [
+      "HistoryBloc saat ini menggunakan DummyData.getWorkOrders() untuk data work order",
+      "Customer dan Vehicle data juga dari DummyData.customers dan DummyData.vehicles",
+      "Filter (status, search, date range) dilakukan di frontend",
+      "Paginasi dilakukan di frontend (client-side pagination)",
+      "Sorting berdasarkan completedAt → updatedAt → createdAt (newest first)"
+    ],
+    "migration_plan": [
+      "1. Buat endpoint GET /api/work-orders/history di backend dengan query params",
+      "2. Tambah ApiConst.historyOrders di api_constans.dart",
+      "3. Buat HistoryRemoteDataSource atau extend WorkOrderRemoteDataSource",
+      "4. Response harus include relasi customer dan vehicle (preloaded/eager loading)",
+      "5. Pindahkan filter dan paginasi ke backend (server-side)",
+      "6. Update HistoryBloc untuk memanggil API instead of DummyData"
+    ]
+  },
+
+  "_notes": [
+    "Response dibungkus dalam envelope standar: { success, message, data, meta, error_code }",
+    "Field 'data' langsung berisi array work order (bukan nested object)",
+    "Field 'meta' berisi pagination metadata dari MetaModel (lib/shared/models/meta_model.dart), 1 level dengan 'data'",
+    "Setiap work order memiliki nested 'services', 'products', 'customer', dan 'vehicle'",
+    "History hanya menampilkan order dengan status 'completed' atau 'paid'",
+    "Data diurutkan berdasarkan tanggal terbaru (completedAt desc)",
+    "Semua harga dalam satuan Rupiah (integer, bukan double)",
+    "Field waktu (createdAt, updatedAt, completedAt) dalam format ISO8601",
+    "Customer dan vehicle di-preload sebagai relasi untuk menghindari N+1 query",
+    "Pencarian bersifat case-insensitive dan mencakup: workOrderCode, customer.name, customer.phoneNumber, vehicle.vehicleBrand, vehicle.vehicleSpecs, vehicle.licensePlate",
+    "Paginasi default: page=1, per_page=10",
+    "Alternative endpoint: bisa juga menggunakan GET /api/work-orders?status=completed,paid dengan query param tambahan"
+  ]
+}
