@@ -44,47 +44,36 @@ class HistoryStats extends StatelessWidget {
   Widget _buildStatCard(String title, String value, IconData icon, Color color, Color bgColor) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.all(24.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(12.r),
           border: Border.all(color: AppColors.slate200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10.r,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(12.w),
+              padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
                 color: bgColor,
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(8.r),
               ),
-              child: Icon(icon, color: color, size: 24.w),
+              child: Icon(icon, color: color, size: 18.w),
             ),
-            SizedBox(width: 16.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyleConst.poppinsMedium14.copyWith(
-                    color: AppColors.slate500,
-                  ),
-                ),
-                SizedBox(height: 4.w),
-                Text(
-                  value,
-                  style: TextStyleConst.poppinsBold24.copyWith(
-                    color: AppColors.slate800,
-                  ),
-                ),
-              ],
+            SizedBox(width: 12.w),
+            Text(
+              title,
+              style: TextStyleConst.poppinsMedium14.copyWith(
+                color: AppColors.slate800,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              value,
+              style: TextStyleConst.poppinsBold18.copyWith(
+                color: AppColors.slate800,
+              ),
             ),
           ],
         ),
