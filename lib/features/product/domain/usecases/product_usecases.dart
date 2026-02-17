@@ -15,6 +15,7 @@ class GetProducts implements UseCase<PaginatedResponse<Product>, GetProductsPara
   Future<Either<Failure, PaginatedResponse<Product>>> call(GetProductsParams params) async {
     return await repository.getProducts(
       type: params.type,
+      search: params.search,
       pagination: params.pagination,
       isProtype: params.isProtype,
     );
@@ -23,13 +24,14 @@ class GetProducts implements UseCase<PaginatedResponse<Product>, GetProductsPara
 
 class GetProductsParams extends Equatable {
   final String? type;
+  final String? search;
   final PaginationParams? pagination;
   final bool isProtype;
 
-  const GetProductsParams({this.type, this.pagination, this.isProtype = false});
+  const GetProductsParams({this.type, this.search, this.pagination, this.isProtype = false});
 
   @override
-  List<Object?> get props => [type, pagination, isProtype];
+  List<Object?> get props => [type, search, pagination, isProtype];
 }
 
 class CreateProduct implements UseCase<Product, Product> {

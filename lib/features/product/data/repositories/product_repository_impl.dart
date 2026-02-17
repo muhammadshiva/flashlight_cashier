@@ -16,6 +16,7 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<Either<Failure, PaginatedResponse<Product>>> getProducts({
     String? type,
+    String? search,
     PaginationParams? pagination,
     bool isProtype = false,
   }) async {
@@ -34,6 +35,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
       final result = await remoteDataSource.getProducts(
         type: type,
+        search: search,
         pagination: pagination,
       );
       return Right(result.toEntity((model) => model.toEntity()));

@@ -128,7 +128,7 @@ class _StatsAndFilterSection extends StatelessWidget {
                         context.read<ProductBloc>().add(SearchProductsEvent(value));
                       },
                       decoration: InputDecoration(
-                        hintText: 'Search product name, sku...',
+                        hintText: 'Search product name, sku... (min 3 chars)',
                         border: InputBorder.none,
                         isDense: true,
                         hintStyle: TextStyle(color: AppColors.slate400, fontSize: 14.sp),

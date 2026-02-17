@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -69,34 +71,59 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
     });
 
-    on<SearchProductsEvent>((event, emit) {
-      if (state is ProductLoaded) {
-        final currentState = state as ProductLoaded;
-        final source = currentState.sourceProducts;
+    on<SearchProductsEvent>((event, emit) async {
+      final query = event.query.trim();
 
-        final query = event.query.toLowerCase();
-        final filtered = query.isEmpty
-            ? source
-            : source
-                .where((p) =>
-                    p.name.toLowerCase().contains(query) || p.id.toLowerCase().contains(query))
-                .toList();
+      // Below minimum characters → reload all products
+      if (query.length < _minSearchLength) {
+        emit(ProductLoading());
+        final result = await getProducts(const GetProductsParams(isProtype: true));
+        result.fold(
+          (failure) => emit(ProductError(failure.message)),
+          (paginatedProducts) {
+            final productList = paginatedProducts.data;
+            const itemsPerPage = 10;
+            final totalItems = productList.length;
+            final firstPageProducts = productList.take(itemsPerPage).toList();
 
-        const itemsPerPage = 10;
-        final totalItems = filtered.length;
-        // Reset to page 1
-        final paginatedProducts = filtered.take(itemsPerPage).toList();
-
-        emit(ProductLoaded(
-          products: paginatedProducts,
-          allProducts: filtered, // Working set is now filtered
-          sourceProducts: source, // Keep master source
-          currentPage: 1,
-          totalItems: totalItems,
-          itemsPerPage: itemsPerPage,
-        ));
+            emit(ProductLoaded(
+              products: firstPageProducts,
+              allProducts: productList,
+              sourceProducts: productList,
+              currentPage: 1,
+              totalItems: totalItems,
+              itemsPerPage: itemsPerPage,
+            ));
+          },
+        );
+        return;
       }
-    });
+
+      // Meets minimum → search via API
+      emit(ProductLoading());
+      final result = await getProducts(GetProductsParams(
+        search: query,
+        isProtype: true,
+      ));
+      result.fold(
+        (failure) => emit(ProductError(failure.message)),
+        (paginatedProducts) {
+          final productList = paginatedProducts.data;
+          const itemsPerPage = 10;
+          final totalItems = productList.length;
+          final firstPageProducts = productList.take(itemsPerPage).toList();
+
+          emit(ProductLoaded(
+            products: firstPageProducts,
+            allProducts: productList,
+            sourceProducts: productList,
+            currentPage: 1,
+            totalItems: totalItems,
+            itemsPerPage: itemsPerPage,
+          ));
+        },
+      );
+    }, transformer: _debounce(const Duration(seconds: 1)));
 
     on<CreateProductEvent>((event, emit) async {
       emit(ProductLoading());
@@ -133,5 +160,30 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         },
       );
     });
+  }
+
+  /// Minimum characters required to trigger API search
+  static const int _minSearchLength = 3;
+
+  /// Pure-Dart debounce EventTransformer.
+  /// Debounces the event stream so only the last event after [duration] is processed.
+  EventTransformer<E> _debounce<E>(Duration duration) {
+    return (events, mapper) {
+      final controller = StreamController<E>();
+      Timer? timer;
+
+      events.listen(
+        (event) {
+          timer?.cancel();
+          timer = Timer(duration, () => controller.add(event));
+        },
+        onDone: () {
+          timer?.cancel();
+          controller.close();
+        },
+      );
+
+      return controller.stream.asyncExpand(mapper);
+    };
   }
 }

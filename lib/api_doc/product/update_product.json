@@ -1,0 +1,139 @@
+{
+  "_info": {
+    "endpoint": "PUT /api/products/:id",
+    "method": "PUT",
+    "base_url": "https://369820dfc74d.ngrok-free.app/api",
+    "full_url": "https://369820dfc74d.ngrok-free.app/api/products/{productId}",
+    "description": "Mengupdate data product yang sudah ada",
+    "authentication": "Bearer Token (required)",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  },
+
+  "_path_parameters": {
+    "productId": {
+      "type": "string (UUID)",
+      "required": true,
+      "description": "ID unik product yang akan diupdate",
+      "example": "prod-a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    }
+  },
+
+  "_request_body": {
+    "description": "Data yang dikirim saat mengupdate product",
+    "content_type": "application/json",
+    "fields": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "description": "Nama product"
+      },
+      "description": {
+        "type": "string",
+        "required": false,
+        "description": "Deskripsi product"
+      },
+      "price": {
+        "type": "integer",
+        "required": true,
+        "description": "Harga product dalam Rupiah"
+      },
+      "imageUrl": {
+        "type": "string",
+        "required": false,
+        "description": "URL gambar product"
+      },
+      "type": {
+        "type": "string",
+        "required": true,
+        "enum": ["coffee", "tea", "water", "snack", "food", "service"],
+        "description": "Kategori product"
+      },
+      "stock": {
+        "type": "integer",
+        "required": true,
+        "description": "Jumlah stok"
+      }
+    },
+    "example": {
+      "name": "Cappuccino Large",
+      "description": "Espresso double shot dengan susu steamed dan foam lembut",
+      "price": 35000,
+      "imageUrl": "https://example.com/images/cappuccino-large.jpg",
+      "type": "coffee",
+      "stock": 40
+    }
+  },
+
+  "_response_success": {
+    "description": "Response ketika product berhasil diupdate (HTTP 200)",
+    "example": {
+      "success": true,
+      "message": "Product updated successfully",
+      "data": {
+        "id": "prod-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "name": "Cappuccino Large",
+        "description": "Espresso double shot dengan susu steamed dan foam lembut",
+        "price": 35000,
+        "imageUrl": "https://example.com/images/cappuccino-large.jpg",
+        "type": "coffee",
+        "stock": 40,
+        "isAvailable": true
+      },
+      "error_code": 0
+    }
+  },
+
+  "_response_error_not_found": {
+    "description": "Response ketika product tidak ditemukan (HTTP 404)",
+    "example": {
+      "success": false,
+      "message": "Product not found",
+      "data": null,
+      "error_code": 404
+    }
+  },
+
+  "_response_error_validation": {
+    "description": "Response ketika validasi gagal (HTTP 422)",
+    "example": {
+      "success": false,
+      "message": "The name field is required.",
+      "data": null,
+      "error_code": 422
+    }
+  },
+
+  "_response_error_unauthorized": {
+    "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+    "example": {
+      "success": false,
+      "message": "Unauthenticated.",
+      "data": null,
+      "error_code": 401
+    }
+  },
+
+  "_response_error_server": {
+    "description": "Response ketika terjadi error di server (HTTP 500)",
+    "example": {
+      "success": false,
+      "message": "Internal server error",
+      "data": null,
+      "error_code": 500
+    }
+  },
+
+  "_notes": [
+    "Response dibungkus dalam envelope standar: { success, message, data, error_code }",
+    "Field 'data' berisi single product object yang sudah diupdate",
+    "Endpoint: PUT /api/products/{productId} — ID dikirim via URL path",
+    "Request body sama dengan create, tanpa field isAvailable",
+    "Semua harga dalam satuan Rupiah (integer, bukan double)",
+    "Datasource URL: '${ApiConst.products}/${product.id}'",
+    "Datasource parsing: membaca result['data'] sebagai ProductModel, fallback ke result jika ada key 'id'"
+  ]
+}

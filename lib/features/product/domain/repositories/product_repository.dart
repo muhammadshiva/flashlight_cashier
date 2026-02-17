@@ -8,6 +8,7 @@ import '../entities/product.dart';
 abstract class ProductRepository {
   Future<Either<Failure, PaginatedResponse<Product>>> getProducts({
     String? type,
+    String? search,
     PaginationParams? pagination,
     bool isProtype = false,
   });

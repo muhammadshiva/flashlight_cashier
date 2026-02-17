@@ -1,0 +1,83 @@
+{
+  "_info": {
+    "endpoint": "DELETE /api/products/:id",
+    "method": "DELETE",
+    "base_url": "https://369820dfc74d.ngrok-free.app/api",
+    "full_url": "https://369820dfc74d.ngrok-free.app/api/products/{productId}",
+    "description": "Menghapus product berdasarkan ID",
+    "authentication": "Bearer Token (required)",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Accept": "application/json"
+    }
+  },
+
+  "_path_parameters": {
+    "productId": {
+      "type": "string (UUID)",
+      "required": true,
+      "description": "ID unik product yang akan dihapus",
+      "example": "prod-a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    }
+  },
+
+  "_response_success": {
+    "description": "Response ketika product berhasil dihapus (HTTP 200)",
+    "example": {
+      "success": true,
+      "message": "Product deleted successfully",
+      "data": null,
+      "error_code": 0
+    }
+  },
+
+  "_response_error_not_found": {
+    "description": "Response ketika product tidak ditemukan (HTTP 404)",
+    "example": {
+      "success": false,
+      "message": "Product not found",
+      "data": null,
+      "error_code": 404
+    }
+  },
+
+  "_response_error_unauthorized": {
+    "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+    "example": {
+      "success": false,
+      "message": "Unauthenticated.",
+      "data": null,
+      "error_code": 401
+    }
+  },
+
+  "_response_error_conflict": {
+    "description": "Response ketika product masih digunakan di work order aktif (HTTP 409)",
+    "example": {
+      "success": false,
+      "message": "Cannot delete product: still referenced by active work orders",
+      "data": null,
+      "error_code": 409
+    }
+  },
+
+  "_response_error_server": {
+    "description": "Response ketika terjadi error di server (HTTP 500)",
+    "example": {
+      "success": false,
+      "message": "Internal server error",
+      "data": null,
+      "error_code": 500
+    }
+  },
+
+  "_notes": [
+    "Response dibungkus dalam envelope standar: { success, message, data, error_code }",
+    "Field 'data' bernilai null pada response delete",
+    "Endpoint: DELETE /api/products/{productId} — ID dikirim via URL path",
+    "Tidak ada request body untuk delete",
+    "Datasource URL: '${ApiConst.products}/$id'",
+    "Datasource hanya mengecek result['success'] == true, tidak mem-parse data",
+    "Backend sebaiknya cek referensi ke work_order_products sebelum menghapus"
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "_info": {
+    "endpoint": "POST /api/products",
+    "method": "POST",
+    "base_url": "https://369820dfc74d.ngrok-free.app/api",
+    "full_url": "https://369820dfc74d.ngrok-free.app/api/products",
+    "description": "Membuat product baru",
+    "authentication": "Bearer Token (required)",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  },
+
+  "_request_body": {
+    "description": "Data yang dikirim saat membuat product baru",
+    "content_type": "application/json",
+    "fields": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "description": "Nama product"
+      },
+      "description": {
+        "type": "string",
+        "required": false,
+        "description": "Deskripsi product"
+      },
+      "price": {
+        "type": "integer",
+        "required": true,
+        "description": "Harga product dalam Rupiah"
+      },
+      "imageUrl": {
+        "type": "string",
+        "required": false,
+        "description": "URL gambar product"
+      },
+      "type": {
+        "type": "string",
+        "required": true,
+        "enum": ["coffee", "tea", "water", "snack", "food", "service"],
+        "description": "Kategori product"
+      },
+      "stock": {
+        "type": "integer",
+        "required": true,
+        "description": "Jumlah stok awal"
+      }
+    },
+    "example": {
+      "name": "Cappuccino",
+      "description": "Espresso dengan susu steamed dan foam lembut",
+      "price": 28000,
+      "imageUrl": "https://example.com/images/cappuccino.jpg",
+      "type": "coffee",
+      "stock": 50
+    }
+  },
+
+  "_response_success": {
+    "description": "Response ketika product berhasil dibuat (HTTP 201)",
+    "example": {
+      "success": true,
+      "message": "Product created successfully",
+      "data": {
+        "id": "prod-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "name": "Cappuccino",
+        "description": "Espresso dengan susu steamed dan foam lembut",
+        "price": 28000,
+        "imageUrl": "https://example.com/images/cappuccino.jpg",
+        "type": "coffee",
+        "stock": 50,
+        "isAvailable": true
+      },
+      "error_code": 0
+    }
+  },
+
+  "_response_error_validation": {
+    "description": "Response ketika validasi gagal (HTTP 422)",
+    "example": {
+      "success": false,
+      "message": "The name field is required.",
+      "data": null,
+      "error_code": 422
+    }
+  },
+
+  "_response_error_unauthorized": {
+    "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+    "example": {
+      "success": false,
+      "message": "Unauthenticated.",
+      "data": null,
+      "error_code": 401
+    }
+  },
+
+  "_response_error_server": {
+    "description": "Response ketika terjadi error di server (HTTP 500)",
+    "example": {
+      "success": false,
+      "message": "Internal server error",
+      "data": null,
+      "error_code": 500
+    }
+  },
+
+  "_field_mapping_from_ui": {
+    "description": "Mapping dari ProductFormDialog ke request body",
+    "mapping": {
+      "_nameController.text": "name",
+      "_descController.text": "description",
+      "_priceController.text (parsed to int)": "price",
+      "product.imageUrl (existing or empty)": "imageUrl",
+      "_type (dropdown selection)": "type",
+      "_stockController.text (parsed to int)": "stock"
+    },
+    "note": "isAvailable tidak dikirim saat create — backend default true"
+  },
+
+  "_notes": [
+    "Response dibungkus dalam envelope standar: { success, message, data, error_code }",
+    "Field 'data' berisi single product object yang baru dibuat",
+    "ID di-generate oleh backend (UUID)",
+    "isAvailable di-default true oleh backend saat create",
+    "Request dan response menggunakan key 'imageUrl' (camelCase) yang konsisten",
+    "Semua harga dalam satuan Rupiah (integer, bukan double)",
+    "Datasource parsing: membaca result['data'] sebagai ProductModel, fallback ke result jika ada key 'id'"
+  ]
+}

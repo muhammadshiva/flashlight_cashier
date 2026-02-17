@@ -4,14 +4,16 @@ import '../../../../core/constants/api_constans.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/pagination/paginated_response_model.dart';
 import '../../../../core/pagination/pagination_params.dart';
+import '../../../../shared/models/meta_model.dart';
 import '../models/product_model.dart';
 
 /// Abstract interface for product remote data operations.
 abstract class ProductRemoteDataSource {
   /// Gets paginated list of products from the API.
-  /// Supports optional [type] filter and [pagination] params.
+  /// Supports optional [type] filter, [search] keyword, and [pagination] params.
   Future<PaginatedResponseModel<ProductModel>> getProducts({
     String? type,
+    String? search,
     PaginationParams? pagination,
   });
 
@@ -34,10 +36,12 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<PaginatedResponseModel<ProductModel>> getProducts({
     String? type,
+    String? search,
     PaginationParams? pagination,
   }) async {
     try {
       final queryParams = <String, dynamic>{};
+      if (search != null && search.isNotEmpty) queryParams['search'] = search;
       if (type != null) queryParams['type'] = type;
       if (pagination != null) queryParams.addAll(pagination.toQueryParams());
 
@@ -46,18 +50,19 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         queryParameters: queryParams,
       );
 
-      // Handle API envelope: { success, message, data: { products: [...], total }, error_code }
+      // Handle API envelope: { success, message, data: [...], meta: {...}, error_code }
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          final data = result['data'];
-          final productsList = data['products'] as List;
-          final total = data['total'] as int? ?? productsList.length;
+          final productsList = result['data'] as List;
+          final meta = result['meta'] != null
+              ? MetaModel.fromJson(result['meta'] as Map<String, dynamic>)
+              : null;
 
-          // Calculate pagination info
-          final page = pagination?.page ?? 1;
-          final limit = pagination?.limit ?? 10;
-          final totalPages = (total / limit).ceil();
+          final page = meta?.page ?? pagination?.page ?? 1;
+          final limit = meta?.perPage ?? pagination?.limit ?? 10;
+          final total = meta?.total ?? productsList.length;
+          final totalPages = meta?.lastPage ?? (total / limit).ceil();
 
           final products =
               productsList.map((e) => ProductModel.fromJson(e as Map<String, dynamic>)).toList();
@@ -90,7 +95,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
           'name': product.name,
           'description': product.description,
           'price': product.price,
-          'imageURL': product.imageUrl,
+          'imageUrl': product.imageUrl,
           'type': product.type,
           'stock': product.stock,
         },
@@ -126,7 +131,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
           'name': product.name,
           'description': product.description,
           'price': product.price,
-          'imageURL': product.imageUrl,
+          'imageUrl': product.imageUrl,
           'type': product.type,
           'stock': product.stock,
         },
