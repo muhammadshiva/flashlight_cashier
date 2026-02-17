@@ -66,18 +66,17 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
         queryParameters: queryParams,
       );
 
-      // Handle API envelope: { success, message, data: { customers: [...], total }, error_code }
+      // Handle API envelope: { success, message, data: [...], meta: {...}, error_code }
       final result = response.data;
       if (result is Map<String, dynamic>) {
         if (result['success'] == true && result['data'] != null) {
-          final data = result['data'];
-          final customersList = data['customers'] as List;
-          final total = data['total'] as int? ?? customersList.length;
+          final customersList = result['data'] as List;
+          final meta = result['meta'] as Map<String, dynamic>?;
 
-          // Calculate pagination info
-          final page = pagination?.page ?? 1;
-          final limit = pagination?.limit ?? 10;
-          final totalPages = (total / limit).ceil();
+          final page = meta?['page'] as int? ?? pagination?.page ?? 1;
+          final limit = meta?['per_page'] as int? ?? pagination?.limit ?? 10;
+          final total = meta?['total'] as int? ?? customersList.length;
+          final totalPages = meta?['last_page'] as int? ?? (total / limit).ceil();
 
           final customers =
               customersList.map((e) => CustomerModel.fromJson(e as Map<String, dynamic>)).toList();

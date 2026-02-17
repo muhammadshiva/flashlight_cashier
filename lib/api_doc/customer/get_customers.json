@@ -1,0 +1,147 @@
+{
+    "_info": {
+        "endpoint": "GET /api/customers",
+        "method": "GET",
+        "base_url": "https://369820dfc74d.ngrok-free.app/api",
+        "full_url": "https://369820dfc74d.ngrok-free.app/api/customers",
+        "description": "Mengambil daftar customer dengan pagination dan search",
+        "authentication": "Bearer Token (required)",
+        "headers": {
+            "Authorization": "Bearer <token>",
+            "Accept": "application/json"
+        }
+    },
+    "_query_parameters": {
+        "description": "Query parameter untuk filter dan paginasi",
+        "parameters": {
+            "query": {
+                "type": "string",
+                "required": false,
+                "default": null,
+                "description": "Keyword pencarian berdasarkan nama, phone number, atau email (case-insensitive). Jika tidak diisi, menampilkan semua"
+            },
+            "page": {
+                "type": "integer",
+                "required": false,
+                "default": 1,
+                "description": "Nomor halaman untuk paginasi (dimulai dari 1)"
+            },
+            "limit": {
+                "type": "integer",
+                "required": false,
+                "default": 10,
+                "description": "Jumlah item per halaman"
+            }
+        },
+        "example_urls": [
+            "/api/customers",
+            "/api/customers?page=1&limit=10",
+            "/api/customers?query=ahmad",
+            "/api/customers?query=0812&page=1&limit=10"
+        ]
+    },
+    "_response_success": {
+        "description": "Response ketika request berhasil (HTTP 200)",
+        "example": {
+            "success": true,
+            "message": "Customers retrieved successfully",
+            "data": [
+                {
+                    "id": "cust-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                    "name": "Ahmad Yani",
+                    "phoneNumber": "081234567890",
+                    "email": "ahmad.yani@email.com",
+                    "membership": null,
+                    "workOrders": []
+                },
+                {
+                    "id": "cust-b2c3d4e5-f6a7-8901-bcde-f12345678901",
+                    "name": "Siti Nurhaliza",
+                    "phoneNumber": "081234567891",
+                    "email": "siti.nurhaliza@email.com",
+                    "membership": {
+                        "id": "mem-001",
+                        "type": "gold",
+                        "points": 1500,
+                        "expiredAt": "2026-12-31"
+                    },
+                    "workOrders": []
+                }
+            ],
+            "meta": {
+                "page": 1,
+                "per_page": 10,
+                "last_page": 3,
+                "total": 25,
+                "first_item": 1,
+                "last_item": 10
+            },
+            "error_code": 0
+        }
+    },
+    "_response_success_empty": {
+        "description": "Response ketika tidak ada customer yang cocok dengan filter (HTTP 200)",
+        "example": {
+            "success": true,
+            "message": "Customers retrieved successfully",
+            "data": [],
+            "meta": {
+                "page": 1,
+                "per_page": 10,
+                "last_page": 0,
+                "total": 0,
+                "first_item": null,
+                "last_item": null
+            },
+            "error_code": 0
+        }
+    },
+    "_response_error_unauthorized": {
+        "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+        "example": {
+            "success": false,
+            "message": "Unauthenticated.",
+            "data": null,
+            "error_code": 401
+        }
+    },
+    "_response_error_server": {
+        "description": "Response ketika terjadi error di server (HTTP 500)",
+        "example": {
+            "success": false,
+            "message": "Internal server error",
+            "data": null,
+            "error_code": 500
+        }
+    },
+    "_field_descriptions": {
+        "_data": {
+            "data": "Array berisi daftar customer (List<Customer>). 1 level dengan 'meta' di dalam response envelope"
+        },
+        "_meta (MetaModel — lib/shared/models/meta_model.dart)": {
+            "meta": "Object pagination metadata, 1 level dengan 'data' di dalam response envelope",
+            "meta.page": "Halaman saat ini (integer, nullable, dimulai dari 1)",
+            "meta.per_page": "Jumlah item per halaman (integer, nullable, default 10)",
+            "meta.last_page": "Halaman terakhir yang tersedia (integer, nullable)",
+            "meta.total": "Total jumlah seluruh customer yang cocok dengan filter (integer, nullable)",
+            "meta.first_item": "Index item pertama di halaman ini (integer, nullable, 1-based)",
+            "meta.last_item": "Index item terakhir di halaman ini (integer, nullable, 1-based)"
+        },
+        "_customer (CustomerModel — lib/features/customer/data/models/customer_model.dart)": {
+            "customer.id": "UUID unik customer (string)",
+            "customer.name": "Nama lengkap customer (string)",
+            "customer.phoneNumber": "Nomor telepon customer (string)",
+            "customer.email": "Alamat email customer (string)",
+            "customer.membership": "Objek membership (nullable, null jika bukan member)",
+            "customer.workOrders": "Array work order terkait customer (nullable, bisa kosong)"
+        }
+    },
+    "_notes": [
+        "Response dibungkus dalam envelope standar: { success, message, data, meta, error_code }",
+        "Field 'data' langsung berisi array customer (bukan nested object)",
+        "Field 'meta' berisi pagination metadata dari MetaModel (lib/shared/models/meta_model.dart), 1 level dengan 'data'",
+        "Datasource parsing: result['data'] sebagai flat array, result['meta'] sebagai MetaModel",
+        "Query param 'query' bersifat case-insensitive, mencari pada field name, phoneNumber, dan email",
+        "Paginasi default: page=1, limit=10"
+    ]
+}

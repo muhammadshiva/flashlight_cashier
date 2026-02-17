@@ -1,0 +1,101 @@
+{
+    "_info": {
+        "endpoint": "POST /api/customers",
+        "method": "POST",
+        "base_url": "https://369820dfc74d.ngrok-free.app/api",
+        "full_url": "https://369820dfc74d.ngrok-free.app/api/customers",
+        "description": "Membuat customer baru",
+        "authentication": "Bearer Token (required)",
+        "headers": {
+            "Authorization": "Bearer <token>",
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+    },
+    "_request_body": {
+        "description": "Data customer yang akan dibuat",
+        "content_type": "application/json",
+        "fields": {
+            "name": {
+                "type": "string",
+                "required": true,
+                "description": "Nama lengkap customer"
+            },
+            "phoneNumber": {
+                "type": "string",
+                "required": true,
+                "description": "Nomor telepon customer"
+            },
+            "email": {
+                "type": "string",
+                "required": true,
+                "description": "Alamat email customer"
+            }
+        },
+        "example": {
+            "name": "Ahmad Yani",
+            "phoneNumber": "081234567890",
+            "email": "ahmad.yani@email.com"
+        }
+    },
+    "_response_success": {
+        "description": "Response ketika customer berhasil dibuat (HTTP 201)",
+        "example": {
+            "success": true,
+            "message": "Customer created successfully",
+            "data": {
+                "id": "cust-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "name": "Ahmad Yani",
+                "phoneNumber": "081234567890",
+                "email": "ahmad.yani@email.com",
+                "membership": null,
+                "workOrders": []
+            },
+            "error_code": 0
+        }
+    },
+    "_response_error_validation": {
+        "description": "Response ketika validasi gagal (HTTP 422)",
+        "example": {
+            "success": false,
+            "message": "The given data was invalid.",
+            "data": {
+                "name": [
+                    "The name field is required."
+                ],
+                "phoneNumber": [
+                    "The phone number field is required."
+                ],
+                "email": [
+                    "The email must be a valid email address."
+                ]
+            },
+            "error_code": 422
+        }
+    },
+    "_response_error_unauthorized": {
+        "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+        "example": {
+            "success": false,
+            "message": "Unauthenticated.",
+            "data": null,
+            "error_code": 401
+        }
+    },
+    "_response_error_server": {
+        "description": "Response ketika terjadi error di server (HTTP 500)",
+        "example": {
+            "success": false,
+            "message": "Internal server error",
+            "data": null,
+            "error_code": 500
+        }
+    },
+    "_notes": [
+        "Response dibungkus dalam envelope standar: { success, message, data, error_code }",
+        "Field 'data' berisi object customer yang baru dibuat",
+        "ID customer di-generate oleh backend",
+        "Datasource mengirim: { name, phoneNumber, email }",
+        "Datasource parsing: result['data'] sebagai single CustomerModel object"
+    ]
+}

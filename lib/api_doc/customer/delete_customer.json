@@ -1,0 +1,63 @@
+{
+    "_info": {
+        "endpoint": "DELETE /api/customers/:id",
+        "method": "DELETE",
+        "base_url": "https://369820dfc74d.ngrok-free.app/api",
+        "full_url": "https://369820dfc74d.ngrok-free.app/api/customers/{id}",
+        "description": "Menghapus customer berdasarkan ID",
+        "authentication": "Bearer Token (required)",
+        "headers": {
+            "Authorization": "Bearer <token>",
+            "Accept": "application/json"
+        }
+    },
+    "_path_parameters": {
+        "id": {
+            "type": "string",
+            "required": true,
+            "description": "UUID unik customer yang akan dihapus"
+        }
+    },
+    "_response_success": {
+        "description": "Response ketika customer berhasil dihapus (HTTP 200)",
+        "example": {
+            "success": true,
+            "message": "Customer deleted successfully",
+            "data": null,
+            "error_code": 0
+        }
+    },
+    "_response_error_not_found": {
+        "description": "Response ketika customer tidak ditemukan (HTTP 404)",
+        "example": {
+            "success": false,
+            "message": "Customer not found",
+            "data": null,
+            "error_code": 404
+        }
+    },
+    "_response_error_unauthorized": {
+        "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+        "example": {
+            "success": false,
+            "message": "Unauthenticated.",
+            "data": null,
+            "error_code": 401
+        }
+    },
+    "_response_error_conflict": {
+        "description": "Response ketika customer tidak bisa dihapus karena masih memiliki relasi (HTTP 409)",
+        "example": {
+            "success": false,
+            "message": "Cannot delete customer with active work orders",
+            "data": null,
+            "error_code": 409
+        }
+    },
+    "_notes": [
+        "Response dibungkus dalam envelope standar: { success, message, data, error_code }",
+        "Field 'data' berisi null setelah penghapusan berhasil",
+        "Datasource mengecek result['success'] == true, jika false throw ServerFailure",
+        "Customer dengan work order aktif mungkin tidak bisa dihapus (tergantung backend policy)"
+    ]
+}

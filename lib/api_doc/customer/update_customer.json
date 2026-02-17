@@ -1,0 +1,102 @@
+{
+    "_info": {
+        "endpoint": "PUT /api/customers/:id",
+        "method": "PUT",
+        "base_url": "https://369820dfc74d.ngrok-free.app/api",
+        "full_url": "https://369820dfc74d.ngrok-free.app/api/customers/{id}",
+        "description": "Mengupdate data customer berdasarkan ID",
+        "authentication": "Bearer Token (required)",
+        "headers": {
+            "Authorization": "Bearer <token>",
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+    },
+    "_path_parameters": {
+        "id": {
+            "type": "string",
+            "required": true,
+            "description": "UUID unik customer yang akan diupdate"
+        }
+    },
+    "_request_body": {
+        "description": "Data customer yang akan diupdate",
+        "content_type": "application/json",
+        "fields": {
+            "name": {
+                "type": "string",
+                "required": true,
+                "description": "Nama lengkap customer"
+            },
+            "phoneNumber": {
+                "type": "string",
+                "required": true,
+                "description": "Nomor telepon customer"
+            },
+            "email": {
+                "type": "string",
+                "required": true,
+                "description": "Alamat email customer"
+            }
+        },
+        "example": {
+            "name": "Ahmad Yani Updated",
+            "phoneNumber": "081234567899",
+            "email": "ahmad.yani.new@email.com"
+        }
+    },
+    "_response_success": {
+        "description": "Response ketika customer berhasil diupdate (HTTP 200)",
+        "example": {
+            "success": true,
+            "message": "Customer updated successfully",
+            "data": {
+                "id": "cust-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "name": "Ahmad Yani Updated",
+                "phoneNumber": "081234567899",
+                "email": "ahmad.yani.new@email.com",
+                "membership": null,
+                "workOrders": []
+            },
+            "error_code": 0
+        }
+    },
+    "_response_error_not_found": {
+        "description": "Response ketika customer tidak ditemukan (HTTP 404)",
+        "example": {
+            "success": false,
+            "message": "Customer not found",
+            "data": null,
+            "error_code": 404
+        }
+    },
+    "_response_error_validation": {
+        "description": "Response ketika validasi gagal (HTTP 422)",
+        "example": {
+            "success": false,
+            "message": "The given data was invalid.",
+            "data": {
+                "email": [
+                    "The email must be a valid email address."
+                ]
+            },
+            "error_code": 422
+        }
+    },
+    "_response_error_unauthorized": {
+        "description": "Response ketika token tidak valid atau expired (HTTP 401)",
+        "example": {
+            "success": false,
+            "message": "Unauthenticated.",
+            "data": null,
+            "error_code": 401
+        }
+    },
+    "_notes": [
+        "Response dibungkus dalam envelope standar: { success, message, data, error_code }",
+        "Field 'data' berisi object customer yang sudah diupdate",
+        "Datasource mengirim: { name, phoneNumber, email }",
+        "Datasource parsing: result['data'] sebagai single CustomerModel object",
+        "Jika result tidak punya key 'data' tapi punya 'id', fallback parse result langsung sebagai CustomerModel"
+    ]
+}

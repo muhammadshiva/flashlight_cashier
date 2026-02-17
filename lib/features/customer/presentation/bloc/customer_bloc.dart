@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 
 import '../../../../core/pagination/pagination_params.dart';
@@ -40,10 +42,20 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     });
 
     on<SearchCustomersEvent>((event, emit) async {
+      final query = event.query.trim();
+
+      // Below minimum characters → reload all customers
+      if (query.length < _minSearchLength) {
+        add(LoadCustomers());
+        return;
+      }
+
+      // Meets minimum → search via API
       emit(CustomerLoading());
       final result = await getCustomers(GetCustomersParams(
         pagination: const PaginationParams(page: 1, limit: 10),
-        query: event.query,
+        query: query,
+        isPrototype: true,
       ));
       result.fold(
         (failure) => emit(CustomerError(failure.message)),
@@ -56,21 +68,13 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
           ));
         },
       );
-    });
+    }, transformer: _debounce(const Duration(seconds: 1)));
 
     on<ChangePageEvent>((event, emit) async {
-      // Need to preserve query if it exists, but for now we assume simple pagination or we need to store query in state
-      // ideally we should add query to CustomerLoaded state to persist it across page changes
-      // For this refactor, I will just paginate. If search was active, we might lose it unless we store it.
-      // Let's assume for this specific refactor step we just want to fix the mechanism.
-      // A better approach is to store the current query in the state.
-      // Let's check if I can modify state again or if I can just pass null query (which resets search).
-      // Given the requirement "server-side pagination", usually implies "server-side filtering" too.
-      // I'll stick to basic server side pagination for now.
-
       emit(CustomerLoading());
       final result = await getCustomers(GetCustomersParams(
         pagination: PaginationParams(page: event.page, limit: 10),
+        isPrototype: true,
       ));
       result.fold(
         (failure) => emit(CustomerError(failure.message)),
@@ -124,5 +128,30 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         },
       );
     });
+  }
+
+  /// Minimum characters required to trigger API search
+  static const int _minSearchLength = 3;
+
+  /// Pure-Dart debounce EventTransformer.
+  /// Debounces the event stream so only the last event after [duration] is processed.
+  EventTransformer<E> _debounce<E>(Duration duration) {
+    return (events, mapper) {
+      final controller = StreamController<E>();
+      Timer? timer;
+
+      events.listen(
+        (event) {
+          timer?.cancel();
+          timer = Timer(duration, () => controller.add(event));
+        },
+        onDone: () {
+          timer?.cancel();
+          controller.close();
+        },
+      );
+
+      return controller.stream.asyncExpand(mapper);
+    };
   }
 }
