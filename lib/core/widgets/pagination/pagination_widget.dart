@@ -24,6 +24,9 @@ class DataDrivenPagination extends StatelessWidget {
       padding: config.theme?.padding ?? EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: config.theme?.backgroundColor ?? AppColors.white,
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(config.theme?.borderRadius ?? 16.r),
+        ),
         border: Border(
             top: BorderSide(color: config.theme?.borderColor ?? AppColors.grey5, width: 1.w)),
         boxShadow: config.theme?.shadow != null
@@ -67,28 +70,59 @@ class DataDrivenPagination extends StatelessWidget {
   }
 
   Widget _buildItemsPerPageDropdown() {
-    return Container(
-      height: 32.w,
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
-      decoration: BoxDecoration(
-        border: Border.all(color: config.theme?.borderColor ?? AppColors.grey5),
-        borderRadius: BorderRadius.circular(config.theme?.borderRadius ?? 4.r),
+    return PopupMenuButton<int>(
+      offset: Offset(0, 40.w),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        side: BorderSide(color: config.theme?.borderColor ?? AppColors.slate200),
       ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<int>(
-          value: config.data.itemsPerPage,
-          icon: Icon(Icons.keyboard_arrow_down,
-              size: 16.w, color: config.theme?.textStyle?.color ?? AppColors.textGray3),
-          style: config.theme?.textStyle ??
-              TextStyleConst.interRegular14.copyWith(color: AppColors.textGray3),
-          items: config.data.itemsPerPageOptions.map((count) {
-            return DropdownMenuItem<int>(value: count, child: Text('$count per halaman'));
-          }).toList(),
-          onChanged: (int? newValue) {
-            if (newValue != null) {
-              config.actions.onItemsPerPageChanged(newValue);
-            }
-          },
+      color: Colors.white,
+      elevation: 8,
+      onSelected: (value) {
+        config.actions.onItemsPerPageChanged(value);
+      },
+      itemBuilder: (context) => config.data.itemsPerPageOptions.map((count) {
+        final isSelected = count == config.data.itemsPerPage;
+        return PopupMenuItem<int>(
+          value: count,
+          child: Row(
+            children: [
+              Text(
+                '$count per halaman',
+                style: TextStyleConst.interMedium14.copyWith(
+                  color: isSelected
+                      ? config.theme?.primaryColor ?? AppColors.orangePrimary
+                      : AppColors.slate800,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                ),
+              ),
+              if (isSelected) ...[
+                const Spacer(),
+                Icon(Icons.check,
+                    size: 18.w, color: config.theme?.primaryColor ?? AppColors.orangePrimary),
+              ],
+            ],
+          ),
+        );
+      }).toList(),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(color: config.theme?.borderColor ?? AppColors.slate200),
+        ),
+        child: Row(
+          children: [
+            Text(
+              '${config.data.itemsPerPage} per halaman',
+              style: TextStyleConst.interMedium14.copyWith(
+                color: AppColors.slate500,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Icon(Icons.keyboard_arrow_down, size: 16.w, color: AppColors.slate500),
+          ],
         ),
       ),
     );
@@ -205,6 +239,9 @@ class DataDrivenPagination extends StatelessWidget {
       padding: config.theme?.padding ?? EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: config.theme?.backgroundColor ?? AppColors.white,
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(config.theme?.borderRadius ?? 16.r),
+        ),
         border: Border(
             top: BorderSide(color: config.theme?.borderColor ?? AppColors.grey5, width: 1.w)),
       ),

@@ -42,3 +42,10 @@ class UpdateProductEvent extends ProductEvent {
   @override
   List<Object> get props => [product];
 }
+
+class ChangeItemsPerPageEvent extends ProductEvent {
+  final int itemsPerPage;
+  const ChangeItemsPerPageEvent(this.itemsPerPage);
+  @override
+  List<Object> get props => [itemsPerPage];
+}

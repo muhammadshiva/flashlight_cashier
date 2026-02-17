@@ -27,6 +27,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     on<RefreshHistory>(_onRefreshHistory);
     on<FilterHistory>(_onFilterHistory);
     on<ChangePageEvent>(_onChangePage);
+    on<ChangeItemsPerPageEvent>(_onChangeItemsPerPage);
   }
 
   @override
@@ -35,8 +36,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     return super.close();
   }
 
-  Future<void> _onLoadHistory(
-      LoadHistory event, Emitter<HistoryState> emit) async {
+  Future<void> _onLoadHistory(LoadHistory event, Emitter<HistoryState> emit) async {
     emit(HistoryLoading());
     await _loadHistoryData(emit);
     _startRefreshTimer();
@@ -49,16 +49,14 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     });
   }
 
-  Future<void> _onRefreshHistory(
-      RefreshHistory event, Emitter<HistoryState> emit) async {
+  Future<void> _onRefreshHistory(RefreshHistory event, Emitter<HistoryState> emit) async {
     // Refresh without showing full loading state
     await _loadHistoryData(emit);
   }
 
   Future<void> _loadHistoryData(Emitter<HistoryState> emit) async {
     // Use dummy data instead of API
-    await Future.delayed(
-        const Duration(milliseconds: 500)); // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
 
     try {
       // Get dummy data
@@ -69,8 +67,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
       // Filter only completed and paid orders for history
       final historyOrders = allOrders
           .where((order) =>
-              order.status.toLowerCase() == 'completed' ||
-              order.status.toLowerCase() == 'paid')
+              order.status.toLowerCase() == 'completed' || order.status.toLowerCase() == 'paid')
           .toList();
 
       // Sort by completion date/updated date (newest first)
@@ -123,8 +120,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     }
   }
 
-  Future<void> _onFilterHistory(
-      FilterHistory event, Emitter<HistoryState> emit) async {
+  Future<void> _onFilterHistory(FilterHistory event, Emitter<HistoryState> emit) async {
     if (state is! HistoryLoaded) return;
 
     final currentState = state as HistoryLoaded;
@@ -133,9 +129,8 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     // Filter by status
     String selectedStatus = event.status ?? currentState.selectedStatus;
     if (selectedStatus != 'Semua') {
-      filtered = filtered
-          .where((o) => o.status.toLowerCase() == selectedStatus.toLowerCase())
-          .toList();
+      filtered =
+          filtered.where((o) => o.status.toLowerCase() == selectedStatus.toLowerCase()).toList();
     }
 
     // Filter by search query
@@ -196,8 +191,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     ));
   }
 
-  Future<void> _onChangePage(
-      ChangePageEvent event, Emitter<HistoryState> emit) async {
+  Future<void> _onChangePage(ChangePageEvent event, Emitter<HistoryState> emit) async {
     if (state is! HistoryLoaded) return;
 
     final currentState = state as HistoryLoaded;
@@ -216,6 +210,25 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     emit(currentState.copyWith(
       displayedOrders: paginatedOrders,
       currentPage: event.page,
+    ));
+  }
+
+  Future<void> _onChangeItemsPerPage(
+      ChangeItemsPerPageEvent event, Emitter<HistoryState> emit) async {
+    if (state is! HistoryLoaded) return;
+
+    final currentState = state as HistoryLoaded;
+    final filteredOrders = currentState.filteredOrders;
+    final newItemsPerPage = event.itemsPerPage;
+
+    // Reset to page 1 with new items per page
+    final paginatedOrders = filteredOrders.take(newItemsPerPage).toList();
+
+    emit(currentState.copyWith(
+      displayedOrders: paginatedOrders,
+      currentPage: 1,
+      itemsPerPage: newItemsPerPage,
+      totalItems: filteredOrders.length,
     ));
   }
 }

@@ -71,6 +71,25 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
     });
 
+    on<ChangeItemsPerPageEvent>((event, emit) {
+      if (state is ProductLoaded) {
+        final currentState = state as ProductLoaded;
+        final allProducts = currentState.allProducts;
+        final newItemsPerPage = event.itemsPerPage;
+
+        final paginatedProducts = allProducts.take(newItemsPerPage).toList();
+
+        emit(ProductLoaded(
+          products: paginatedProducts,
+          allProducts: allProducts,
+          sourceProducts: currentState.sourceProducts,
+          currentPage: 1,
+          totalItems: allProducts.length,
+          itemsPerPage: newItemsPerPage,
+        ));
+      }
+    });
+
     on<SearchProductsEvent>((event, emit) async {
       final query = event.query.trim();
 

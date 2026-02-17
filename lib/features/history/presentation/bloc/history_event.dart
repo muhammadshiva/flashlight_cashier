@@ -41,3 +41,12 @@ class ChangePageEvent extends HistoryEvent {
   @override
   List<Object> get props => [page];
 }
+
+class ChangeItemsPerPageEvent extends HistoryEvent {
+  final int itemsPerPage;
+
+  const ChangeItemsPerPageEvent(this.itemsPerPage);
+
+  @override
+  List<Object> get props => [itemsPerPage];
+}

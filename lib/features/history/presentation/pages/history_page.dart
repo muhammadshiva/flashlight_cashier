@@ -5,11 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/shared/models/pagination_actions.dart';
+import '../../../../core/shared/models/pagination_config.dart';
+import '../../../../core/shared/models/pagination_data.dart';
+import '../../../../core/widgets/pagination/pagination_widget.dart';
 import '../bloc/history_bloc.dart';
 import '../bloc/history_event.dart';
 import '../bloc/history_state.dart';
 import '../widgets/history_header.dart';
-import '../widgets/history_pagination.dart';
 import '../widgets/history_stats.dart';
 import '../widgets/history_table.dart';
 
@@ -22,7 +25,7 @@ class HistoryPage extends StatelessWidget {
       listener: _onStateChanged,
       builder: (context, state) {
         if (state is HistoryLoading) return _buildLoading();
-        if (state is HistoryLoaded) return _buildLoaded(state);
+        if (state is HistoryLoaded) return _buildLoaded(context, state);
         return _buildEmpty();
       },
     );
@@ -46,7 +49,7 @@ class HistoryPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLoaded(HistoryLoaded state) {
+  Widget _buildLoaded(BuildContext context, HistoryLoaded state) {
     return Scaffold(
       backgroundColor: AppColors.slate50,
       resizeToAvoidBottomInset: false,
@@ -59,14 +62,21 @@ class HistoryPage extends StatelessWidget {
             SizedBox(height: 16.w),
             HistoryStats(state: state),
             SizedBox(height: 24.w),
-            Expanded(child: _buildTableCard(state)),
+            Expanded(child: _buildTableCard(context, state)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTableCard(HistoryLoaded state) {
+  Widget _buildTableCard(BuildContext context, HistoryLoaded state) {
+    final currentPage = state.currentPage;
+    final itemsPerPage = state.itemsPerPage;
+    final totalItems = state.totalItems;
+    final totalPages = (totalItems / itemsPerPage).ceil();
+    final startItem = totalItems == 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+    final endItem = totalItems == 0 ? 0 : startItem + state.displayedOrders.length - 1;
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -89,7 +99,30 @@ class HistoryPage extends StatelessWidget {
               vehicles: state.vehicles,
             ),
           ),
-          const HistoryPagination(),
+          DataDrivenPagination(
+            config: PaginationConfig(
+              data: PaginationData(
+                currentPage: currentPage,
+                totalPages: totalPages > 0 ? totalPages : 1,
+                itemsPerPage: itemsPerPage,
+                totalItems: totalItems,
+                startIndex: startItem,
+                endIndex: endItem,
+                itemLabel: 'order',
+              ),
+              actions: PaginationActions(
+                onPageChanged: (page) => context.read<HistoryBloc>().add(ChangePageEvent(page)),
+                onItemsPerPageChanged: (count) =>
+                    context.read<HistoryBloc>().add(ChangeItemsPerPageEvent(count)),
+                onNextPage: currentPage < totalPages
+                    ? () => context.read<HistoryBloc>().add(ChangePageEvent(currentPage + 1))
+                    : null,
+                onPreviousPage: currentPage > 1
+                    ? () => context.read<HistoryBloc>().add(ChangePageEvent(currentPage - 1))
+                    : null,
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/shared/models/pagination_actions.dart';
+import '../../../../core/shared/models/pagination_config.dart';
+import '../../../../core/shared/models/pagination_data.dart';
+import '../../../../core/widgets/pagination/pagination_widget.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
@@ -83,7 +87,48 @@ class _CustomerContentView extends StatelessWidget {
                       },
                     ),
                   ),
-                  const _PaginationSection(),
+                  BlocBuilder<CustomerBloc, CustomerState>(
+                    builder: (context, state) {
+                      if (state is! CustomerLoaded) return const SizedBox.shrink();
+
+                      final currentPage = state.currentPage;
+                      final itemsPerPage = state.itemsPerPage;
+                      final totalItems = state.totalItems;
+                      final totalPages = (totalItems / itemsPerPage).ceil();
+                      final startItem = totalItems == 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+                      final endItem = totalItems == 0 ? 0 : startItem + state.customers.length - 1;
+
+                      return DataDrivenPagination(
+                        config: PaginationConfig(
+                          data: PaginationData(
+                            currentPage: currentPage,
+                            totalPages: totalPages > 0 ? totalPages : 1,
+                            itemsPerPage: itemsPerPage,
+                            totalItems: totalItems,
+                            startIndex: startItem,
+                            endIndex: endItem,
+                            itemLabel: 'customer',
+                          ),
+                          actions: PaginationActions(
+                            onPageChanged: (page) =>
+                                context.read<CustomerBloc>().add(ChangePageEvent(page)),
+                            onItemsPerPageChanged: (count) =>
+                                context.read<CustomerBloc>().add(ChangeItemsPerPageEvent(count)),
+                            onNextPage: currentPage < totalPages
+                                ? () => context
+                                    .read<CustomerBloc>()
+                                    .add(ChangePageEvent(currentPage + 1))
+                                : null,
+                            onPreviousPage: currentPage > 1
+                                ? () => context
+                                    .read<CustomerBloc>()
+                                    .add(ChangePageEvent(currentPage - 1))
+                                : null,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -352,113 +397,6 @@ class _DataCell extends StatelessWidget {
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
             color: const Color(0xFF475569),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PaginationSection extends StatelessWidget {
-  const _PaginationSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<CustomerBloc, CustomerState>(
-      builder: (context, state) {
-        if (state is! CustomerLoaded) return const SizedBox.shrink();
-
-        final currentPage = state.currentPage;
-        final itemsPerPage = state.itemsPerPage;
-        final totalItems = state.totalItems;
-        final totalPages = (totalItems / itemsPerPage).ceil();
-
-        final startItem = totalItems == 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
-        final endItem = (startItem + state.customers.length - 1);
-
-        return Padding(
-          padding: EdgeInsets.all(24.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const Text('View', style: TextStyle(color: AppColors.slate500)),
-                  SizedBox(width: 8.w),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: AppColors.slate200),
-                    ),
-                    child: Row(
-                      children: [
-                        Text('$itemsPerPage', style: const TextStyle(fontWeight: FontWeight.bold)),
-                        Icon(Icons.keyboard_arrow_down, size: 16.w),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  const Text('entry per page', style: TextStyle(color: AppColors.slate500)),
-                ],
-              ),
-              Row(
-                children: [
-                  Text('Showing $startItem-$endItem of $totalItems entries',
-                      style: const TextStyle(color: AppColors.slate500)),
-                  SizedBox(width: 24.w),
-                  IconButton(
-                      onPressed: currentPage > 1
-                          ? () => context.read<CustomerBloc>().add(ChangePageEvent(currentPage - 1))
-                          : null,
-                      icon: Icon(Icons.chevron_left,
-                          color: currentPage > 1 ? AppColors.slate500 : const Color(0xFFCBD5E1))),
-                  ...List.generate(totalPages, (index) {
-                    final page = index + 1;
-                    if (totalPages > 7 &&
-                        (page > 2 &&
-                            page < totalPages - 1 &&
-                            (page < currentPage - 1 || page > currentPage + 1))) {
-                      return page == currentPage - 2 || page == currentPage + 2
-                          ? const Text('...', style: TextStyle(color: AppColors.slate500))
-                          : const SizedBox.shrink();
-                    }
-                    return _buildPageNumber(context, page, isActive: page == currentPage);
-                  }),
-                  IconButton(
-                      onPressed: currentPage < totalPages
-                          ? () => context.read<CustomerBloc>().add(ChangePageEvent(currentPage + 1))
-                          : null,
-                      icon: Icon(Icons.chevron_right,
-                          color: currentPage < totalPages
-                              ? AppColors.slate500
-                              : const Color(0xFFCBD5E1))),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildPageNumber(BuildContext context, int number, {required bool isActive}) {
-    return InkWell(
-      onTap: () => context.read<CustomerBloc>().add(ChangePageEvent(number)),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4.w),
-        width: 32.w,
-        height: 32.w,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: isActive ? AppColors.orangePrimary : Colors.transparent,
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        child: Text(
-          number.toString(),
-          style: TextStyle(
-            color: isActive ? Colors.white : AppColors.slate500,
-            fontWeight: FontWeight.w600,
           ),
         ),
       ),

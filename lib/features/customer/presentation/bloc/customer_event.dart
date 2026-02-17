@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import '../../domain/entities/customer.dart';
 
 abstract class CustomerEvent extends Equatable {
@@ -55,4 +56,11 @@ class SearchCustomersEvent extends CustomerEvent {
   const SearchCustomersEvent(this.query);
   @override
   List<Object> get props => [query];
+}
+
+class ChangeItemsPerPageEvent extends CustomerEvent {
+  final int itemsPerPage;
+  const ChangeItemsPerPageEvent(this.itemsPerPage);
+  @override
+  List<Object> get props => [itemsPerPage];
 }

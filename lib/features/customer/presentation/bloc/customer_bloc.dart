@@ -89,6 +89,25 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       );
     });
 
+    on<ChangeItemsPerPageEvent>((event, emit) async {
+      emit(CustomerLoading());
+      final result = await getCustomers(GetCustomersParams(
+        pagination: PaginationParams(page: 1, limit: event.itemsPerPage),
+        isPrototype: true,
+      ));
+      result.fold(
+        (failure) => emit(CustomerError(failure.message)),
+        (paginatedCustomers) {
+          emit(CustomerLoaded(
+            customers: paginatedCustomers.data,
+            currentPage: 1,
+            totalItems: paginatedCustomers.total,
+            itemsPerPage: event.itemsPerPage,
+          ));
+        },
+      );
+    });
+
     on<CreateCustomerEvent>((event, emit) async {
       emit(CustomerLoading());
       final result = await createCustomer(CreateCustomerParams(

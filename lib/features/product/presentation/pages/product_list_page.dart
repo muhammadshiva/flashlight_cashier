@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/shared/models/pagination_actions.dart';
+import '../../../../core/shared/models/pagination_config.dart';
+import '../../../../core/shared/models/pagination_data.dart';
+import '../../../../core/widgets/pagination/pagination_widget.dart';
 import '../../../../injection_container.dart';
 import '../bloc/product_bloc.dart';
-import 'components/product_pagination.dart';
 import 'components/product_stats_and_filter.dart';
 import 'components/product_table.dart';
 
@@ -58,7 +61,43 @@ class _ProductContentView extends StatelessWidget {
         children: [
           const Divider(height: 1, color: AppColors.slate100),
           Expanded(child: _buildProductContent()),
-          const ProductPagination(),
+          BlocBuilder<ProductBloc, ProductState>(
+            builder: (context, state) {
+              if (state is! ProductLoaded) return const SizedBox.shrink();
+
+              final currentPage = state.currentPage;
+              final itemsPerPage = state.itemsPerPage;
+              final totalItems = state.totalItems;
+              final totalPages = (totalItems / itemsPerPage).ceil();
+              final startItem = totalItems == 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+              final endItem = totalItems == 0 ? 0 : startItem + state.products.length - 1;
+
+              return DataDrivenPagination(
+                config: PaginationConfig(
+                  data: PaginationData(
+                    currentPage: currentPage,
+                    totalPages: totalPages > 0 ? totalPages : 1,
+                    itemsPerPage: itemsPerPage,
+                    totalItems: totalItems,
+                    startIndex: startItem,
+                    endIndex: endItem,
+                    itemLabel: 'produk',
+                  ),
+                  actions: PaginationActions(
+                    onPageChanged: (page) => context.read<ProductBloc>().add(ChangePageEvent(page)),
+                    onItemsPerPageChanged: (count) =>
+                        context.read<ProductBloc>().add(ChangeItemsPerPageEvent(count)),
+                    onNextPage: currentPage < totalPages
+                        ? () => context.read<ProductBloc>().add(ChangePageEvent(currentPage + 1))
+                        : null,
+                    onPreviousPage: currentPage > 1
+                        ? () => context.read<ProductBloc>().add(ChangePageEvent(currentPage - 1))
+                        : null,
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
